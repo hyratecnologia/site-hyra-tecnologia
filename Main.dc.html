@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Hyra Tecnologia</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Fraunces:wght@500;600&amp;display=swap">
+<style>
+body{margin:0;background:#0B0B0B}
+html{scroll-behavior:smooth}
+a{color:#F5F5F5}a:hover{color:#FF9800}
+*{box-sizing:border-box}
+.nav-link{color:#A3A3A3;text-decoration:none;font-size:15px;padding:12px 4px;transition:color .2s ease}
+.nav-link:hover{color:#F5F5F5}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;border-radius:2px;font-weight:600;font-size:15px;text-decoration:none;transition:transform .25s ease,background .25s ease,border-color .25s ease,color .25s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--accent);color:#0B0B0B;border:1px solid var(--accent)}
+.btn-primary:hover{color:#0B0B0B}
+.btn-ghost{background:transparent;color:#F5F5F5;border:1px solid #333333}
+.btn-ghost:hover{border-color:#F5F5F5;color:#F5F5F5}
+.card{transition:border-color .3s ease,transform .3s ease,background .3s ease}
+.card:hover{border-color:var(--accent);transform:translateY(-4px);background:#151515}
+.card:hover .card-sq{transform:scale(1.6)}
+.card-sq{transition:transform .3s ease}
+.work .mock{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.work:hover .mock{transform:translateY(-8px)}
+.chip{min-height:44px;padding:0 18px;border-radius:2px;border:1px solid #333333;background:transparent;color:#D4D4D4;font:500 14px Inter,system-ui,sans-serif;cursor:pointer;transition:all .2s ease}
+.chip:hover{border-color:#F5F5F5;color:#F5F5F5}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#0B0B0B}
+.tag{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border:1px solid #262626;color:#D4D4D4;font-size:15px;transition:border-color .2s ease,color .2s ease}
+.tag:hover{border-color:var(--accent);color:#F5F5F5}
+.field{width:100%;min-height:48px;padding:12px 14px;background:#0B0B0B;border:1px solid #333333;border-radius:2px;color:#F5F5F5;font:400 15px Inter,system-ui,sans-serif;transition:border-color .2s ease}
+.field:focus{outline:none;border-color:var(--accent)}
+.thumb{background-color:#121212;background-image:linear-gradient(#1C1C1C 1px,transparent 1px),linear-gradient(90deg,#1C1C1C 1px,transparent 1px);background-size:32px 32px}
+.day{min-width:52px;min-height:60px;border-radius:12px;border:1px solid #E8DCD5;background:#FFFFFF;color:#2B1D19;font:600 13px Inter,system-ui,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .2s ease}
+.day.on{background:#2B1D19;border-color:#2B1D19;color:#FFFFFF}
+.slot{min-height:44px;border-radius:10px;border:1px solid #E8DCD5;background:#FFFFFF;color:#2B1D19;font:600 14px Inter,system-ui,sans-serif;cursor:pointer;transition:all .2s ease}
+.slot:hover{border-color:#A85F4D}
+.slot.on{background:#A85F4D;border-color:#A85F4D;color:#FFFFFF}
+.slot:disabled{background:transparent;color:#B9AAA3;text-decoration:line-through;cursor:not-allowed;border-color:#F0E7E2}
+.confirm{width:100%;min-height:50px;border:0;border-radius:12px;background:#A85F4D;color:#FFFFFF;font:600 15px Inter,system-ui,sans-serif;cursor:pointer;transition:opacity .2s ease}
+.confirm:disabled{opacity:.45;cursor:not-allowed}
+.lg-guide{fill:none;stroke:#4A4A4A;stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1;animation:dash 1s cubic-bezier(.6,0,.2,1) forwards,dim 1s 3.4s ease forwards}
+.lg-circle{fill:none;stroke:#7A7A7A;stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1;animation:dash 1.2s .7s cubic-bezier(.6,0,.2,1) forwards,dim 1s 3.4s ease forwards}
+.lg-h{fill:#F5F5F5;fill-opacity:0;stroke:#F5F5F5;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;animation:dash 1.5s 1.2s cubic-bezier(.6,0,.2,1) forwards,fillin .7s 2.5s ease forwards}
+.lg-sq{fill-opacity:0;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;animation:dash .9s 1.9s cubic-bezier(.6,0,.2,1) forwards,fillin .5s 2.8s ease forwards}
+.lg-label{opacity:0;animation:labelseq 3.4s .9s ease forwards}
+.lg-g1{animation-delay:0s,3.4s}.lg-g2{animation-delay:.1s,3.4s}.lg-g3{animation-delay:.2s,3.4s}.lg-g4{animation-delay:.3s,3.4s}
+.rise{opacity:0;transform:translateY(16px);animation:rise .8s ease forwards}
+.rise2{animation-delay:.15s}.rise3{animation-delay:.3s}
+@keyframes dash{to{stroke-dashoffset:0}}
+@keyframes fillin{to{fill-opacity:1}}
+@keyframes dim{to{opacity:.45}}
+@keyframes labelseq{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:.5}}
+@keyframes rise{to{opacity:1;transform:none}}
+@media (max-width:860px){.nav-links{display:none !important}}
+@media (prefers-reduced-motion:reduce){.lg-guide,.lg-circle{animation:none;stroke-dashoffset:0;opacity:.45}.lg-h,.lg-sq{animation:none;stroke-dashoffset:0;fill-opacity:1}.lg-label{animation:none;opacity:.5}.rise{animation:none;opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</helmet>
+<div style="--accent: {{accent}}; background: #0B0B0B; color: #F5F5F5; font-family: Inter, system-ui, sans-serif; min-height: 100vh">
+
+<header style="position: sticky; top: 0; z-index: 10; background: rgba(11,11,11,0.86); backdrop-filter: blur(12px); border-bottom: 1px solid #1F1F1F">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px">
+<a href="#inicio" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #F5F5F5">
+<svg width="30" height="30" viewBox="200.9 202.06 597.76 597.76" role="img" aria-label="Logo Hyra Tecnologia"><path d="M 600.86823,202.05692 H 798.66908 V 399.85725 H 600.86823 Z" fill="{{accent}}"></path><path d="m 200.91538,202.0564 v 597.75421 h 0.90073 196.90115 v -5.1e-4 h 2.03089 a 99.044067,99.044067 0 0 1 0,-0.0481 99.044067,99.044067 0 0 1 99.04408,-99.04409 99.044067,99.044067 0 0 1 99.04409,99.04409 99.044067,99.044067 0 0 1 0,0.0481 h 198.93204 a 297.97617,297.97617 0 0 0 0,-0.0481 297.97617,297.97617 0 0 0 -297.97613,-297.97613 297.97617,297.97617 0 0 0 -101.07497,17.6661 v -317.39509 -5.2e-4 z" fill="#F5F5F5"></path></svg>
+<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em">Hyra <span style="color: #A3A3A3; font-weight: 500">Tecnologia</span></span>
+</a>
+<nav class="nav-links" aria-label="Principal" style="display: flex; gap: 28px">
+<a class="nav-link" href="#solucoes">Soluções</a>
+<a class="nav-link" href="#agenda">Hyra Agenda</a>
+<a class="nav-link" href="#portfolio">Portfólio</a>
+<a class="nav-link" href="#contato">Contato</a>
+</nav>
+<a class="btn btn-primary" href="#contato" style="min-height: 44px; padding: 0 18px; font-size: 14px">Orçamento</a>
+</div>
+</header>
+
+<section id="inicio" style="max-width: 1200px; margin: 0 auto; padding: clamp(56px, 8vw, 104px) clamp(16px, 4vw, 40px) clamp(64px, 8vw, 104px); display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
+<div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+<p class="rise" style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A3A3A3">Sites · Agendamento online · Sistemas web</p>
+<h1 class="rise rise2" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(40px, 6.2vw, 78px); line-height: 1.02; letter-spacing: -0.035em">Sites e sistemas que colocam seu negócio para trabalhar<span style="display: inline-block; width: 0.16em; height: 0.16em; margin-left: 0.06em; background: {{accent}}"></span></h1>
+<p class="rise rise3" style="margin: 0; max-width: 580px; font-size: clamp(17px, 1.6vw, 19px); line-height: 1.6; color: #B5B5B5">Criamos sites que aparecem no Google, páginas com agendamento online e sistemas sob medida para comércios e prestadores de serviço de Aparecida de Goiânia e região.</p>
+<div class="rise rise3" style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px">
+<a class="btn btn-primary" href="#contato">Solicitar orçamento<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg></a>
+<a class="btn btn-ghost" href="#portfolio">Ver portfólio</a>
+</div>
+</div>
+<div class="thumb" style="flex: 1 1 340px; max-width: 470px; min-width: 0; aspect-ratio: 1 / 1; border: 1px solid #1F1F1F">
+<svg viewBox="100 101 800 800" width="100%" height="100%" aria-hidden="true" style="display: block">
+<path class="lg-guide lg-g1" pathLength="1" d="M 200.92 140 V 860"></path>
+<path class="lg-guide lg-g2" pathLength="1" d="M 398.72 140 V 860"></path>
+<path class="lg-guide lg-g3" pathLength="1" d="M 600.87 140 V 860"></path>
+<path class="lg-guide lg-g4" pathLength="1" d="M 798.67 140 V 860"></path>
+<path class="lg-guide lg-g1" pathLength="1" d="M 140 202.06 H 860"></path>
+<path class="lg-guide lg-g2" pathLength="1" d="M 140 399.86 H 860"></path>
+<path class="lg-guide lg-g4" pathLength="1" d="M 140 799.81 H 860"></path>
+<path class="lg-circle" pathLength="1" d="M 201.89 799.81 A 297.98 297.98 0 0 1 797.84 799.81"></path>
+<path class="lg-circle" pathLength="1" d="M 400.82 799.81 A 99.04 99.04 0 0 1 598.91 799.81"></path>
+<path class="lg-circle" pathLength="1" d="M 499.87 799.81 L 708.57 590.70"></path>
+<path class="lg-h" pathLength="1" d="m 200.91538,202.0564 v 597.75421 h 0.90073 196.90115 v -5.1e-4 h 2.03089 a 99.044067,99.044067 0 0 1 0,-0.0481 99.044067,99.044067 0 0 1 99.04408,-99.04409 99.044067,99.044067 0 0 1 99.04409,99.04409 99.044067,99.044067 0 0 1 0,0.0481 h 198.93204 a 297.97617,297.97617 0 0 0 0,-0.0481 297.97617,297.97617 0 0 0 -297.97613,-297.97613 297.97617,297.97617 0 0 0 -101.07497,17.6661 v -317.39509 -5.2e-4 z"></path>
+<path class="lg-sq" pathLength="1" d="M 600.86823,202.05692 H 798.66908 V 399.85725 H 600.86823 Z" fill="{{accent}}" stroke="{{accent}}"></path>
+<g class="lg-label" font-family="JetBrains Mono, monospace" font-size="22" fill="#9A9A9A">
+<circle cx="499.87" cy="799.81" r="6" fill="{{accent}}"></circle>
+<text x="300" y="186" text-anchor="middle">1u</text>
+<text x="500" y="186" text-anchor="middle">1u</text>
+<text x="700" y="186" text-anchor="middle">1u</text>
+<text x="872" y="308" text-anchor="start">1u</text>
+<text x="712" y="580">R 1,5u</text>
+<text x="499.87" y="840" text-anchor="middle">r 0,5u</text>
+</g>
+</svg>
+</div>
+</section>
+
+<section id="solucoes" style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1200px; margin: 0 auto; padding: clamp(64px, 8vw, 104px) clamp(16px, 4vw, 40px); display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<p style="margin: 0; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A3A3A3"><span style="width: 8px; height: 8px; background: {{accent}}"></span>Soluções</p>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(30px, 4vw, 48px); line-height: 1.08; letter-spacing: -0.03em">Da vitrine na internet ao sistema que organiza o seu dia.</h2>
+</div>
+<p style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6; color: #A3A3A3">Cada solução é montada para o tamanho do seu negócio. Você só paga pelo que vai usar.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px">
+
+<article class="card" style="border: 1px solid #1F1F1F; background: #111111; padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F5F5F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"></rect><path d="M3 9h18"></path><path d="M7 13h6M7 16h4"></path></svg><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8A8A">01</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site vitrine<span class="card-sq" style="width: 6px; height: 6px; background: {{accent}}"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Seus serviços, fotos, endereço e botão de WhatsApp num site rápido, pronto para celular e fácil de achar no Google.</p>
+<p style="margin: 0; margin-top: auto; font-size: 13px; color: #8A8A8A">Lojas, oficinas, som automotivo, restaurantes</p>
+</article>
+
+<article class="card" style="border: 1px solid #1F1F1F; background: #111111; padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F5F5F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"></rect><path d="M3 10h18M8 3v4M16 3v4"></path><path d="M9 15l2 2 4-4"></path></svg><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8A8A">02</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site com agendamento<span class="card-sq" style="width: 6px; height: 6px; background: {{accent}}"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">O cliente escolhe o horário pelo link e você controla a agenda num painel. Menos mensagem, mais atendimento.</p>
+<p style="margin: 0; margin-top: auto; font-size: 13px; color: #8A8A8A">Salões, barbearias, psicólogos, clínicas</p>
+</article>
+
+<article class="card" style="border: 1px solid #1F1F1F; background: #111111; padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F5F5F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-6 6 6 6"></path><path d="M16 6l6 6-6 6"></path><path d="M14 4l-4 16"></path></svg><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8A8A">03</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Sistemas e apps web<span class="card-sq" style="width: 6px; height: 6px; background: {{accent}}"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Cardápios online, catálogos, painéis e ferramentas feitas para a rotina da sua empresa, que abrem no navegador ou no celular.</p>
+<p style="margin: 0; margin-top: auto; font-size: 13px; color: #8A8A8A">Sob medida para o seu processo</p>
+</article>
+
+<article class="card" style="border: 1px solid #1F1F1F; background: #111111; padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F5F5F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8A8A8A">04</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Hospedagem e suporte<span class="card-sq" style="width: 6px; height: 6px; background: {{accent}}"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Domínio, hospedagem, backup e ajustes por uma mensalidade. Seu site no ar sem você precisar se preocupar.</p>
+<p style="margin: 0; margin-top: auto; font-size: 13px; color: #8A8A8A">Para todos os projetos</p>
+</article>
+
+</div>
+</div>
+</section>
+
+<section id="agenda" style="border-top: 1px solid #1F1F1F; background: #0F0F0F">
+<div style="max-width: 1200px; margin: 0 auto; padding: clamp(64px, 8vw, 104px) clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: center; gap: 64px">
+<div style="flex: 999 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A3A3A3"><span style="width: 8px; height: 8px; background: {{accent}}"></span>Produto Hyra</p>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(30px, 4vw, 48px); line-height: 1.08; letter-spacing: -0.03em">Hyra Agenda: horário marcado sem troca de mensagem.</h2>
+<p style="margin: 0; max-width: 520px; font-size: 17px; line-height: 1.6; color: #B5B5B5">Um sistema de agendamento com a cara do seu negócio. Seu cliente abre o link, escolhe o dia e o horário e pronto. Teste ao lado.</p>
+<ul style="list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid #1F1F1F">
+<li style="display: flex; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #1F1F1F"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">01</span><span style="font-size: 16px; line-height: 1.5">Link próprio, como <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #D4D4D4">seusalao.hyratecnologia.com.br</span>, ou o seu domínio</span></li>
+<li style="display: flex; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #1F1F1F"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">02</span><span style="font-size: 16px; line-height: 1.5">Com a sua logo, as suas cores e os seus serviços</span></li>
+<li style="display: flex; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #1F1F1F"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">03</span><span style="font-size: 16px; line-height: 1.5">Painel para ver, mover e organizar todos os horários</span></li>
+<li style="display: flex; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid #1F1F1F"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">04</span><span style="font-size: 16px; line-height: 1.5">Mensalidade com hospedagem, painel e suporte inclusos</span></li>
+</ul>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding-top: 8px">
+<a class="btn btn-primary" href="#contato">Quero o Hyra Agenda</a>
+<span style="font-size: 15px; color: #A3A3A3">A partir de <span style="color: #F5F5F5; font-weight: 600">[VALOR]/mês</span></span>
+</div>
+</div>
+
+<div style="flex: 1 1 320px; display: flex; justify-content: center; min-width: 0">
+<div style="width: 100%; max-width: 340px; border: 1px solid #333333; border-radius: 40px; padding: 10px; background: #050505">
+<div style="border-radius: 31px; background: #FBF7F4; color: #2B1D19; padding: 28px 20px 22px; display: flex; flex-direction: column; gap: 18px; min-height: 620px">
+<div style="display: flex; align-items: center; gap: 12px">
+<div style="width: 40px; height: 40px; border-radius: 50%; background: #2B1D19; color: #FBF7F4; display: flex; align-items: center; justify-content: center; font-family: Fraunces, Georgia, serif; font-size: 18px; font-weight: 600">A</div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 18px">Studio Aurora</span><span style="font-size: 12px; color: #6E5A53">Corte e escova · 1h</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 13px; font-weight: 600; color: #6E5A53">Escolha o dia</span>
+<div role="group" aria-label="Dias" style="display: flex; gap: 6px; justify-content: space-between">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="5">
+<button type="button" class="day {{d.cls}}" aria-pressed="{{d.pressed}}" onClick="{{d.pick}}"><span style="font-size: 11px; font-weight: 500; opacity: .75">{{d.wk}}</span><span style="font-size: 17px">{{d.num}}</span></button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 13px; font-weight: 600; color: #6E5A53">Horários disponíveis</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{slots}}" as="s" hint-placeholder-count="9">
+<button type="button" class="slot {{s.cls}}" disabled="{{s.busy}}" aria-pressed="{{s.pressed}}" onClick="{{s.pick}}">{{s.time}}</button>
+</sc-for>
+</div>
+</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{confirmed}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="border-radius: 12px; background: #EFE4DE; padding: 14px; font-size: 14px; line-height: 1.45"><span style="font-weight: 700">Horário confirmado.</span> {{summary}}</div>
+</sc-if>
+<sc-if value="{{notConfirmed}}" hint-placeholder-val="{{ true }}">
+<button type="button" class="confirm" disabled="{{cantConfirm}}" onClick="{{confirm}}">{{confirmLabel}}</button>
+</sc-if>
+<span style="font-size: 11px; color: #6E5A53; text-align: center">Demonstração · Hyra Agenda</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="nichos" style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1200px; margin: 0 auto; padding: clamp(64px, 8vw, 104px) clamp(16px, 4vw, 40px); display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<p style="margin: 0; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A3A3A3"><span style="width: 8px; height: 8px; background: {{accent}}"></span>Para quem</p>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(30px, 4vw, 48px); line-height: 1.08; letter-spacing: -0.03em">Feito para o comércio e os serviços da sua cidade.</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 40px">
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700">Sites vitrine</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span class="tag">Som automotivo</span><span class="tag">Oficinas mecânicas</span><span class="tag">Autopeças e pneus</span><span class="tag">Vidraçarias e serralherias</span><span class="tag">Marmorarias</span><span class="tag">Material de construção</span><span class="tag">Restaurantes</span>
+</div>
+</div>
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700">Sites com agendamento</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span class="tag">Salões e cabeleireiros</span><span class="tag">Barbearias</span><span class="tag">Manicures</span><span class="tag">Psicólogos</span><span class="tag">Nutricionistas e terapeutas</span><span class="tag">Pilates e yoga</span><span class="tag">Clínicas de estética</span><span class="tag">Estúdios de tatuagem</span><span class="tag">Pet shops</span><span class="tag">Lava-jatos</span><span class="tag">Personal trainers</span><span class="tag">Fotógrafos</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="portfolio" style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1200px; margin: 0 auto; padding: clamp(64px, 8vw, 104px) clamp(16px, 4vw, 40px); display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<p style="margin: 0; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A3A3A3"><span style="width: 8px; height: 8px; background: {{accent}}"></span>Portfólio</p>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(30px, 4vw, 48px); line-height: 1.08; letter-spacing: -0.03em">Projetos e modelos prontos para o seu negócio.</h2>
+</div>
+<div role="group" aria-label="Filtrar projetos" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{filters}}" as="item" hint-placeholder-count="4">
+<button type="button" class="chip {{item.cls}}" aria-pressed="{{item.pressed}}" onClick="{{item.pick}}">{{item.name}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px">
+
+<sc-if value="{{show.vibex}}" hint-placeholder-val="{{ true }}">
+<article class="card work" style="border: 1px solid #1F1F1F; background: #111111; display: flex; flex-direction: column; height: 100%">
+<div class="thumb" aria-hidden="true" style="aspect-ratio: 16 / 10; padding: 28px 28px 0; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid #1F1F1F">
+<div class="mock" style="width: 100%; height: 100%; border-radius: 6px 6px 0 0; overflow: hidden; background: #0A0A0A; border: 1px solid #2A2A2A; border-bottom: 0; display: flex; flex-direction: column">
+<div style="height: 18px; display: flex; gap: 5px; align-items: center; padding: 0 8px; background: #161616"><span style="width: 6px; height: 6px; border-radius: 50%; background: #3A3A3A"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #3A3A3A"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #3A3A3A"></span></div>
+<div style="padding: 12px 14px; display: flex; justify-content: space-between; align-items: center"><span style="font: 700 10px 'Space Grotesk', sans-serif; letter-spacing: .14em; color: #F5F5F5">VIBEX AUDIOCAR</span><span style="display: flex; gap: 6px"><span style="width: 18px; height: 3px; background: #444"></span><span style="width: 18px; height: 3px; background: #444"></span><span style="width: 18px; height: 3px; background: #EF4444"></span></span></div>
+<div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 12px">
+<svg viewBox="0 0 240 100" width="88%"><path d="M14 74 H34 Q38 56 62 52 L104 34 Q126 28 150 32 L188 50 Q206 54 210 74 H226" fill="none" stroke="#EF4444" stroke-width="1.6"></path><path d="M104 34 L112 52 H184 M150 32 L148 52" fill="none" stroke="#5A5A5A" stroke-width="1"></path><circle cx="62" cy="76" r="15" fill="none" stroke="#F5F5F5" stroke-width="1.6"></circle><circle cx="62" cy="76" r="7" fill="none" stroke="#5A5A5A" stroke-width="1"></circle><circle cx="182" cy="76" r="15" fill="none" stroke="#F5F5F5" stroke-width="1.6"></circle><circle cx="182" cy="76" r="7" fill="none" stroke="#5A5A5A" stroke-width="1"></circle><path d="M10 92 H230" stroke="#2A2A2A" stroke-width="1"></path></svg>
+</div>
+</div>
+</div>
+<div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Site vitrine</span><span style="font-size: 12px; font-weight: 600; color: #0B0B0B; background: #F5F5F5; padding: 3px 8px">Cliente</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Vibex AudioCar</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Loja de som automotivo em Aparecida de Goiânia. Site com seções animadas e modelo 3D do carro mostrando cada parte do som.</p>
+</div>
+</article>
+</sc-if>
+
+<sc-if value="{{show.salao}}" hint-placeholder-val="{{ true }}">
+<article class="card work" style="border: 1px solid #1F1F1F; background: #111111; display: flex; flex-direction: column; height: 100%">
+<div class="thumb" aria-hidden="true" style="aspect-ratio: 16 / 10; padding: 28px 28px 0; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid #1F1F1F">
+<div class="mock" style="width: 100%; height: 100%; border-radius: 6px 6px 0 0; overflow: hidden; background: #FBF7F4; display: flex; flex-direction: column">
+<div style="height: 18px; display: flex; gap: 5px; align-items: center; padding: 0 8px; background: #EFE4DE"><span style="width: 6px; height: 6px; border-radius: 50%; background: #D8C6BD"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #D8C6BD"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #D8C6BD"></span></div>
+<div style="flex: 1; display: flex; gap: 14px; padding: 14px">
+<div style="flex: 1.2; display: flex; flex-direction: column; justify-content: center; gap: 8px">
+<span style="font: 600 20px Fraunces, Georgia, serif; color: #2B1D19; line-height: 1.05">Studio Aurora</span>
+<span style="width: 80%; height: 4px; background: #D8C6BD"></span><span style="width: 60%; height: 4px; background: #D8C6BD"></span>
+<span style="margin-top: 4px; align-self: flex-start; font: 600 8px Inter, sans-serif; color: #FFFFFF; background: #A85F4D; padding: 5px 9px; border-radius: 4px">Agendar horário</span>
+</div>
+<div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; align-content: center">
+<span style="height: 16px; border-radius: 4px; border: 1px solid #E8DCD5; background: #FFFFFF"></span><span style="height: 16px; border-radius: 4px; background: #A85F4D"></span><span style="height: 16px; border-radius: 4px; border: 1px solid #E8DCD5; background: #FFFFFF"></span><span style="height: 16px; border-radius: 4px; border: 1px solid #F0E7E2"></span><span style="height: 16px; border-radius: 4px; border: 1px solid #E8DCD5; background: #FFFFFF"></span><span style="height: 16px; border-radius: 4px; border: 1px solid #E8DCD5; background: #FFFFFF"></span><span style="height: 16px; border-radius: 4px; border: 1px solid #E8DCD5; background: #FFFFFF"></span><span style="height: 16px; border-radius: 4px; border: 1px solid #F0E7E2"></span><span style="height: 16px; border-radius: 4px; border: 1px solid #E8DCD5; background: #FFFFFF"></span>
+</div>
+</div>
+</div>
+</div>
+<div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Agendamento</span><span style="font-size: 12px; color: #A3A3A3; border: 1px solid #333333; padding: 2px 8px">Projeto conceito</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Salão de beleza</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Página do salão com serviços, fotos e agenda online. A cliente escolhe o profissional e o horário sem precisar chamar no WhatsApp.</p>
+</div>
+</article>
+</sc-if>
+
+<sc-if value="{{show.barbearia}}" hint-placeholder-val="{{ true }}">
+<article class="card work" style="border: 1px solid #1F1F1F; background: #111111; display: flex; flex-direction: column; height: 100%">
+<div class="thumb" aria-hidden="true" style="aspect-ratio: 16 / 10; padding: 28px 28px 0; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid #1F1F1F">
+<div class="mock" style="width: 100%; height: 100%; border-radius: 6px 6px 0 0; overflow: hidden; background: #171412; border: 1px solid #2E2925; border-bottom: 0; display: flex; flex-direction: column">
+<div style="height: 18px; display: flex; gap: 5px; align-items: center; padding: 0 8px; background: #211D1A"><span style="width: 6px; height: 6px; border-radius: 50%; background: #3E3833"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #3E3833"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #3E3833"></span></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 14px 16px">
+<span style="font: 700 16px 'Space Grotesk', sans-serif; letter-spacing: .2em; color: #C9A227">NAVALHA</span>
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2E2925; padding-bottom: 6px"><span style="width: 42%; height: 4px; background: #5B524A"></span><span style="width: 14%; height: 4px; background: #C9A227"></span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2E2925; padding-bottom: 6px"><span style="width: 36%; height: 4px; background: #5B524A"></span><span style="width: 14%; height: 4px; background: #C9A227"></span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2E2925; padding-bottom: 6px"><span style="width: 48%; height: 4px; background: #5B524A"></span><span style="width: 14%; height: 4px; background: #C9A227"></span></div>
+<span style="margin-top: auto; align-self: flex-start; font: 700 8px Inter, sans-serif; letter-spacing: .1em; color: #171412; background: #C9A227; padding: 6px 10px">AGENDAR</span>
+</div>
+</div>
+</div>
+<div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Agendamento</span><span style="font-size: 12px; color: #A3A3A3; border: 1px solid #333333; padding: 2px 8px">Projeto conceito</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Barbearia</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Tabela de serviços com preço, escolha do barbeiro e horário marcado pelo celular. Fila de espera vira agenda organizada.</p>
+</div>
+</article>
+</sc-if>
+
+<sc-if value="{{show.psico}}" hint-placeholder-val="{{ true }}">
+<article class="card work" style="border: 1px solid #1F1F1F; background: #111111; display: flex; flex-direction: column; height: 100%">
+<div class="thumb" aria-hidden="true" style="aspect-ratio: 16 / 10; padding: 28px 28px 0; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid #1F1F1F">
+<div class="mock" style="width: 100%; height: 100%; border-radius: 6px 6px 0 0; overflow: hidden; background: #F1F5F1; display: flex; flex-direction: column">
+<div style="height: 18px; display: flex; gap: 5px; align-items: center; padding: 0 8px; background: #E1EAE2"><span style="width: 6px; height: 6px; border-radius: 50%; background: #BFD0C2"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #BFD0C2"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #BFD0C2"></span></div>
+<div style="flex: 1; display: flex; gap: 14px; padding: 14px">
+<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px">
+<span style="font: 600 15px Fraunces, Georgia, serif; color: #23392C; line-height: 1.1">Espaço Escuta</span>
+<span style="font: 500 8px Inter, sans-serif; color: #4D6B58">Psicologia clínica</span>
+<span style="width: 85%; height: 4px; background: #C9D8CC"></span><span style="width: 65%; height: 4px; background: #C9D8CC"></span>
+</div>
+<div style="flex: 1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 3px; align-content: center">
+<span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #3F6B52"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #C9D8CC"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #3F6B52"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span><span style="aspect-ratio: 1; background: #C9D8CC"></span><span style="aspect-ratio: 1; background: #FFFFFF"></span>
+</div>
+</div>
+</div>
+</div>
+<div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Agendamento</span><span style="font-size: 12px; color: #A3A3A3; border: 1px solid #333333; padding: 2px 8px">Projeto conceito</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Consultório de psicologia</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Site sóbrio e acolhedor, com apresentação do profissional e agenda de sessões semanais, presenciais ou online.</p>
+</div>
+</article>
+</sc-if>
+
+<sc-if value="{{show.oficina}}" hint-placeholder-val="{{ true }}">
+<article class="card work" style="border: 1px solid #1F1F1F; background: #111111; display: flex; flex-direction: column; height: 100%">
+<div class="thumb" aria-hidden="true" style="aspect-ratio: 16 / 10; padding: 28px 28px 0; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid #1F1F1F">
+<div class="mock" style="width: 100%; height: 100%; border-radius: 6px 6px 0 0; overflow: hidden; background: #1C1C1C; border: 1px solid #2E2E2E; border-bottom: 0; display: flex; flex-direction: column">
+<div style="height: 18px; display: flex; gap: 5px; align-items: center; padding: 0 8px; background: #262626"><span style="width: 6px; height: 6px; border-radius: 50%; background: #444"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #444"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #444"></span></div>
+<div style="background: #FACC15; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px"><span style="font: 700 15px 'Space Grotesk', sans-serif; color: #1C1C1C; letter-spacing: -.01em">TORQUE OFICINA</span><span style="width: 55%; height: 4px; background: rgba(28,28,28,.35)"></span></div>
+<div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 10px 14px">
+<span style="background: #2A2A2A; border-top: 2px solid #FACC15"></span><span style="background: #2A2A2A; border-top: 2px solid #FACC15"></span><span style="background: #2A2A2A; border-top: 2px solid #FACC15"></span>
+</div>
+</div>
+</div>
+<div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Site vitrine</span><span style="font-size: 12px; color: #A3A3A3; border: 1px solid #333333; padding: 2px 8px">Projeto conceito</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Oficina mecânica</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Serviços em destaque, mapa, horário de funcionamento e botão para pedir orçamento pelo WhatsApp.</p>
+</div>
+</article>
+</sc-if>
+
+<sc-if value="{{show.restaurante}}" hint-placeholder-val="{{ true }}">
+<article class="card work" style="border: 1px solid #1F1F1F; background: #111111; display: flex; flex-direction: column; height: 100%">
+<div class="thumb" aria-hidden="true" style="aspect-ratio: 16 / 10; padding: 28px 28px 0; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid #1F1F1F">
+<div class="mock" style="width: 100%; height: 100%; border-radius: 6px 6px 0 0; overflow: hidden; background: #FBF6EE; display: flex; flex-direction: column">
+<div style="height: 18px; display: flex; gap: 5px; align-items: center; padding: 0 8px; background: #F0E6D6"><span style="width: 6px; height: 6px; border-radius: 50%; background: #DCCDB6"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #DCCDB6"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #DCCDB6"></span></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 7px; padding: 12px 16px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font: 600 15px Fraunces, Georgia, serif; color: #8F3422">Casa Brasa</span><span style="font: 600 7px Inter, sans-serif; color: #FFFFFF; background: #8F3422; padding: 4px 7px; border-radius: 3px">Cardápio</span></div>
+<div style="display: flex; gap: 8px; align-items: center"><span style="width: 26px; height: 20px; background: #E9D9C2; border-radius: 3px"></span><span style="flex: 1; height: 4px; background: #DCCDB6"></span><span style="width: 18px; height: 4px; background: #8F3422"></span></div>
+<div style="display: flex; gap: 8px; align-items: center"><span style="width: 26px; height: 20px; background: #E9D9C2; border-radius: 3px"></span><span style="flex: 1; height: 4px; background: #DCCDB6"></span><span style="width: 18px; height: 4px; background: #8F3422"></span></div>
+<div style="display: flex; gap: 8px; align-items: center"><span style="width: 26px; height: 20px; background: #E9D9C2; border-radius: 3px"></span><span style="flex: 1; height: 4px; background: #DCCDB6"></span><span style="width: 18px; height: 4px; background: #8F3422"></span></div>
+</div>
+</div>
+</div>
+<div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Sistema web</span><span style="font-size: 12px; color: #A3A3A3; border: 1px solid #333333; padding: 2px 8px">Projeto conceito</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Cardápio online</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Cardápio que o próprio restaurante atualiza, com fotos e preços, aberto por QR Code na mesa ou pelo Instagram.</p>
+</div>
+</article>
+</sc-if>
+
+<sc-if value="{{show.agenda}}" hint-placeholder-val="{{ true }}">
+<article class="card work" style="border: 1px solid #1F1F1F; background: #111111; display: flex; flex-direction: column; height: 100%">
+<div class="thumb" aria-hidden="true" style="aspect-ratio: 16 / 10; padding: 28px 28px 0; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid #1F1F1F">
+<div class="mock" style="width: 100%; height: 100%; border-radius: 6px 6px 0 0; overflow: hidden; background: #0E0E0E; border: 1px solid #2A2A2A; border-bottom: 0; display: flex; flex-direction: column">
+<div style="height: 18px; display: flex; gap: 5px; align-items: center; padding: 0 8px; background: #171717"><span style="width: 6px; height: 6px; border-radius: 50%; background: #3A3A3A"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #3A3A3A"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #3A3A3A"></span></div>
+<div style="flex: 1; display: flex">
+<div style="width: 22%; border-right: 1px solid #222; padding: 10px 8px; display: flex; flex-direction: column; gap: 7px"><span style="width: 12px; height: 12px; background: {{accent}}"></span><span style="width: 80%; height: 3px; background: #F5F5F5"></span><span style="width: 65%; height: 3px; background: #444"></span><span style="width: 72%; height: 3px; background: #444"></span></div>
+<div style="flex: 1; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
+<span style="font: 600 9px Inter, sans-serif; color: #F5F5F5">Hoje · 6 horários</span>
+<div style="display: flex; gap: 8px; align-items: center; background: #171717; padding: 6px 8px"><span style="font: 500 7px 'JetBrains Mono', monospace; color: #A3A3A3">09:00</span><span style="width: 3px; height: 12px; background: {{accent}}"></span><span style="flex: 1; height: 3px; background: #555"></span></div>
+<div style="display: flex; gap: 8px; align-items: center; background: #171717; padding: 6px 8px"><span style="font: 500 7px 'JetBrains Mono', monospace; color: #A3A3A3">10:30</span><span style="width: 3px; height: 12px; background: #F5F5F5"></span><span style="flex: 1; height: 3px; background: #555"></span></div>
+<div style="display: flex; gap: 8px; align-items: center; background: #171717; padding: 6px 8px"><span style="font: 500 7px 'JetBrains Mono', monospace; color: #A3A3A3">14:00</span><span style="width: 3px; height: 12px; background: {{accent}}"></span><span style="flex: 1; height: 3px; background: #555"></span></div>
+</div>
+</div>
+</div>
+</div>
+<div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Sistema web</span><span style="font-size: 12px; font-weight: 600; color: #0B0B0B; background: {{accent}}; padding: 3px 8px">Produto Hyra</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Painel Hyra Agenda</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">O painel onde o dono do negócio vê os horários do dia, confirma, remarca e acompanha os clientes.</p>
+</div>
+</article>
+</sc-if>
+
+</div>
+</div>
+</section>
+
+<section id="processo" style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1200px; margin: 0 auto; padding: clamp(64px, 8vw, 104px) clamp(16px, 4vw, 40px); display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<p style="margin: 0; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A3A3A3"><span style="width: 8px; height: 8px; background: {{accent}}"></span>Como trabalhamos</p>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(30px, 4vw, 48px); line-height: 1.08; letter-spacing: -0.03em">Do primeiro papo ao site no ar.</h2>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 0; border-top: 1px solid #333333">
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">01</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Conversa</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Você conta como funciona o seu negócio e o que precisa resolver.</p></li>
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">02</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Proposta</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Orçamento claro, com prazo e o que está incluso. Sem letras miúdas.</p></li>
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">03</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Design e desenvolvimento</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Você aprova o visual e acompanha cada etapa até ficar do seu jeito.</p></li>
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{accent}}">04</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">No ar e com suporte</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A3A3A3">Publicamos, cuidamos da hospedagem e seguimos por perto para ajustes.</p></li>
+</ol>
+</div>
+</section>
+
+<section id="contato" style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1200px; margin: 0 auto; padding: clamp(64px, 8vw, 104px) clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; gap: 56px">
+<div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A3A3A3"><span style="width: 8px; height: 8px; background: {{accent}}"></span>Contato</p>
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(30px, 4vw, 48px); line-height: 1.08; letter-spacing: -0.03em">Vamos colocar o seu negócio na internet?</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #A3A3A3">Orçamento sem compromisso. Atendimento em Aparecida de Goiânia, Goiânia e região.</p>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #1F1F1F; margin-top: 8px">
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid #1F1F1F"><span style="color: #A3A3A3; font-size: 15px">WhatsApp</span><a href="https://wa.me/55XXXXXXXXXXX" style="font-weight: 500; font-size: 15px">[SEU WHATSAPP]</a></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid #1F1F1F"><span style="color: #A3A3A3; font-size: 15px">E-mail</span><span style="font-weight: 500; font-size: 15px">[SEU E-MAIL]</span></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid #1F1F1F"><span style="color: #A3A3A3; font-size: 15px">Instagram</span><a href="https://instagram.com/hyratecnologia" style="font-weight: 500; font-size: 15px">@hyratecnologia</a></div>
+</div>
+</div>
+<form style="flex: 1 1 420px; min-width: 0; background: #111111; border: 1px solid #1F1F1F; padding: clamp(24px, 3vw, 40px); display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="f-nome" style="font-size: 14px; font-weight: 500; color: #D4D4D4">Nome</label><input id="f-nome" class="field" type="text" autocomplete="name"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="f-neg" style="font-size: 14px; font-weight: 500; color: #D4D4D4">Seu negócio</label><input id="f-neg" class="field" type="text" placeholder="Ex.: salão, oficina, loja"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="f-tel" style="font-size: 14px; font-weight: 500; color: #D4D4D4">WhatsApp</label><input id="f-tel" class="field" type="tel" autocomplete="tel"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="f-serv" style="font-size: 14px; font-weight: 500; color: #D4D4D4">O que você precisa?</label><select id="f-serv" class="field"><option>Site vitrine</option><option>Site com agendamento (Hyra Agenda)</option><option>Sistema ou app web sob medida</option><option>Hospedagem e manutenção de site</option><option>Outro</option></select></div>
+<button type="button" class="btn btn-primary" style="justify-content: center; cursor: pointer; font-family: Inter, system-ui, sans-serif">Enviar pedido de orçamento</button>
+<p style="margin: 0; font-size: 13px; color: #8A8A8A">Respondemos em horário comercial.</p>
+</form>
+</div>
+</section>
+
+<footer style="border-top: 1px solid #1F1F1F">
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px">
+<div style="display: flex; align-items: center; gap: 12px">
+<svg width="26" height="26" viewBox="200.9 202.06 597.76 597.76" role="img" aria-label="Logo Hyra Tecnologia"><path d="M 600.86823,202.05692 H 798.66908 V 399.85725 H 600.86823 Z" fill="{{accent}}"></path><path d="m 200.91538,202.0564 v 597.75421 h 0.90073 196.90115 v -5.1e-4 h 2.03089 a 99.044067,99.044067 0 0 1 0,-0.0481 99.044067,99.044067 0 0 1 99.04408,-99.04409 99.044067,99.044067 0 0 1 99.04409,99.04409 99.044067,99.044067 0 0 1 0,0.0481 h 198.93204 a 297.97617,297.97617 0 0 0 0,-0.0481 297.97617,297.97617 0 0 0 -297.97613,-297.97613 297.97617,297.97617 0 0 0 -101.07497,17.6661 v -317.39509 -5.2e-4 z" fill="#F5F5F5"></path></svg>
+<span style="font-size: 14px; color: #A3A3A3">© 2026 Hyra Tecnologia · Aparecida de Goiânia-GO</span>
+</div>
+<p style="margin: 0; font-size: 13px; color: #8A8A8A">Também atendemos manutenção e montagem de computadores e redes.</p>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF9800","options":["#FF9800","#F5F5F5","#3B82F6","#22C55E"]},"$preview":{"width":1440,"height":6900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'Todos', day: 1, slot: null, confirmed: false };
+  }
+  renderVals() {
+    var self = this;
+    var accent = this.props.accent ?? '#FF9800';
+    var st = this.state;
+
+    var cats = { vibex: 'Vitrine', salao: 'Agendamento', barbearia: 'Agendamento', psico: 'Agendamento', oficina: 'Vitrine', restaurante: 'Sistemas', agenda: 'Sistemas' };
+    var show = {};
+    Object.keys(cats).forEach(function (k) { show[k] = st.filter === 'Todos' || cats[k] === st.filter; });
+    var filters = ['Todos', 'Vitrine', 'Agendamento', 'Sistemas'].map(function (name) {
+      return { name: name, cls: name === st.filter ? 'on' : '', pressed: name === st.filter ? 'true' : 'false', pick: function () { self.setState({ filter: name }); } };
+    });
+
+    var dayList = [
+      { wk: 'Seg', num: '26' }, { wk: 'Ter', num: '27' }, { wk: 'Qua', num: '28' }, { wk: 'Qui', num: '29' }, { wk: 'Sex', num: '30' }
+    ];
+    var days = dayList.map(function (d, i) {
+      return { wk: d.wk, num: d.num, cls: i === st.day ? 'on' : '', pressed: i === st.day ? 'true' : 'false', pick: function () { self.setState({ day: i, slot: null, confirmed: false }); } };
+    });
+    var times = ['09:00', '09:30', '10:00', '10:30', '11:00', '14:00', '14:30', '15:00', '16:00'];
+    var slots = times.map(function (t, i) {
+      var busy = ((i * 7 + st.day * 3) % 5) === 0;
+      return { time: t, busy: busy, cls: st.slot === t ? 'on' : '', pressed: st.slot === t ? 'true' : 'false', pick: function () { self.setState({ slot: t, confirmed: false }); } };
+    });
+    var d = dayList[st.day];
+    var summary = d.wk + ', ' + d.num + '/10 às ' + (st.slot || '') + '. Até lá!';
+
+    return {
+      accent: accent,
+      filters: filters,
+      show: show,
+      days: days,
+      slots: slots,
+      confirmed: st.confirmed,
+      notConfirmed: !st.confirmed,
+      cantConfirm: !st.slot,
+      confirmLabel: st.slot ? 'Confirmar ' + d.wk + ' às ' + st.slot : 'Escolha um horário',
+      confirm: function () { if (self.state.slot) self.setState({ confirmed: true }); },
+      summary: summary
+    };
+  }
+}
+</script>
+</body>
+</html>
