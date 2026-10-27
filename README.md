@@ -33,6 +33,6 @@ e acesse <http://localhost:8000>.
 
 ## Pendências
 
-- Trocar o número de WhatsApp de exemplo (`55XXXXXXXXXXX`) pelo número real. Na v2: `v2/js/main.js` (constante `WHATSAPP`) e o link na seção de contato do `v2/index.html`.
+- Trocar o número de WhatsApp de exemplo (`55XXXXXXXXXXX`) pelo número real. Na v1: constante `WHATSAPP` no script do `Main.dc.html` (um lugar só). Na v2: `v2/js/main.js` (constante `WHATSAPP`) e o link na seção de contato do `v2/index.html`.
 - Preencher o e-mail (`[SEU E-MAIL]`). O preço mostrado é "a partir de R$ 89/mês" (plano Essencial).
 - Os links do portfólio usam os endereços provisórios do Cloud Run; trocar quando houver domínio.

@@ -97,6 +97,10 @@ html{scroll-behavior:smooth}
   .app-desc{display:none !important}
 }
 @media (max-width:520px){.hide-sm{display:none !important}}
+@media (max-width:860px){.hero{gap:28px !important;padding-top:32px !important}.hero-logo{order:-1;flex:none !important;width:min(46vw,190px)}}
+.wa-float{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:20;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#25D366;color:#FFFFFF !important;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:transform .25s ease}
+.wa-float:hover{transform:scale(1.08)}
+.site .btn-wa,.site .btn-wa:hover{background:#25D366;border:1px solid #25D366;color:#0B0B0B}
 @media (max-width:420px){.hide-xs{display:none !important}}
 
 /* O celular de exemplo: as cores vêm do negócio escolhido */
@@ -231,17 +235,18 @@ a.work:hover{color:var(--fg)}
 </div>
 </header>
 
-<section id="inicio" class="wrap" style="padding-top: clamp(56px, 8vw, 104px); padding-bottom: clamp(64px, 8vw, 104px); display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
+<section id="inicio" class="wrap hero" style="padding-top: clamp(56px, 8vw, 104px); padding-bottom: clamp(64px, 8vw, 104px); display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
 <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
 <p class="rise eyebrow">Sites · Agendamento online · Sistemas web</p>
 <h1 class="rise rise2" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(40px, 6.2vw, 78px); line-height: 1.02; letter-spacing: -0.035em">Sites e sistemas que colocam seu negócio para trabalhar<span style="display: inline-block; width: 0.16em; height: 0.16em; margin-left: 0.06em; background: {{accent}}"></span></h1>
 <p class="rise rise3" style="margin: 0; max-width: 580px; font-size: clamp(17px, 1.6vw, 19px); line-height: 1.6; color: var(--lead)">Criamos sites que aparecem no Google, páginas com agendamento online e sistemas sob medida para comércios e prestadores de serviço de Aparecida de Goiânia e região.</p>
 <div class="rise rise3" style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px">
 <a class="btn btn-primary" href="#contato">Solicitar orçamento<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg></a>
+<a class="btn btn-wa" href="{{whats}}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Falar no WhatsApp</a>
 <a class="btn btn-ghost" href="#portfolio">Ver portfólio</a>
 </div>
 </div>
-<div class="thumb" style="flex: 1 1 340px; max-width: 470px; min-width: 0; aspect-ratio: 1 / 1; border: 1px solid var(--line)">
+<div class="thumb hero-logo" style="flex: 1 1 340px; max-width: 470px; min-width: 0; aspect-ratio: 1 / 1; border: 1px solid var(--line)">
 <svg viewBox="100 101 800 800" width="100%" height="100%" aria-hidden="true" style="display: block">
 <path class="lg-guide lg-g1" pathLength="1" d="M 200.92 140 V 860"></path>
 <path class="lg-guide lg-g2" pathLength="1" d="M 398.72 140 V 860"></path>
@@ -588,29 +593,6 @@ a.work:hover{color:var(--fg)}
 </div>
 </section>
 
-<section id="nichos" class="sec">
-<div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 40px">
-<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
-<p class="eyebrow"><i></i>Para quem</p>
-<h2 class="h2">Feito para o comércio e os serviços da sua cidade.</h2>
-</div>
-<div style="display: flex; flex-wrap: wrap; gap: 40px">
-<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700">Sites vitrine</h3>
-<div style="display: flex; flex-wrap: wrap; gap: 8px">
-<span class="tag">Som automotivo</span><span class="tag">Oficinas mecânicas</span><span class="tag">Autopeças e pneus</span><span class="tag">Vidraçarias e serralherias</span><span class="tag">Marmorarias</span><span class="tag">Material de construção</span><span class="tag">Restaurantes</span>
-</div>
-</div>
-<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700">Site + agenda + loja</h3>
-<div style="display: flex; flex-wrap: wrap; gap: 8px">
-<span class="tag">Salões e cabeleireiros</span><span class="tag">Barbearias</span><span class="tag">Manicures</span><span class="tag">Psicólogos</span><span class="tag">Nutricionistas e terapeutas</span><span class="tag">Pilates e yoga</span><span class="tag">Clínicas de estética</span><span class="tag">Estúdios de tatuagem</span><span class="tag">Pet shops</span><span class="tag">Lava-jatos</span><span class="tag">Personal trainers</span><span class="tag">Fotógrafos</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-
 <section id="portfolio" class="sec">
 <div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 40px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
@@ -759,7 +741,7 @@ a.work:hover{color:var(--fg)}
 <h2 class="h2">Vamos colocar o seu negócio na internet?</h2>
 <p class="muted" style="margin: 0; font-size: 16px; line-height: 1.6">Orçamento sem compromisso. Atendimento em Aparecida de Goiânia, Goiânia e região.</p>
 <div style="display: flex; flex-direction: column; border-top: 1px solid var(--line); margin-top: 8px">
-<div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line)"><span class="muted" style="font-size: 15px">WhatsApp</span><a href="https://wa.me/55XXXXXXXXXXX" style="font-weight: 500; font-size: 15px">[SEU WHATSAPP]</a></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line)"><span class="muted" style="font-size: 15px">WhatsApp</span><a href="{{whats}}" target="_blank" rel="noopener" style="font-weight: 500; font-size: 15px">Chamar no WhatsApp ↗</a></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line)"><span class="muted" style="font-size: 15px">E-mail</span><span style="font-weight: 500; font-size: 15px">[SEU E-MAIL]</span></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line)"><span class="muted" style="font-size: 15px">Instagram</span><a href="https://instagram.com/hyratecnologia" style="font-weight: 500; font-size: 15px">@hyratecnologia</a></div>
 </div>
@@ -769,8 +751,8 @@ a.work:hover{color:var(--fg)}
 <div style="display: flex; flex-direction: column; gap: 8px"><label for="f-neg" style="font-size: 14px; font-weight: 500; color: var(--fg-2)">Seu negócio</label><input id="f-neg" class="field" type="text" placeholder="Ex.: salão, oficina, loja"></div>
 <div style="display: flex; flex-direction: column; gap: 8px"><label for="f-tel" style="font-size: 14px; font-weight: 500; color: var(--fg-2)">WhatsApp</label><input id="f-tel" class="field" type="tel" autocomplete="tel"></div>
 <div style="display: flex; flex-direction: column; gap: 8px"><label for="f-serv" style="font-size: 14px; font-weight: 500; color: var(--fg-2)">O que você precisa?</label><select id="f-serv" class="field"><option>Site vitrine</option><option>Site + agenda + loja (sistema completo)</option><option>Sistema ou app web sob medida</option><option>Hospedagem e manutenção de site</option><option>Outro</option></select></div>
-<button type="button" class="btn btn-primary" style="justify-content: center; cursor: pointer; font-family: Inter, system-ui, sans-serif">Enviar pedido de orçamento</button>
-<p style="margin: 0; font-size: 13px; color: var(--muted-2)">Respondemos em horário comercial.</p>
+<button type="button" class="btn btn-wa" onClick="{{enviarPedido}}" style="justify-content: center; cursor: pointer; font-family: Inter, system-ui, sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Enviar pedido pelo WhatsApp</button>
+<p style="margin: 0; font-size: 13px; color: var(--muted-2)">Abre o WhatsApp com a mensagem pronta. Respondemos em horário comercial.</p>
 </form>
 </div>
 </section>
@@ -785,9 +767,16 @@ a.work:hover{color:var(--fg)}
 </div>
 </footer>
 
+<a class="wa-float" href="{{whats}}" target="_blank" rel="noopener" aria-label="Falar com a Hyra no WhatsApp" title="Falar no WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg></a>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF9800","options":["#FF9800","#F5F5F5","#3B82F6","#22C55E"]},"$preview":{"width":1440,"height":8200}}'>
+// WhatsApp da Hyra (só números, com 55 e DDD). Usado no botão flutuante, no topo e no contato.
+var WHATSAPP = '55XXXXXXXXXXX';
+var MSG_PADRAO = 'Olá! Vi o site da Hyra e quero um orçamento.';
+function linkWhats(texto) { return 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto); }
+
 var PALS = {
   rose: { nome: 'Rosé', bg: '#FBF6F4', card: '#FFFFFF', fg: '#2B1D19', mut: '#7A6660', ac: '#B5546A', acfg: '#FFFFFF', line: '#EEDFDA' },
   noite: { nome: 'Noturno', bg: '#16120F', card: '#211B17', fg: '#F3EDE6', mut: '#A89A8E', ac: '#C9A227', acfg: '#16120F', line: '#3A3029' },
@@ -975,6 +964,16 @@ class Component extends DCLogic {
 
     return {
       accent: accent,
+      whats: linkWhats(MSG_PADRAO),
+      enviarPedido: function () {
+        var campo = function (id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; };
+        var linhas = ['Olá! Quero um orçamento.'];
+        if (campo('f-nome')) linhas.push('Nome: ' + campo('f-nome'));
+        if (campo('f-neg')) linhas.push('Negócio: ' + campo('f-neg'));
+        if (campo('f-tel')) linhas.push('WhatsApp: ' + campo('f-tel'));
+        if (campo('f-serv')) linhas.push('Preciso de: ' + campo('f-serv'));
+        window.open(linkWhats(linhas.join('\n')), '_blank', 'noopener');
+      },
       themeLabel: st.theme === 'light' ? 'Mudar para o tema escuro' : 'Mudar para o tema claro',
       toggleTheme: function () {
         var t = self.state.theme === 'light' ? 'dark' : 'light';
