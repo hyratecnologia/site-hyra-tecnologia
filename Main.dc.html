@@ -82,41 +82,46 @@ html{scroll-behavior:smooth}
 .sol-pill{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 18px;border:1px solid var(--line-strong);font:700 17px 'Space Grotesk',sans-serif;letter-spacing:-.01em}
 .sol-pill b{color:var(--accent-ink);font-weight:700}
 .niches{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-.niches::-webkit-scrollbar,.ft-nav::-webkit-scrollbar{display:none}
-.sys{display:grid;grid-template-columns:290px 340px minmax(0,1fr);grid-template-areas:"nav phone cap";gap:40px;align-items:start}
-.ft-nav{grid-area:nav;display:flex;flex-direction:column;gap:22px}
-.ft-grp{display:flex;flex-direction:column}
-.ft-glbl{margin:0 0 8px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2)}
-.ft{display:flex;gap:12px;align-items:baseline;width:100%;text-align:left;min-height:44px;padding:10px 14px;border:0;border-left:2px solid var(--line);background:transparent;color:var(--muted);font:500 15px Inter,system-ui,sans-serif;cursor:pointer;transition:all .2s ease}
-.ft .ftn{font:500 12px 'JetBrains Mono',monospace;color:var(--muted-2)}
-.ft:hover{color:var(--fg);border-left-color:var(--line-strong)}
-.ft.on{color:var(--fg);border-left-color:var(--accent);background:var(--card)}
-.ft.on .ftn{color:var(--accent-ink)}
-.sys-phone{grid-area:phone;display:flex;justify-content:center;min-width:0}
-.sys-cap{grid-area:cap;display:flex;flex-direction:column;gap:18px;padding-top:12px;min-width:0}
-.sys-cap h3{margin:0;font:700 clamp(26px,3vw,34px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.02em}
-.sys-cap p{margin:0;font-size:17px;line-height:1.6;color:var(--lead)}
-.sys-step{display:flex;gap:8px}
-.sys-step button{min-width:44px;min-height:44px;border:1px solid var(--line-strong);background:transparent;color:var(--fg);border-radius:2px;cursor:pointer;font-size:18px}
-.sys-step button:hover{border-color:var(--accent)}
-@media (max-width:1080px){.sys{grid-template-columns:260px minmax(0,1fr);grid-template-areas:"nav phone" "nav cap"}}
+.niches::-webkit-scrollbar{display:none}
+.app-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:auto 1fr;grid-template-areas:"chips phone" "cap phone";column-gap:56px;row-gap:28px;align-items:start}
+.app-chips{grid-area:chips;display:flex;flex-direction:column;gap:12px;min-width:0}
+.app-chips .niches{flex-wrap:wrap}
+.app-phone{grid-area:phone;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.app-cap{grid-area:cap;display:flex;flex-direction:column;gap:16px;min-width:0}
+.app-cap h3{margin:0;font:700 clamp(24px,2.6vw,32px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.02em}
+.app-cap p{margin:0;font-size:17px;line-height:1.6;color:var(--lead)}
 @media (max-width:860px){
   .nav-links{display:none !important}
-  .sys{grid-template-columns:minmax(0,1fr);grid-template-areas:"nav" "phone" "cap";gap:24px}
-  .ft-nav{flex-direction:row;overflow-x:auto;gap:8px;margin:0 calc(-1 * clamp(16px,4vw,40px));padding:0 clamp(16px,4vw,40px) 2px}
-  .ft-grp{display:contents}.ft-glbl{display:none}
-  .ft{flex:none;width:auto;white-space:nowrap;border:1px solid var(--line-strong);border-radius:2px}
-  .ft.on{border-color:var(--accent)}
-  .sys-cap{padding-top:0}
+  .app-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"chips" "phone" "cap"}
+  .app-chips .niches{flex-wrap:nowrap;margin:0 calc(-1 * clamp(16px,4vw,40px));padding:0 clamp(16px,4vw,40px) 2px}
+  .app-desc{display:none !important}
 }
 @media (max-width:520px){.hide-sm{display:none !important}}
 
 /* O celular de exemplo: as cores vêm do negócio escolhido */
 .ph{width:100%;max-width:340px;border:1px solid var(--line-strong);border-radius:42px;padding:10px;background:#050505;box-shadow:var(--shadow)}
-.ph-scr{border-radius:33px;background:var(--p-bg);color:var(--p-fg);height:640px;overflow:hidden;display:flex;flex-direction:column;font:400 13px/1.4 Inter,system-ui,sans-serif;transition:background .3s ease,color .3s ease}
+.ph-scr{border-radius:33px;background:var(--p-bg);color:var(--p-fg);height:680px;overflow:hidden;display:flex;flex-direction:column;font:400 13px/1.4 Inter,system-ui,sans-serif;transition:background .3s ease,color .3s ease}
 .ph-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 6px;font-size:11px;font-weight:600;color:var(--p-fg)}
 .ph-bar i{display:inline-block;width:3px;margin-left:2px;background:var(--p-fg);border-radius:1px;vertical-align:bottom}
-.ph-body{flex:1;min-height:0;padding:8px 16px 16px;display:flex;flex-direction:column;gap:11px;overflow:hidden}
+.ph-body{flex:1 0 auto;padding:8px 16px 16px;display:flex;flex-direction:column;gap:11px}
+.ph-main{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:none}
+.ph-main::-webkit-scrollbar{display:none}
+.ph-top{display:flex;align-items:center;gap:8px;min-height:46px;padding:0 12px 0 8px;border-bottom:1px solid var(--p-line)}
+.ph-top b{font:600 16px var(--p-font);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-back{width:40px;height:40px;flex:none;border:0;background:transparent;color:var(--p-fg);font-size:26px;line-height:1;cursor:pointer;border-radius:50%}
+.ph-back:hover{background:var(--p-card)}
+.ph-tip{margin:12px 16px 0;padding:10px 12px;border-radius:var(--p-r);background:color-mix(in srgb,var(--p-ac) 12%,var(--p-card));border-left:3px solid var(--p-ac);display:flex;flex-direction:column;gap:3px;font-size:12px;line-height:1.45}
+.ph-tip b{font-size:12.5px;color:var(--p-ac)}
+.ph-hello{font:600 22px/1.15 var(--p-font);margin:0}
+.ph-tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ph-ic{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border:1px solid var(--p-line);border-radius:var(--p-r);background:var(--p-card);color:var(--p-fg);font:600 11px Inter,system-ui,sans-serif;cursor:pointer;transition:border-color .2s ease,transform .2s ease}
+.ph-ic:hover{border-color:var(--p-ac);transform:translateY(-2px)}
+.ph-ic i{width:36px;height:36px;border-radius:calc(var(--p-r) - 2px);display:grid;place-items:center;background:color-mix(in srgb,var(--p-ac) 15%,var(--p-card));color:var(--p-ac)}
+.ph-ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ph-tabs{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--p-line);background:var(--p-card);padding:4px 4px 10px}
+.ph-tab{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:46px;justify-content:center;border:0;background:transparent;color:var(--p-mut);font:600 10px Inter,system-ui,sans-serif;cursor:pointer}
+.ph-tab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ph-tab.on{color:var(--p-ac)}
 .ph-h{margin:0;font-family:var(--p-font);font-weight:600;font-size:21px;line-height:1.1}
 .ph-big{margin:0;font-family:var(--p-font);font-weight:600;font-size:30px;line-height:1.02;letter-spacing:-.01em}
 .ph-mut{color:var(--p-mut);font-size:11.5px}
@@ -315,8 +320,9 @@ a.work:hover{color:var(--fg)}
 <div class="sol-pills"><span class="sol-pill">Site <b>+</b> Agenda <b>+</b> Shop</span><span class="sol-pill">Mensagens <b>em 1 clique</b></span><span class="sol-pill">Gestão <b>em tempo real</b></span></div>
 </div>
 
-<div style="display: flex; flex-direction: column; gap: 12px">
-<span class="muted" style="font-size: 14px">Veja como fica no seu tipo de negócio:</span>
+<div class="app-grid">
+<div class="app-chips">
+<span class="muted" style="font-size: 14px">Escolha o seu tipo de negócio e navegue pelo app de exemplo:</span>
 <div class="niches" role="group" aria-label="Tipo de negócio">
 <sc-for list="{{niches}}" as="item" hint-placeholder-count="5">
 <button type="button" class="chip {{item.cls}}" aria-pressed="{{item.pressed}}" onClick="{{item.pick}}">{{item.label}}</button>
@@ -324,23 +330,46 @@ a.work:hover{color:var(--fg)}
 </div>
 </div>
 
-<div class="sys">
-<div class="ft-nav" role="group" aria-label="Funções">
-<div class="ft-grp"><p class="ft-glbl">Para o seu cliente</p>
-<sc-for list="{{featCliente}}" as="f" hint-placeholder-count="2"><button type="button" class="ft {{f.cls}}" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}"><span class="ftn">{{f.num}}</span>{{f.t}}</button></sc-for>
-</div>
-<div class="ft-grp"><p class="ft-glbl">Para organizar</p>
-<sc-for list="{{featGestao}}" as="f" hint-placeholder-count="5"><button type="button" class="ft {{f.cls}}" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}"><span class="ftn">{{f.num}}</span>{{f.t}}</button></sc-for>
-</div>
-<div class="ft-grp"><p class="ft-glbl">Para vender mais</p>
-<sc-for list="{{featVendas}}" as="f" hint-placeholder-count="5"><button type="button" class="ft {{f.cls}}" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}"><span class="ftn">{{f.num}}</span>{{f.t}}</button></sc-for>
-</div>
-</div>
-
-<div class="sys-phone">
-<div class="ph" role="img" aria-label="{{phoneLabel}}">
+<div class="app-phone">
+<div class="ph" aria-label="{{phoneLabel}}">
 <div class="ph-scr" style="--p-bg: {{p.bg}}; --p-card: {{p.card}}; --p-fg: {{p.fg}}; --p-mut: {{p.mut}}; --p-ac: {{p.ac}}; --p-acfg: {{p.acfg}}; --p-line: {{p.line}}; --p-font: {{p.font}}; --p-r: {{p.r}}">
 <div class="ph-bar" aria-hidden="true"><span>9:41</span><span><i style="height: 4px"></i><i style="height: 6px"></i><i style="height: 8px"></i><i style="height: 10px"></i></span></div>
+<sc-if value="{{notHome}}" hint-placeholder-val="{{ false }}">
+<div class="ph-top"><button type="button" class="ph-back" aria-label="Voltar para o início" onClick="{{go.home}}">‹</button><b>{{cur.s}}</b><span class="ph-logo" style="width: 26px; height: 26px; font-size: 13px">{{n.ini}}</span></div>
+</sc-if>
+<sc-if value="{{scr.home}}" hint-placeholder-val="{{ true }}">
+<div class="ph-top" style="padding-left: 16px"><span class="ph-logo">{{n.ini}}</span><b>{{n.name}}</b><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg></div>
+</sc-if>
+<div class="ph-main">
+<sc-if value="{{notHome}}" hint-placeholder-val="{{ false }}">
+<div class="ph-tip"><b>{{cur.t}}</b><span>{{cur.d}}</span></div>
+</sc-if>
+
+<sc-if value="{{scr.home}}" hint-placeholder-val="{{ true }}">
+<div class="ph-body">
+<p class="ph-hello">Olá! Este é o painel do {{n.name}}.</p>
+<div class="ph-card" style="display: flex; flex-direction: column; gap: 6px">
+<div class="ph-row" style="justify-content: space-between"><span class="ph-lbl">Hoje</span><span class="ph-live">ao vivo</span></div>
+<div class="ph-row" style="justify-content: space-between"><b style="font: 700 20px var(--p-font)">{{r.atend}} horários</b><b style="font: 700 20px var(--p-font)">{{r.hoje}}</b></div>
+<span class="ph-mut">Próximo: 14:00 · {{n.c0first}} · {{n.s0.nome}} com {{n.team0}}</span>
+</div>
+<span class="ph-lbl">Toque para ver cada função</span>
+<div class="ph-tiles3">
+<button type="button" class="ph-ic" onClick="{{go.site}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M8 21h8M12 18v3"></path></svg></i>Meu site</button>
+<button type="button" class="ph-ic" onClick="{{go.agendar}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></i>Agendar</button>
+<button type="button" class="ph-ic" onClick="{{go.clientes}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"></path></svg></i>Clientes</button>
+<button type="button" class="ph-ic" onClick="{{go.equipe}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"></path></svg></i>Equipe</button>
+<button type="button" class="ph-ic" onClick="{{go.acesso}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></i>Acessos</button>
+<button type="button" class="ph-ic" onClick="{{go.relatorios}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg></i>Relatórios</button>
+<button type="button" class="ph-ic" onClick="{{go.caixa}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg></i>Caixa</button>
+<button type="button" class="ph-ic" onClick="{{go.massa}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg></i>Mensagens</button>
+<button type="button" class="ph-ic" onClick="{{go.lembrete}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg></i>Lembretes</button>
+<button type="button" class="ph-ic" onClick="{{go.sumido}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></i>Sumidos</button>
+<button type="button" class="ph-ic" onClick="{{go.promo}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="8" cy="8" r="1.5"></circle></svg></i>Promoções</button>
+<button type="button" class="ph-ic" onClick="{{go.visual}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="8" cy="10" r="1.2"></circle><circle cx="12" cy="7.5" r="1.2"></circle><circle cx="16" cy="10" r="1.2"></circle><path d="M12 21a3 3 0 0 1 0-6h2a3 3 0 0 0 3-3"></path></svg></i>Visual</button>
+</div>
+</div>
+</sc-if>
 
 <sc-if value="{{scr.site}}" hint-placeholder-val="{{ true }}">
 <div class="ph-body">
@@ -360,7 +389,6 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.agendar}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<p class="ph-h">Agendar</p>
 <div class="ph-card ph-row"><span class="ph-av">{{n.team0ini}}</span><span class="ph-grow"><b>{{n.s0.nome}}</b><span class="ph-mut">com {{n.team0}} · {{n.s0.dur}} · {{n.s0.precoTxt}}</span></span></div>
 <span class="ph-lbl">Escolha o dia</span>
 <div style="display: flex; gap: 6px">
@@ -385,7 +413,7 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.clientes}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<div class="ph-row" style="justify-content: space-between"><p class="ph-h">Clientes</p><span class="ph-chip">{{n.total}} cadastrados</span></div>
+<div class="ph-row" style="justify-content: space-between"><span class="ph-lbl">Todos</span><span class="ph-chip"><span>{{n.total}} cadastrados</span></span></div>
 <div class="ph-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>Buscar por nome ou telefone</div>
 <div class="ph-list">
 <sc-for list="{{n.clients}}" as="c" hint-placeholder-count="5"><div class="ph-row"><span class="ph-av">{{c.ini}}</span><span class="ph-grow"><b>{{c.nome}}</b><span class="ph-mut">{{c.tel}} · última visita {{c.ultima}}</span></span><span class="ph-aniv {{c.anivCls}}">🎂 {{c.aniv}}</span></div></sc-for>
@@ -396,7 +424,6 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.equipe}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<p class="ph-h">Equipe</p>
 <div class="ph-card ph-row"><span class="ph-grow"><b>Comissões</b><span class="ph-mut">Calculadas a cada atendimento</span></span><span class="ph-tog" aria-hidden="true"></span></div>
 <sc-for list="{{n.team}}" as="m" hint-placeholder-count="3">
 <div class="ph-card" style="display: flex; flex-direction: column; gap: 8px">
@@ -409,7 +436,7 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.acesso}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<p class="ph-h">Quem vê o quê</p>
+<span class="ph-lbl">Quem vê o quê</span>
 <div class="ph-list">
 <div class="ph-row"><span class="ph-av">EU</span><span class="ph-grow"><b>Você · dono</b><span class="ph-mut">Tudo: agenda, caixa, relatórios e equipe</span></span></div>
 <sc-for list="{{n.team}}" as="m" hint-placeholder-count="3"><div class="ph-row"><span class="ph-av">{{m.ini}}</span><span class="ph-grow"><b>{{m.nome}}</b><span class="ph-mut">Só a própria agenda e comissão</span></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color: var(--p-ac)"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></div></sc-for>
@@ -426,7 +453,7 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.relatorios}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<div class="ph-row" style="justify-content: space-between"><p class="ph-h">Relatórios</p><span class="ph-live">ao vivo</span></div>
+<div class="ph-row" style="justify-content: space-between"><span class="ph-lbl">Hoje</span><span class="ph-live">ao vivo</span></div>
 <div class="ph-tiles">
 <div class="ph-tile"><span class="ph-mut">Faturamento hoje</span><b>{{r.hoje}}</b></div>
 <div class="ph-tile"><span class="ph-mut">Atendimentos</span><b>{{r.atend}}</b></div>
@@ -443,7 +470,6 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.caixa}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<p class="ph-h">Caixa de hoje</p>
 <div class="ph-tiles">
 <div class="ph-tile"><span class="ph-mut">Entradas</span><b class="ph-in">{{cx.ent}}</b></div>
 <div class="ph-tile"><span class="ph-mut">Saídas</span><b class="ph-out">{{cx.sai}}</b></div>
@@ -458,16 +484,15 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.massa}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<p class="ph-h">Nova mensagem</p>
 <span class="ph-lbl">Para quem</span>
-<div style="display: flex; flex-wrap: wrap; gap: 6px"><span class="ph-chip on">Todos ({{n.total}})</span><span class="ph-chip">Aniversariantes (12)</span><span class="ph-chip">Escolher</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><span class="ph-chip on"><span>Todos ({{n.total}})</span></span><span class="ph-chip">Aniversariantes (12)</span><span class="ph-chip">Escolher</span></div>
 <span class="ph-lbl">Mensagem</span>
 <div class="ph-txt">Olá, <span class="ph-var">{nome}</span>! {{n.massa}}</div>
 <span class="ph-lbl">Cada um recebe assim</span>
 <div class="ph-chat" style="flex: none">
 <div class="bub">Olá, <b>{{n.c0first}}</b>! {{n.massa}}</div>
 </div>
-<span class="ph-btn" style="margin-top: auto">Enviar para {{n.total}} clientes</span>
+<span class="ph-btn" style="margin-top: auto"><span>Enviar para {{n.total}} clientes</span></span>
 </div>
 </sc-if>
 
@@ -486,7 +511,6 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.sumido}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<p class="ph-h">Clientes sumidos</p>
 <div style="display: flex; gap: 6px"><span class="ph-chip">30 dias</span><span class="ph-chip on">60 dias</span><span class="ph-chip">90 dias</span></div>
 <div class="ph-list">
 <sc-for list="{{n.sumidos}}" as="c" hint-placeholder-count="3"><div class="ph-row"><span class="ph-av">{{c.ini}}</span><span class="ph-grow"><b>{{c.nome}}</b><span class="ph-mut">não volta há {{c.dias}} dias</span></span></div></sc-for>
@@ -501,7 +525,6 @@ a.work:hover{color:var(--fg)}
 
 <sc-if value="{{scr.promo}}" hint-placeholder-val="{{ false }}">
 <div class="ph-body">
-<p class="ph-h">Promoção</p>
 <div class="ph-promo"><span style="font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .85">Só esta semana</span><b>{{n.promo}}</b><span style="font-size: 12px; opacity: .9">Responda AGENDAR para garantir</span></div>
 <div class="ph-list">
 <div class="ph-row"><span class="ph-grow"><span class="ph-mut">Para</span><b>Clientes de {{n.s1.nome}} ({{n.promoQtd}})</b></span></div>
@@ -536,17 +559,26 @@ a.work:hover{color:var(--fg)}
 <span class="ph-mut">E ainda: logo, fotos, textos, galeria e domínio próprio.</span>
 </div>
 </sc-if>
+</div>
+<nav class="ph-tabs" aria-label="Menu do app de exemplo">
+<button type="button" class="ph-tab {{tab.home}}" onClick="{{go.home}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg>Início</button>
+<button type="button" class="ph-tab {{tab.agendar}}" onClick="{{go.agendar}}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Agenda</button>
+<button type="button" class="ph-tab {{tab.clientes}}" onClick="{{go.clientes}}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"></path></svg>Clientes</button>
+<button type="button" class="ph-tab {{tab.caixa}}" onClick="{{go.caixa}}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Caixa</button>
+<button type="button" class="ph-tab {{tab.massa}}" onClick="{{go.massa}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>Mensagens</button>
+</nav>
+</div>
+</div>
+<span class="muted" style="font-size: 13px; text-align: center">App de exemplo · toque nos ícones para navegar</span>
+</div>
 
-</div>
-</div>
-</div>
-
-<div class="sys-cap">
-<span class="num">{{cur.num}} / 12</span>
+<div class="app-cap">
+<div class="app-desc" style="display: flex; flex-direction: column; gap: 12px">
+<span class="num">{{cur.num}}</span>
 <h3>{{cur.t}}</h3>
 <p>{{cur.d}}</p>
-<div class="sys-step"><button type="button" aria-label="Função anterior" onClick="{{prevFeat}}">‹</button><button type="button" aria-label="Próxima função" onClick="{{nextFeat}}">›</button></div>
-<div style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px">
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
 <a class="btn btn-primary" href="#contato">Quero no meu negócio</a>
 <a class="btn btn-ghost" href="https://afeto-628683916456.southamerica-east1.run.app" target="_blank" rel="noopener">Ver um site no ar ↗</a>
 </div>
@@ -807,18 +839,18 @@ var NICHES = [
 ];
 
 var FEATS = [
-  { id: 'site', g: 'cliente', t: 'Site + agenda + loja', d: 'Um site com a cara do seu negócio: serviços, fotos, equipe, avaliações, loja de produtos e o botão de agendar, tudo no mesmo endereço.' },
-  { id: 'agendar', g: 'cliente', t: 'Marcar e desmarcar horário', d: 'O cliente escolhe o serviço, o profissional, o dia e um horário livre. Se precisar, desmarca sozinho e o horário volta para a agenda. Teste no celular de exemplo.' },
-  { id: 'clientes', g: 'gestao', t: 'Lista de clientes', d: 'Cada cliente com telefone, aniversário, histórico de atendimentos e quanto já gastou. Achou pelo nome ou pelo telefone, sem cadastro repetido.' },
-  { id: 'equipe', g: 'gestao', t: 'Equipe, horários e comissão', d: 'O horário de trabalho de cada profissional, os serviços que cada um faz e a comissão por pessoa ou por serviço, calculada sozinha.' },
-  { id: 'acesso', g: 'gestao', t: 'Acesso de cada profissional', d: 'Cada pessoa da equipe entra com o próprio login, no próprio celular, e vê só a agenda e a comissão dela. O caixa e os números ficam com você.' },
-  { id: 'relatorios', g: 'gestao', t: 'Relatórios em tempo real', d: 'Faturamento, atendimentos, ticket médio e serviços mais vendidos, atualizados a cada atendimento fechado. Sem planilha.' },
-  { id: 'caixa', g: 'gestao', t: 'Caixa do dia', d: 'Entradas e saídas do dia por forma de pagamento (Pix, cartão, dinheiro) e o fechamento do caixa em um toque.' },
-  { id: 'massa', g: 'vendas', t: 'Mensagem para vários clientes', d: 'Escreva uma vez e envie para todos, só para os aniversariantes ou para quem você escolher, em 1 clique. Cada um recebe com o próprio nome.' },
-  { id: 'lembrete', g: 'vendas', t: 'Lembrete de horário', d: 'O cliente recebe um lembrete no WhatsApp antes do horário e confirma ou remarca com um botão. Menos faltas, agenda cheia.' },
-  { id: 'sumido', g: 'vendas', t: 'Cliente sumido', d: 'O sistema mostra quem não volta há 30, 60 ou 90 dias. Você aprova e ele manda a mensagem chamando de volta.' },
-  { id: 'promo', g: 'vendas', t: 'Promoção em massa', d: 'Monte a promoção, escolha quem recebe e acompanhe quantos leram e quantos agendaram.' },
-  { id: 'visual', g: 'vendas', t: 'Site personalizável', d: 'Cores, fontes, cantos, logo, fotos e textos do seu jeito. Toque nas cores e fontes do celular e veja o site mudar na hora.' }
+  { id: 'site', s: 'Meu site', g: 'cliente', t: 'Site + agenda + loja', d: 'Um site com a cara do seu negócio: serviços, fotos, equipe, avaliações, loja de produtos e o botão de agendar, tudo no mesmo endereço.' },
+  { id: 'agendar', s: 'Agendar', g: 'cliente', t: 'Marcar e desmarcar horário', d: 'O cliente escolhe o serviço, o profissional, o dia e um horário livre. Se precisar, desmarca sozinho e o horário volta para a agenda. Teste aqui: escolha um horário e confirme.' },
+  { id: 'clientes', s: 'Clientes', g: 'gestao', t: 'Lista de clientes', d: 'Cada cliente com telefone, aniversário, histórico de atendimentos e quanto já gastou. Achou pelo nome ou pelo telefone, sem cadastro repetido.' },
+  { id: 'equipe', s: 'Equipe', g: 'gestao', t: 'Equipe, horários e comissão', d: 'O horário de trabalho de cada profissional, os serviços que cada um faz e a comissão por pessoa ou por serviço, calculada sozinha.' },
+  { id: 'acesso', s: 'Acessos', g: 'gestao', t: 'Acesso de cada profissional', d: 'Cada pessoa da equipe entra com o próprio login, no próprio celular, e vê só a agenda e a comissão dela. O caixa e os números ficam com você.' },
+  { id: 'relatorios', s: 'Relatórios', g: 'gestao', t: 'Relatórios em tempo real', d: 'Faturamento, atendimentos, ticket médio e serviços mais vendidos, atualizados a cada atendimento fechado. Sem planilha.' },
+  { id: 'caixa', s: 'Caixa', g: 'gestao', t: 'Caixa do dia', d: 'Entradas e saídas do dia por forma de pagamento (Pix, cartão, dinheiro) e o fechamento do caixa em um toque.' },
+  { id: 'massa', s: 'Mensagens', g: 'vendas', t: 'Mensagem para vários clientes', d: 'Escreva uma vez e envie para todos, só para os aniversariantes ou para quem você escolher, em 1 clique. Cada um recebe com o próprio nome.' },
+  { id: 'lembrete', s: 'Lembretes', g: 'vendas', t: 'Lembrete de horário', d: 'O cliente recebe um lembrete no WhatsApp antes do horário e confirma ou remarca com um botão. Menos faltas, agenda cheia.' },
+  { id: 'sumido', s: 'Sumidos', g: 'vendas', t: 'Cliente sumido', d: 'O sistema mostra quem não volta há 30, 60 ou 90 dias. Você aprova e ele manda a mensagem chamando de volta.' },
+  { id: 'promo', s: 'Promoções', g: 'vendas', t: 'Promoção em massa', d: 'Monte a promoção, escolha quem recebe e acompanhe quantos leram e quantos agendaram.' },
+  { id: 'visual', s: 'Visual', g: 'vendas', t: 'Site personalizável', d: 'Cores, fontes, cantos, logo, fotos e textos do seu jeito. Toque nas cores e fontes abaixo e veja o site mudar na hora.' }
 ];
 
 function brl(v) { return v === 0 ? 'Sem custo' : 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); }
@@ -832,7 +864,12 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     var tema = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-    this.state = { filter: 'Todos', niche: 0, feat: 1, pal: null, font: null, canto: null, day: 0, slot: null, booked: false, canceled: false, theme: tema };
+    this.state = { filter: 'Todos', niche: 0, feat: -1, pal: null, font: null, canto: null, day: 0, slot: null, booked: false, canceled: false, theme: tema };
+  }
+  irPara(i) {
+    this.setState({ feat: i });
+    var tela = document.querySelector('.ph-main');
+    if (tela) tela.scrollTop = 0;
   }
   renderVals() {
     var self = this;
@@ -925,13 +962,15 @@ class Component extends DCLogic {
     var amanha = dias[0];
 
     // Funções
-    var feats = FEATS.map(function (f, i) {
-      return { id: f.id, g: f.g, t: f.t, d: f.d, num: dd(i + 1), cls: i === st.feat ? 'on' : '', pressed: i === st.feat ? 'true' : 'false', pick: function () { self.setState({ feat: i }); } };
-    });
-    var cur = feats[st.feat];
-    var scr = {};
+    var feats = FEATS.map(function (f, i) { return { id: f.id, s: f.s, t: f.t, d: f.d, num: dd(i + 1) + ' / 12' }; });
+    var home = st.feat < 0;
+    var cur = home ? { s: 'Início', t: 'Um app para o dono e para a equipe', d: 'Agenda, clientes, equipe, caixa, relatórios e mensagens num app que abre no celular e no computador, sem instalar nada. Toque nos ícones para conhecer cada função.', num: 'Início' } : feats[st.feat];
+    var scr = { home: home };
     FEATS.forEach(function (f, i) { scr[f.id] = i === st.feat; });
-    var ir = function (passo) { return function () { self.setState({ feat: (self.state.feat + passo + FEATS.length) % FEATS.length }); }; };
+    var go = { home: function () { self.irPara(-1); } };
+    FEATS.forEach(function (f, i) { go[f.id] = function () { self.irPara(i); }; });
+    var tab = {};
+    ['home', 'agendar', 'clientes', 'caixa', 'massa'].forEach(function (k) { tab[k] = (k === 'home' ? home : scr[k]) ? 'on' : ''; });
 
     return {
       accent: accent,
@@ -944,11 +983,8 @@ class Component extends DCLogic {
       },
       filters: filters, show: show,
       niches: niches, n: n, p: p, pals: pals, fonts: fonts, cantos: cantos, r: r, cx: cx,
-      featCliente: feats.filter(function (f) { return f.g === 'cliente'; }),
-      featGestao: feats.filter(function (f) { return f.g === 'gestao'; }),
-      featVendas: feats.filter(function (f) { return f.g === 'vendas'; }),
-      cur: cur, scr: scr, prevFeat: ir(-1), nextFeat: ir(1),
-      phoneLabel: 'Exemplo da tela "' + cur.t + '" para ' + N.label.toLowerCase(),
+      cur: cur, scr: scr, go: go, tab: tab, notHome: !home,
+      phoneLabel: 'App de exemplo para ' + N.label.toLowerCase() + ', tela ' + cur.s,
       lem: { quando: 'amanhã, ' + SEMANA_LONGA[amanha.getDay()] + ' ' + dd(amanha.getDate()) + '/' + dd(amanha.getMonth() + 1) + ', às 14:00', dia: 'amanhã' },
       days: days, slots: slots,
       booked: st.booked, notBooked: !st.booked, canceled: st.canceled,
