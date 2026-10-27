@@ -81,7 +81,7 @@ html{scroll-behavior:smooth}
 .sol-pills{display:flex;flex-wrap:wrap;gap:10px}
 .sol-pill{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 18px;border:1px solid var(--line-strong);font:700 17px 'Space Grotesk',sans-serif;letter-spacing:-.01em}
 .sol-pill b{color:var(--accent-ink);font-weight:700}
-.niches{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.niches{display:flex;flex-wrap:wrap;gap:8px}
 .niches::-webkit-scrollbar{display:none}
 .app-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:auto 1fr;grid-template-areas:"chips phone" "cap phone";column-gap:56px;row-gap:28px;align-items:start}
 .app-chips{grid-area:chips;display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -93,19 +93,19 @@ html{scroll-behavior:smooth}
 @media (max-width:860px){
   .nav-links{display:none !important}
   .app-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"chips" "phone" "cap"}
-  .app-chips .niches{flex-wrap:nowrap;margin:0 calc(-1 * clamp(16px,4vw,40px));padding:0 clamp(16px,4vw,40px) 2px}
+  .app-chips .niches .chip{min-height:40px;padding:0 14px}
   .app-desc{display:none !important}
 }
 @media (max-width:520px){.hide-sm{display:none !important}}
+@media (max-width:420px){.hide-xs{display:none !important}}
 
 /* O celular de exemplo: as cores vêm do negócio escolhido */
 .ph{width:100%;max-width:340px;border:1px solid var(--line-strong);border-radius:42px;padding:10px;background:#050505;box-shadow:var(--shadow)}
-.ph-scr{border-radius:33px;background:var(--p-bg);color:var(--p-fg);height:680px;overflow:hidden;display:flex;flex-direction:column;font:400 13px/1.4 Inter,system-ui,sans-serif;transition:background .3s ease,color .3s ease}
+.ph-scr{border-radius:33px;background:var(--p-bg);color:var(--p-fg);min-height:680px;overflow:hidden;display:flex;flex-direction:column;font:400 13px/1.4 Inter,system-ui,sans-serif;transition:background .3s ease,color .3s ease}
 .ph-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 6px;font-size:11px;font-weight:600;color:var(--p-fg)}
 .ph-bar i{display:inline-block;width:3px;margin-left:2px;background:var(--p-fg);border-radius:1px;vertical-align:bottom}
 .ph-body{flex:1 0 auto;padding:8px 16px 16px;display:flex;flex-direction:column;gap:11px}
-.ph-main{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:none}
-.ph-main::-webkit-scrollbar{display:none}
+.ph-main{flex:1 0 auto;display:flex;flex-direction:column}
 .ph-top{display:flex;align-items:center;gap:8px;min-height:46px;padding:0 12px 0 8px;border-bottom:1px solid var(--p-line)}
 .ph-top b{font:600 16px var(--p-font);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ph-back{width:40px;height:40px;flex:none;border:0;background:transparent;color:var(--p-fg);font-size:26px;line-height:1;cursor:pointer;border-radius:50%}
@@ -213,7 +213,7 @@ a.work:hover{color:var(--fg)}
 <div class="wrap" style="height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
 <a href="#inicio" style="display: flex; align-items: center; gap: 12px; text-decoration: none">
 <svg width="30" height="30" viewBox="200.9 202.06 597.76 597.76" role="img" aria-label="Logo Hyra Tecnologia"><path d="M 600.86823,202.05692 H 798.66908 V 399.85725 H 600.86823 Z" fill="{{accent}}"></path><path class="logo-h" d="m 200.91538,202.0564 v 597.75421 h 0.90073 196.90115 v -5.1e-4 h 2.03089 a 99.044067,99.044067 0 0 1 0,-0.0481 99.044067,99.044067 0 0 1 99.04408,-99.04409 99.044067,99.044067 0 0 1 99.04409,99.04409 99.044067,99.044067 0 0 1 0,0.0481 h 198.93204 a 297.97617,297.97617 0 0 0 0,-0.0481 297.97617,297.97617 0 0 0 -297.97613,-297.97613 297.97617,297.97617 0 0 0 -101.07497,17.6661 v -317.39509 -5.2e-4 z"></path></svg>
-<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em">Hyra <span class="muted" style="font-weight: 500">Tecnologia</span></span>
+<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em">Hyra <span class="muted hide-xs" style="font-weight: 500">Tecnologia</span></span>
 </a>
 <nav class="nav-links" aria-label="Principal" style="display: flex; gap: 28px">
 <a class="nav-link" href="#solucoes">Soluções</a>
@@ -868,8 +868,9 @@ class Component extends DCLogic {
   }
   irPara(i) {
     this.setState({ feat: i });
-    var tela = document.querySelector('.ph-main');
-    if (tela) tela.scrollTop = 0;
+    // A tela nova pode ter outra altura: se o topo do app sumiu, volta para ele.
+    var app = document.querySelector('.ph');
+    if (app && app.getBoundingClientRect().top < 72) window.scrollTo({ top: app.getBoundingClientRect().top + window.scrollY - 84 });
   }
   renderVals() {
     var self = this;
