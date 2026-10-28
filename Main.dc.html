@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hyra Tecnologia</title>
-<meta name="description" content="Sites, agendamento online e sistemas para comércios e prestadores de serviço de Aparecida de Goiânia e região.">
+<meta name="description" content="Site, agenda online e gestão para pequenos negócios de Aparecida de Goiânia, Goiânia e região.">
 <script>
 // Tema escolhido no botão do topo (escuro é o padrão).
 try { document.documentElement.setAttribute('data-theme', localStorage.getItem('hyra-tema') === 'light' ? 'light' : 'dark'); }
@@ -92,6 +92,10 @@ html{scroll-behavior:smooth;scroll-padding-top:72px}
 .app-desc h3{margin:0;font:700 clamp(24px,2.6vw,32px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.02em}
 .app-desc p{margin:0;font-size:17px;line-height:1.6;color:var(--lead)}
 .app-phone{position:sticky;top:96px}
+.prob-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.prob-list li{display:grid;grid-template-columns:40px minmax(0,1fr) minmax(0,1.25fr);gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
+.prob-list b{font:600 18px/1.3 'Space Grotesk',sans-serif;letter-spacing:-.01em}
+.prob-list li > span:last-child{font-size:15.5px;line-height:1.55;color:var(--muted)}
 .feat-list{grid-area:desc;list-style:none;margin:0;padding:0;border-top:1px solid var(--line);min-width:0}
 .feat-list li{border-bottom:1px solid var(--line)}
 .fl{width:100%;display:flex;align-items:center;gap:18px;padding:13px 0;background:none;border:0;color:var(--fg-2);font:500 16px Inter,system-ui,sans-serif;text-align:left;cursor:pointer;transition:color .2s ease}
@@ -143,7 +147,9 @@ html{scroll-behavior:smooth;scroll-padding-top:72px}
   .hero-h1{font-size:33px !important}
   .hero-lead{font-size:15px !important;line-height:1.55 !important}
   .sis-lead{font-size:15px !important}
-  .sol-pills{display:none}
+  .prob-list li{grid-template-columns:26px minmax(0,1fr);gap:4px 10px;padding:12px 0}
+  .prob-list li > span:last-child{grid-column:2;font-size:13.5px;line-height:1.45}
+  .prob-list b{font-size:15.5px}
   .feat-list{display:none !important}
   .app-phone{position:static}
   .app-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"chips" "phone" "cta";row-gap:16px}
@@ -298,7 +304,7 @@ a.work:hover{color:var(--fg)}
 <nav class="nav-links" aria-label="Principal" style="display: flex; gap: 28px">
 <a class="nav-link" href="#sistema">Site + Agenda</a>
 <a class="nav-link" href="#portfolio">Portfólio</a>
-<a class="nav-link" href="#solucoes">Soluções</a>
+<a class="nav-link" href="#solucoes">Serviços</a>
 <a class="nav-link" href="#contato">Contato</a>
 </nav>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -314,8 +320,8 @@ a.work:hover{color:var(--fg)}
 <section id="inicio" class="wrap hero" style="padding-top: clamp(56px, 8vw, 104px); padding-bottom: clamp(64px, 8vw, 104px); display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
 <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
 <p class="rise eyebrow">Sites · Agendamento online · Sistemas web</p>
-<h1 class="rise rise2 hero-h1" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(40px, 6.2vw, 78px); line-height: 1.02; letter-spacing: -0.035em">Sites e sistemas que colocam seu negócio para trabalhar<span style="display: inline-block; width: 0.16em; height: 0.16em; margin-left: 0.06em; background: {{accent}}"></span></h1>
-<p class="rise rise3 hero-lead" style="margin: 0; max-width: 580px; font-size: clamp(17px, 1.6vw, 19px); line-height: 1.6; color: var(--lead)">Criamos sites que aparecem no Google, páginas com agendamento online e sistemas sob medida para comércios e prestadores de serviço de Aparecida de Goiânia e região.</p>
+<h1 class="rise rise2 hero-h1" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(40px, 6.2vw, 78px); line-height: 1.02; letter-spacing: -0.035em">Site, agenda online e gestão para o seu negócio<span style="display: inline-block; width: 0.16em; height: 0.16em; margin-left: 0.06em; background: {{accent}}"></span></h1>
+<p class="rise rise3 hero-lead" style="margin: 0; max-width: 580px; font-size: clamp(17px, 1.6vw, 19px); line-height: 1.6; color: var(--lead)">Seus clientes marcam horário pelo site e você cuida da agenda, da equipe e do caixa pelo celular. Atendemos Aparecida de Goiânia, Goiânia e região.</p>
 <div class="rise rise3" style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px">
 <a class="btn btn-primary" href="#contato">Solicitar orçamento<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg></a>
 <a class="btn btn-ghost" href="{{whats}}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Falar no WhatsApp</a>
@@ -349,18 +355,33 @@ a.work:hover{color:var(--fg)}
 </div>
 </section>
 
+<section id="problemas" class="sec">
+<div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<p class="eyebrow"><i></i>O que resolvemos</p>
+<h2 class="h2">O que muda no seu dia a dia.</h2>
+</div>
+<ol class="prob-list">
+<li><span class="num">01</span><b>Horário marcado por mensagem, um por um</b><span>O cliente escolhe o dia e o horário pelo seu site, a qualquer hora.</span></li>
+<li><span class="num">02</span><b>Cliente que esquece e falta</b><span>Lembrete automático no WhatsApp, com botão para confirmar ou remarcar.</span></li>
+<li><span class="num">03</span><b>Não saber quanto entrou no mês</b><span>Caixa do dia, comissões e relatórios atualizados a cada atendimento.</span></li>
+<li><span class="num">04</span><b>Cliente que some e não volta</b><span>O sistema mostra quem está sumido e envia uma mensagem convidando para voltar.</span></li>
+<li><span class="num">05</span><b>Negócio difícil de achar na internet</b><span>Site rápido, feito para celular e fácil de encontrar no Google.</span></li>
+</ol>
+</div>
+</section>
+
 <section id="sistema" class="sec" style="background: var(--bg-alt)">
 <div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 40px">
 <div style="display: flex; flex-direction: column; gap: 20px; max-width: 820px">
 <p class="eyebrow"><i></i>A solução completa</p>
-<h2 class="h2">Seu negócio inteiro no celular: site, agenda e loja num lugar só.</h2>
-<p class="sis-lead" style="margin: 0; max-width: 640px; font-size: 18px; line-height: 1.6; color: var(--lead)">O cliente marca sozinho pelo site, a equipe vê a própria agenda, você acompanha o caixa e os números na hora, e o sistema chama o cliente de volta pelo WhatsApp.</p>
-<div class="sol-pills"><span class="sol-pill">Site <b>+</b> Agenda <b>+</b> Shop</span><span class="sol-pill">Mensagens <b>em 1 clique</b></span><span class="sol-pill">Gestão <b>em tempo real</b></span></div>
+<h2 class="h2">Site, agenda e loja num só lugar.</h2>
+<p class="sis-lead" style="margin: 0; max-width: 640px; font-size: 18px; line-height: 1.6; color: var(--lead)">Este é o app que você e sua equipe usam no dia a dia. Experimente abaixo.</p>
 </div>
 
 <div class="app-grid">
 <div class="app-chips">
-<span class="muted" style="font-size: 14px">Escolha o seu tipo de negócio e navegue pelo app de exemplo:</span>
+<span class="muted" style="font-size: 14px">Veja o exemplo no seu tipo de negócio:</span>
 <div class="niches" role="group" aria-label="Tipo de negócio">
 <sc-for list="{{niches}}" as="item" hint-placeholder-count="5">
 <button type="button" class="chip {{item.cls}}" aria-pressed="{{item.pressed}}" onClick="{{item.pick}}">{{item.label}}</button>
@@ -610,7 +631,6 @@ a.work:hover{color:var(--fg)}
 </nav>
 </div>
 </div>
-<span class="muted" style="font-size: 13px; text-align: center">App de exemplo · toque nos ícones para navegar</span>
 </div>
 
 <ol class="feat-list" aria-label="Funções do sistema">
@@ -621,10 +641,10 @@ a.work:hover{color:var(--fg)}
 </ol>
 <div class="app-cta">
 <div style="display: flex; flex-wrap: wrap; gap: 12px">
-<a class="btn btn-primary" href="#contato">Quero no meu negócio</a>
+<a class="btn btn-primary" href="#contato">Quero para o meu negócio</a>
 <a class="btn btn-ghost" href="https://afeto-628683916456.southamerica-east1.run.app" target="_blank" rel="noopener">Ver um site no ar ↗</a>
 </div>
-<span class="muted" style="font-size: 15px">Planos a partir de <span style="color: var(--fg); font-weight: 600">R$ 89/mês</span>, com hospedagem e suporte.</span>
+<span class="muted" style="font-size: 15px">Planos a partir de <span style="color: var(--fg); font-weight: 600">R$ XX/mês</span>, com hospedagem e suporte.</span>
 </div>
 </div>
 </div>
@@ -635,7 +655,7 @@ a.work:hover{color:var(--fg)}
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
 <div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
 <p class="eyebrow"><i></i>Portfólio</p>
-<h2 class="h2">Sites no ar. Toque para abrir e testar.</h2>
+<h2 class="h2">Sites no ar. Abra e teste.</h2>
 </div>
 <div role="group" aria-label="Filtrar projetos" style="display: flex; flex-wrap: wrap; gap: 8px">
 <sc-for list="{{filters}}" as="item" hint-placeholder-count="5">
@@ -643,7 +663,7 @@ a.work:hover{color:var(--fg)}
 </sc-for>
 </div>
 </div>
-<span class="swipe-hint">Deslize para o lado para ver todos →</span>
+<span class="swipe-hint">Deslize para ver mais →</span>
 <div class="port-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px">
 
 <sc-if value="{{show.novovisual}}" hint-placeholder-val="{{ true }}">
@@ -652,7 +672,7 @@ a.work:hover{color:var(--fg)}
 <div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px; flex: 1">
 <div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span class="live">No ar</span><span class="badge-cli">Cliente</span></div>
 <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Novo Visual Barbearia</h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Barbearia tradicional da região sul de Goiânia. Serviços, barbeiros, produtos, avaliações do Google e horário marcado pelo site.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Barbearia na região sul de Goiânia. Serviços, barbeiros, produtos, avaliações do Google e agendamento pelo site.</p>
 <span class="go">Abrir site ↗</span>
 </div>
 </a>
@@ -676,7 +696,7 @@ a.work:hover{color:var(--fg)}
 <div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px; flex: 1">
 <div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span class="live">No ar</span><span class="badge">Demonstração</span></div>
 <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Espaço Escuta · psicologia</h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Consultório sóbrio e acolhedor, com sessões presenciais e online marcadas pelo celular.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Consultório com visual sóbrio e acolhedor. Sessões presenciais e online agendadas pelo celular.</p>
 <span class="go">Abrir site ↗</span>
 </div>
 </a>
@@ -688,7 +708,7 @@ a.work:hover{color:var(--fg)}
 <div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px; flex: 1">
 <div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span class="live">No ar</span><span class="badge">Demonstração</span></div>
 <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Corvo Tattoo · estúdio de tatuagem</h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Visual escuro com fonte gótica, galeria de trabalhos e orçamento sem custo marcado pelo site.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Visual escuro com fonte gótica, galeria de trabalhos e agendamento de orçamento pelo site.</p>
 <span class="go">Abrir site ↗</span>
 </div>
 </a>
@@ -708,7 +728,7 @@ a.work:hover{color:var(--fg)}
 <div style="padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px">
 <div style="display: flex; justify-content: space-between; gap: 12px; align-items: center"><span class="num" style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">Site vitrine</span><span class="badge-cli">Cliente</span></div>
 <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em">Vibex AudioCar</h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Loja de som automotivo em Aparecida de Goiânia. Site com seções animadas e modelo 3D do carro mostrando cada parte do som.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Loja de som automotivo em Aparecida de Goiânia. Site com animações e um modelo 3D do carro que mostra cada parte do som.</p>
 </div>
 </article>
 </sc-if>
@@ -761,10 +781,10 @@ a.work:hover{color:var(--fg)}
 <div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 48px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
 <div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
-<p class="eyebrow"><i></i>Soluções</p>
-<h2 class="h2">Da vitrine na internet ao sistema que organiza o seu dia.</h2>
+<p class="eyebrow"><i></i>Serviços</p>
+<h2 class="h2">Escolha o que o seu negócio precisa.</h2>
 </div>
-<p class="muted" style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6">Cada solução é montada para o tamanho do seu negócio. Você só paga pelo que vai usar.</p>
+<p class="muted" style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6">Você contrata só o que vai usar.</p>
 </div>
 <div class="sol-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px">
 
@@ -785,14 +805,14 @@ a.work:hover{color:var(--fg)}
 <article class="card sol-card">
 <div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-6 6 6 6"></path><path d="M16 6l6 6-6 6"></path><path d="M14 4l-4 16"></path></svg><span class="num" style="color: var(--muted-2)">03</span></div>
 <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Sistemas e apps web<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Cardápios online, catálogos, painéis e ferramentas feitas para a rotina da sua empresa, que abrem no navegador ou no celular.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Cardápios online, catálogos, painéis e ferramentas sob medida para a rotina da sua empresa.</p>
 <p class="sol-for">Sob medida para o seu processo</p>
 </article>
 
 <article class="card sol-card">
 <div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">04</span></div>
 <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Hospedagem e suporte<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Domínio, hospedagem, backup e ajustes por uma mensalidade. Seu site no ar sem você precisar se preocupar.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Domínio, hospedagem, backup e ajustes incluídos na mensalidade.</p>
 <p class="sol-for">Para todos os projetos</p>
 </article>
 
@@ -804,13 +824,13 @@ a.work:hover{color:var(--fg)}
 <div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 48px">
 <div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
 <p class="eyebrow"><i></i>Como trabalhamos</p>
-<h2 class="h2">Do primeiro papo ao site no ar.</h2>
+<h2 class="h2">Do primeiro contato ao site no ar.</h2>
 </div>
 <ol class="proc-list" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 0; border-top: 1px solid var(--line-strong)">
-<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">01</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Conversa</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Você conta como funciona o seu negócio e o que precisa resolver.</p></li>
-<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">02</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Proposta</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Orçamento claro, com prazo e o que está incluso. Sem letras miúdas.</p></li>
-<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">03</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Design e desenvolvimento</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Você aprova o visual e acompanha cada etapa até ficar do seu jeito.</p></li>
-<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">04</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">No ar e com suporte</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Publicamos, cuidamos da hospedagem e seguimos por perto para ajustes.</p></li>
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">01</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Conversa</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Você explica como funciona o seu negócio e o que precisa.</p></li>
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">02</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Proposta</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Orçamento com prazo e tudo o que está incluído.</p></li>
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">03</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Design e desenvolvimento</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Você aprova o visual e acompanha cada etapa.</p></li>
+<li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">04</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">No ar e com suporte</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Publicamos o site, cuidamos da hospedagem e fazemos os ajustes necessários.</p></li>
 </ol>
 </div>
 </section>
@@ -819,8 +839,8 @@ a.work:hover{color:var(--fg)}
 <div class="wrap sec-in" style="display: flex; flex-wrap: wrap; gap: 56px">
 <div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
 <p class="eyebrow"><i></i>Contato</p>
-<h2 class="h2">Vamos colocar o seu negócio na internet?</h2>
-<p class="muted" style="margin: 0; font-size: 16px; line-height: 1.6">Orçamento sem compromisso. Atendimento em Aparecida de Goiânia, Goiânia e região.</p>
+<h2 class="h2">Peça um orçamento.</h2>
+<p class="muted" style="margin: 0; font-size: 16px; line-height: 1.6">Sem compromisso. Atendemos Aparecida de Goiânia, Goiânia e região.</p>
 <div style="display: flex; flex-direction: column; border-top: 1px solid var(--line); margin-top: 8px">
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line)"><span class="muted" style="font-size: 15px">WhatsApp</span><a href="{{whats}}" target="_blank" rel="noopener" style="font-weight: 500; font-size: 15px">Chamar no WhatsApp ↗</a></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line)"><span class="muted" style="font-size: 15px">E-mail</span><span style="font-weight: 500; font-size: 15px">[SEU E-MAIL]</span></div>
@@ -929,18 +949,18 @@ var NICHES = [
 ];
 
 var FEATS = [
-  { id: 'site', s: 'Meu site', g: 'cliente', t: 'Site + agenda + loja', d: 'Um site com a cara do seu negócio: serviços, fotos, equipe, avaliações, loja de produtos e o botão de agendar, tudo no mesmo endereço.' },
-  { id: 'agendar', s: 'Agendar', g: 'cliente', t: 'Marcar e desmarcar horário', d: 'O cliente escolhe o serviço, o profissional, o dia e um horário livre. Se precisar, desmarca sozinho e o horário volta para a agenda. Teste aqui: escolha um horário e confirme.' },
-  { id: 'clientes', s: 'Clientes', g: 'gestao', t: 'Lista de clientes', d: 'Cada cliente com telefone, aniversário, histórico de atendimentos e quanto já gastou. Achou pelo nome ou pelo telefone, sem cadastro repetido.' },
-  { id: 'equipe', s: 'Equipe', g: 'gestao', t: 'Equipe, horários e comissão', d: 'O horário de trabalho de cada profissional, os serviços que cada um faz e a comissão por pessoa ou por serviço, calculada sozinha.' },
-  { id: 'acesso', s: 'Acessos', g: 'gestao', t: 'Acesso de cada profissional', d: 'Cada pessoa da equipe entra com o próprio login, no próprio celular, e vê só a agenda e a comissão dela. O caixa e os números ficam com você.' },
-  { id: 'relatorios', s: 'Relatórios', g: 'gestao', t: 'Relatórios em tempo real', d: 'Faturamento, atendimentos, ticket médio e serviços mais vendidos, atualizados a cada atendimento fechado. Sem planilha.' },
-  { id: 'caixa', s: 'Caixa', g: 'gestao', t: 'Caixa do dia', d: 'Entradas e saídas do dia por forma de pagamento (Pix, cartão, dinheiro) e o fechamento do caixa em um toque.' },
-  { id: 'massa', s: 'Mensagens', g: 'vendas', t: 'Mensagem para vários clientes', d: 'Escreva uma vez e envie para todos, só para os aniversariantes ou para quem você escolher, em 1 clique. Cada um recebe com o próprio nome.' },
-  { id: 'lembrete', s: 'Lembretes', g: 'vendas', t: 'Lembrete de horário', d: 'O cliente recebe um lembrete no WhatsApp antes do horário e confirma ou remarca com um botão. Menos faltas, agenda cheia.' },
-  { id: 'sumido', s: 'Sumidos', g: 'vendas', t: 'Cliente sumido', d: 'O sistema mostra quem não volta há 30, 60 ou 90 dias. Você aprova e ele manda a mensagem chamando de volta.' },
-  { id: 'promo', s: 'Promoções', g: 'vendas', t: 'Promoção em massa', d: 'Monte a promoção, escolha quem recebe e acompanhe quantos leram e quantos agendaram.' },
-  { id: 'visual', s: 'Visual', g: 'vendas', t: 'Site personalizável', d: 'Cores, fontes, cantos, logo, fotos e textos do seu jeito. Toque nas cores e fontes abaixo e veja o site mudar na hora.' }
+  { id: 'site', s: 'Meu site', g: 'cliente', t: 'Site com agenda e loja', d: 'Serviços, fotos, equipe, avaliações e produtos num site com a cara do seu negócio, com o botão de agendar sempre à vista.' },
+  { id: 'agendar', s: 'Agendar', g: 'cliente', t: 'Marcar e desmarcar horário', d: 'O cliente escolhe serviço, profissional, dia e horário. Se desmarcar, o horário volta a ficar livre. Teste: escolha um horário e confirme.' },
+  { id: 'clientes', s: 'Clientes', g: 'gestao', t: 'Lista de clientes', d: 'Telefone, aniversário, histórico de atendimentos e total gasto de cada cliente. Busca por nome ou telefone, sem cadastro repetido.' },
+  { id: 'equipe', s: 'Equipe', g: 'gestao', t: 'Equipe, horários e comissão', d: 'Horário de trabalho e serviços de cada profissional, com a comissão por pessoa ou por serviço calculada automaticamente.' },
+  { id: 'acesso', s: 'Acessos', g: 'gestao', t: 'Acesso de cada profissional', d: 'Cada profissional entra com o próprio login e vê apenas a sua agenda e a sua comissão. Caixa e relatórios ficam só com você.' },
+  { id: 'relatorios', s: 'Relatórios', g: 'gestao', t: 'Relatórios em tempo real', d: 'Faturamento, atendimentos, valor médio e serviços mais vendidos, atualizados a cada atendimento. Sem planilha.' },
+  { id: 'caixa', s: 'Caixa', g: 'gestao', t: 'Caixa do dia', d: 'Entradas e saídas por forma de pagamento (Pix, cartão e dinheiro) e fechamento do caixa em um toque.' },
+  { id: 'massa', s: 'Mensagens', g: 'vendas', t: 'Mensagem para vários clientes', d: 'Escreva uma vez e envie para todos, para os aniversariantes ou para quem você escolher. Cada cliente recebe com o próprio nome.' },
+  { id: 'lembrete', s: 'Lembretes', g: 'vendas', t: 'Lembrete de horário', d: 'O cliente recebe um lembrete no WhatsApp antes do horário e confirma ou remarca com um toque. Menos faltas na agenda.' },
+  { id: 'sumido', s: 'Sumidos', g: 'vendas', t: 'Clientes sumidos', d: 'Veja quem não volta há 30, 60 ou 90 dias e envie uma mensagem convidando para retornar.' },
+  { id: 'promo', s: 'Promoções', g: 'vendas', t: 'Promoções', d: 'Crie a promoção, escolha quem recebe e acompanhe quantos leram e quantos agendaram.' },
+  { id: 'visual', s: 'Visual', g: 'vendas', t: 'Site personalizável', d: 'Cores, fontes, logo, fotos e textos do seu jeito. Toque nas opções abaixo e veja o resultado na hora.' }
 ];
 
 function brl(v) { return v === 0 ? 'Sem custo' : 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); }
@@ -1056,7 +1076,7 @@ class Component extends DCLogic {
     // Funções
     var feats = FEATS.map(function (f, i) { return { id: f.id, s: f.s, t: f.t, d: f.d, num: dd(i + 1) + ' / 12' }; });
     var home = st.feat < 0;
-    var cur = home ? { s: 'Início', t: 'Um app para o dono e para a equipe', d: 'Agenda, clientes, equipe, caixa, relatórios e mensagens num app que abre no celular e no computador, sem instalar nada. Toque nos ícones para conhecer cada função.', num: 'Início' } : feats[st.feat];
+    var cur = home ? { s: 'Início', t: 'Um app para o dono e para a equipe', d: 'Funciona no celular e no computador, sem instalar nada. Toque nos ícones para ver cada função.', num: 'Início' } : feats[st.feat];
     var scr = { home: home };
     FEATS.forEach(function (f, i) { scr[f.id] = i === st.feat; });
     var go = { home: function () { self.irPara(-1); } };
