@@ -34,7 +34,7 @@ e acesse <http://localhost:8000>.
 ## Pendências
 
 - WhatsApp da v1: (62) 9920-8147, na constante `WHATSAPP` do script do `Main.dc.html` (um lugar só). A v2 ainda usa o número de exemplo em `v2/js/main.js` e no contato do `v2/index.html`.
-- Preencher o e-mail (`[SEU E-MAIL]`). O preço ainda não foi definido: o site mostra "a partir de R$ XX/mês".
+- Preencher o e-mail (`hyratecnologia@gmail.com`). O preço ainda não foi definido: o site mostra "a partir de R$ XX/mês".
 - Os links do portfólio usam os endereços provisórios do Cloud Run; trocar quando houver domínio.
 
 ## Editor visual
