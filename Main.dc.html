@@ -108,7 +108,12 @@ html{scroll-behavior:smooth;scroll-padding-top:72px}
 .sol-card{padding:24px;display:flex;flex-direction:column;gap:12px}
 .sol-for{margin:0;margin-top:auto;font-size:13px;color:var(--muted-2)}
 .swipe-hint{display:none}
-@media (max-width:520px){.hide-sm{display:none !important}}
+@media (max-width:520px){.hide-sm{display:none !important}
+  .hero-btns{display:grid !important;grid-template-columns:1fr 1fr}
+  .hero-btns .btn{justify-content:center;padding-left:10px;padding-right:10px}
+  .hero-port{order:-1}
+  .show-sm{display:inline !important}}
+.show-sm{display:none}
 @media (max-width:420px){.hide-xs{display:none !important}}
 
 /* WhatsApp discreto */
@@ -302,9 +307,9 @@ a.work:hover{color:var(--fg)}
 <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em">Hyra <span class="muted hide-xs" style="font-weight: 500">Tecnologia</span></span>
 </a>
 <nav class="nav-links" aria-label="Principal" style="display: flex; gap: 28px">
+<a class="nav-link" href="#solucoes">Serviços</a>
 <a class="nav-link" href="#sistema">Site + Agenda</a>
 <a class="nav-link" href="#portfolio">Portfólio</a>
-<a class="nav-link" href="#solucoes">Serviços</a>
 <a class="nav-link" href="#contato">Contato</a>
 </nav>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -312,7 +317,7 @@ a.work:hover{color:var(--fg)}
 <svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg>
 <svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
 </button>
-<a class="btn btn-primary" href="#contato" style="min-height: 44px; padding: 0 18px; font-size: 14px">Orçamento</a>
+<a class="btn btn-primary hide-sm" href="#contato" style="min-height: 44px; padding: 0 18px; font-size: 14px">Orçamento</a>
 </div>
 </div>
 </header>
@@ -322,10 +327,10 @@ a.work:hover{color:var(--fg)}
 <p class="rise eyebrow">Sites · Agendamento online · Sistemas web</p>
 <h1 class="rise rise2 hero-h1" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(40px, 6.2vw, 78px); line-height: 1.02; letter-spacing: -0.035em">Site, agenda online e gestão para o seu negócio<span style="display: inline-block; width: 0.16em; height: 0.16em; margin-left: 0.06em; background: {{accent}}"></span></h1>
 <p class="rise rise3 hero-lead" style="margin: 0; max-width: 580px; font-size: clamp(17px, 1.6vw, 19px); line-height: 1.6; color: var(--lead)">Seus clientes marcam horário pelo site e você cuida da agenda, da equipe e do caixa pelo celular. Atendemos Aparecida de Goiânia, Goiânia e região.</p>
-<div class="rise rise3" style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px">
-<a class="btn btn-primary" href="#contato">Solicitar orçamento<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg></a>
-<a class="btn btn-ghost" href="{{whats}}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Falar no WhatsApp</a>
-<a class="btn btn-ghost hide-sm" href="#portfolio">Ver portfólio</a>
+<div class="rise rise3 hero-btns" style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px">
+<a class="btn btn-primary" href="#contato"><span class="hide-sm">Solicitar orçamento</span><span class="show-sm">Orçamento</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg></a>
+<a class="btn btn-ghost hide-sm" href="{{whats}}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Falar no WhatsApp</a>
+<a class="btn btn-ghost hero-port" href="#portfolio">Ver portfólio</a>
 </div>
 </div>
 <div class="thumb hero-logo" style="flex: 1 1 340px; max-width: 470px; min-width: 0; aspect-ratio: 1 / 1; border: 1px solid var(--line)">
@@ -352,6 +357,49 @@ a.work:hover{color:var(--fg)}
 <text x="499.87" y="840" text-anchor="middle">r 0,5u</text>
 </g>
 </svg>
+</div>
+</section>
+
+<section id="solucoes" class="sec">
+<div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<p class="eyebrow"><i></i>Serviços</p>
+<h2 class="h2">Escolha o que o seu negócio precisa.</h2>
+</div>
+<p class="muted" style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6">Você contrata só o que vai usar.</p>
+</div>
+<div class="sol-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px">
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"></rect><path d="M3 9h18"></path><path d="M7 13h6M7 16h4"></path></svg><span class="num" style="color: var(--muted-2)">01</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site vitrine<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Seus serviços, fotos, endereço e botão de WhatsApp num site rápido, pronto para celular e fácil de achar no Google.</p>
+<p class="sol-for">Lojas, oficinas, som automotivo, restaurantes</p>
+</article>
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"></rect><path d="M3 10h18M8 3v4M16 3v4"></path><path d="M9 15l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">02</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site + agenda + loja<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">O cliente marca o horário e compra pelo site. Você organiza agenda, equipe, clientes e caixa num painel no celular.</p>
+<p class="sol-for">Salões, barbearias, clínicas, estúdios, pet shops</p>
+</article>
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-6 6 6 6"></path><path d="M16 6l6 6-6 6"></path><path d="M14 4l-4 16"></path></svg><span class="num" style="color: var(--muted-2)">03</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Sistemas e apps web<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Cardápios online, catálogos, painéis e ferramentas sob medida para a rotina da sua empresa.</p>
+<p class="sol-for">Sob medida para o seu processo</p>
+</article>
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">04</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Hospedagem e suporte<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Domínio, hospedagem, backup e ajustes incluídos na mensalidade.</p>
+<p class="sol-for">Para todos os projetos</p>
+</article>
+
+</div>
 </div>
 </section>
 
@@ -772,49 +820,6 @@ a.work:hover{color:var(--fg)}
 </div>
 </article>
 </sc-if>
-
-</div>
-</div>
-</section>
-
-<section id="solucoes" class="sec">
-<div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 48px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
-<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
-<p class="eyebrow"><i></i>Serviços</p>
-<h2 class="h2">Escolha o que o seu negócio precisa.</h2>
-</div>
-<p class="muted" style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6">Você contrata só o que vai usar.</p>
-</div>
-<div class="sol-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px">
-
-<article class="card sol-card">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"></rect><path d="M3 9h18"></path><path d="M7 13h6M7 16h4"></path></svg><span class="num" style="color: var(--muted-2)">01</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site vitrine<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Seus serviços, fotos, endereço e botão de WhatsApp num site rápido, pronto para celular e fácil de achar no Google.</p>
-<p class="sol-for">Lojas, oficinas, som automotivo, restaurantes</p>
-</article>
-
-<article class="card sol-card">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"></rect><path d="M3 10h18M8 3v4M16 3v4"></path><path d="M9 15l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">02</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site + agenda + loja<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">O cliente marca o horário e compra pelo site. Você organiza agenda, equipe, clientes e caixa num painel no celular.</p>
-<p class="sol-for">Salões, barbearias, clínicas, estúdios, pet shops</p>
-</article>
-
-<article class="card sol-card">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-6 6 6 6"></path><path d="M16 6l6 6-6 6"></path><path d="M14 4l-4 16"></path></svg><span class="num" style="color: var(--muted-2)">03</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Sistemas e apps web<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Cardápios online, catálogos, painéis e ferramentas sob medida para a rotina da sua empresa.</p>
-<p class="sol-for">Sob medida para o seu processo</p>
-</article>
-
-<article class="card sol-card">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">04</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Hospedagem e suporte<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Domínio, hospedagem, backup e ajustes incluídos na mensalidade.</p>
-<p class="sol-for">Para todos os projetos</p>
-</article>
 
 </div>
 </div>
