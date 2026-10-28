@@ -1,6 +1,6 @@
 # Site — Hyra Tecnologia
 
-Página inicial do site da Hyra Tecnologia (seções: início, soluções, a solução completa site + agenda + loja, para quem, portfólio, processo e contato).
+Página inicial do site da Hyra Tecnologia (seções: início, a solução completa site + agenda + loja, portfólio, soluções, processo e contato).
 
 ## Versões
 
@@ -33,6 +33,11 @@ e acesse <http://localhost:8000>.
 
 ## Pendências
 
-- Trocar o número de WhatsApp de exemplo (`55XXXXXXXXXXX`) pelo número real. Na v1: constante `WHATSAPP` no script do `Main.dc.html` (um lugar só). Na v2: `v2/js/main.js` (constante `WHATSAPP`) e o link na seção de contato do `v2/index.html`.
+- WhatsApp da v1: (62) 9920-8147, na constante `WHATSAPP` do script do `Main.dc.html` (um lugar só). A v2 ainda usa o número de exemplo em `v2/js/main.js` e no contato do `v2/index.html`.
 - Preencher o e-mail (`[SEU E-MAIL]`). O preço mostrado é "a partir de R$ 89/mês" (plano Essencial).
 - Os links do portfólio usam os endereços provisórios do Cloud Run; trocar quando houver domínio.
+
+## Editor visual
+
+- `editor.html` abre o site dentro de um editor (clicar, arrastar, cores, espaços, tamanho, esconder, subir/descer seções, recados), separado por computador e celular. Não altera o `Main.dc.html`: salva `alteracoes-site-hyra.json` (em Downloads) para aplicar depois no código.
+- Abrir: dois cliques em `EDITAR O SITE.bat` (precisa do Python; não funciona abrindo o arquivo direto).

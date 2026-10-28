@@ -23,7 +23,7 @@ catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
 :root{--bg:#0B0B0B;--bg-alt:#0F0F0F;--card:#111111;--card-h:#151515;--line:#1F1F1F;--line-2:#262626;--line-strong:#333333;--fg:#F5F5F5;--fg-2:#D4D4D4;--lead:#B5B5B5;--muted:#A3A3A3;--muted-2:#8A8A8A;--head:rgba(11,11,11,.86);--grid-bg:#121212;--grid-line:#1C1C1C;--guide:#4A4A4A;--guide-2:#7A7A7A;--shadow:none;color-scheme:dark}
 :root[data-theme="light"]{--bg:#FAFAF8;--bg-alt:#F2F1EE;--card:#FFFFFF;--card-h:#FFFFFF;--line:#E6E4E0;--line-2:#DEDBD6;--line-strong:#CFCBC5;--fg:#141414;--fg-2:#2B2B2B;--lead:#45423E;--muted:#5C5852;--muted-2:#6F6A63;--head:rgba(250,250,248,.86);--grid-bg:#F4F3F0;--grid-line:#E7E5E1;--guide:#C9C5BF;--guide-2:#A29D96;--shadow:0 12px 32px rgba(20,20,20,.08);color-scheme:light}
 body{margin:0;background:var(--bg);transition:background .3s ease}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
 *{box-sizing:border-box}
 .site{--accent-ink:var(--accent);background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;min-height:100vh;transition:background .3s ease,color .3s ease}
 :root[data-theme="light"] .site{--accent-ink:color-mix(in srgb,var(--accent) 58%,#000)}
@@ -83,25 +83,101 @@ html{scroll-behavior:smooth}
 .sol-pill b{color:var(--accent-ink);font-weight:700}
 .niches{display:flex;flex-wrap:wrap;gap:8px}
 .niches::-webkit-scrollbar{display:none}
-.app-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:auto 1fr;grid-template-areas:"chips phone" "cap phone";column-gap:56px;row-gap:28px;align-items:start}
+.app-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:auto auto 1fr;grid-template-areas:"chips phone" "desc phone" "cta phone";column-gap:56px;row-gap:28px;align-items:start}
 .app-chips{grid-area:chips;display:flex;flex-direction:column;gap:12px;min-width:0}
-.app-chips .niches{flex-wrap:wrap}
+.app-chips .niches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-width:520px}
+.app-chips .niches .chip{padding:0 8px;text-align:center}
 .app-phone{grid-area:phone;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
-.app-cap{grid-area:cap;display:flex;flex-direction:column;gap:16px;min-width:0}
-.app-cap h3{margin:0;font:700 clamp(24px,2.6vw,32px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.02em}
-.app-cap p{margin:0;font-size:17px;line-height:1.6;color:var(--lead)}
+.app-desc{grid-area:desc;display:flex;flex-direction:column;gap:12px;min-width:0}
+.app-desc h3{margin:0;font:700 clamp(24px,2.6vw,32px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-.02em}
+.app-desc p{margin:0;font-size:17px;line-height:1.6;color:var(--lead)}
+.app-phone{position:sticky;top:96px}
+.feat-list{grid-area:desc;list-style:none;margin:0;padding:0;border-top:1px solid var(--line);min-width:0}
+.feat-list li{border-bottom:1px solid var(--line)}
+.fl{width:100%;display:flex;align-items:center;gap:18px;padding:13px 0;background:none;border:0;color:var(--fg-2);font:500 16px Inter,system-ui,sans-serif;text-align:left;cursor:pointer;transition:color .2s ease}
+.fl:hover{color:var(--fg)}
+.fl .num{flex:none;width:22px}
+.fl.on{color:var(--fg)}.fl.on .fl-t{font-weight:600}
+.fl-d{margin:0 0 16px 40px;font-size:15px;line-height:1.6;color:var(--muted)}
+@media (min-width:861px){.app-desc{display:none !important}}
+.app-cta{grid-area:cta;display:flex;flex-direction:column;gap:16px;min-width:0}
+.sol-card{padding:24px;display:flex;flex-direction:column;gap:12px}
+.sol-for{margin:0;margin-top:auto;font-size:13px;color:var(--muted-2)}
+.swipe-hint{display:none}
+@media (max-width:520px){.hide-sm{display:none !important}}
+@media (max-width:420px){.hide-xs{display:none !important}}
+
+/* WhatsApp discreto */
+.wa-float{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:20;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line-strong);color:var(--fg) !important;box-shadow:var(--shadow);transition:border-color .2s ease,color .2s ease,transform .25s ease}
+.wa-float:hover{border-color:var(--accent);color:var(--accent-ink) !important;transform:translateY(-2px)}
+
+/* Logo do topo: se desenha ao abrir e de novo ao passar o mouse ou tocar */
+.hl-h{fill:var(--fg);fill-opacity:0;stroke:var(--fg);stroke-width:22;stroke-dasharray:1;stroke-dashoffset:1;animation:dash 1.1s .15s cubic-bezier(.6,0,.2,1) forwards,fillin .5s 1.05s ease forwards,strokeout .4s 1.4s ease forwards}
+.hl-sq{fill-opacity:0;stroke-width:22;stroke-dasharray:1;stroke-dashoffset:1;animation:dash .7s .75s cubic-bezier(.6,0,.2,1) forwards,fillin .4s 1.3s ease forwards,strokeout .4s 1.6s ease forwards}
+@keyframes strokeout{to{stroke-opacity:0}}
+
+/* App de exemplo: selo e ícones chamando para o toque */
+.ph{position:relative}
+.ph-badge{position:absolute;top:-11px;right:18px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--accent);color:#0B0B0B;font:600 11px Inter,system-ui,sans-serif;letter-spacing:.02em}
+.ph-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#0B0B0B;animation:pulse 1.4s ease infinite}
+.nudge .ph-ic i{animation:nudge 3s ease-in-out infinite}
+.nudge .ph-ic:nth-child(2) i{animation-delay:.1s}.nudge .ph-ic:nth-child(3) i{animation-delay:.2s}.nudge .ph-ic:nth-child(4) i{animation-delay:.3s}
+.nudge .ph-ic:nth-child(5) i{animation-delay:.4s}.nudge .ph-ic:nth-child(6) i{animation-delay:.5s}.nudge .ph-ic:nth-child(7) i{animation-delay:.6s}
+.nudge .ph-ic:nth-child(8) i{animation-delay:.7s}.nudge .ph-ic:nth-child(9) i{animation-delay:.8s}.nudge .ph-ic:nth-child(10) i{animation-delay:.9s}
+.nudge .ph-ic:nth-child(11) i{animation-delay:1s}.nudge .ph-ic:nth-child(12) i{animation-delay:1.1s}
+@keyframes nudge{0%,62%,100%{transform:scale(1)}72%{transform:scale(1.14)}}
+
+/* Celular: tudo mais compacto para rolar menos */
 @media (max-width:860px){
   .nav-links{display:none !important}
-  .app-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"chips" "phone" "cap"}
-  .app-chips .niches .chip{min-height:40px;padding:0 14px}
-  .app-desc{display:none !important}
+  .head-in{height:60px !important}
+  .head-in .btn{min-height:38px !important;padding:0 14px !important;font-size:13px !important}
+  .head-in .theme-btn{width:38px;height:38px}
+  .sec-in{padding-top:40px;padding-bottom:40px;gap:22px !important}
+  .h2{font-size:25px}
+  .eyebrow{font-size:11px}
+  .btn{min-height:42px;padding:0 16px;font-size:14px;gap:8px}
+  .hero{padding-top:28px !important;padding-bottom:36px !important;gap:20px !important}
+  .hero-logo{display:none !important}
+  .hero > div:first-child{gap:16px !important}
+  .hero-h1{font-size:33px !important}
+  .hero-lead{font-size:15px !important;line-height:1.55 !important}
+  .sis-lead{font-size:15px !important}
+  .sol-pills{display:none}
+  .feat-list{display:none !important}
+  .app-phone{position:static}
+  .app-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"chips" "desc" "phone" "cta";row-gap:16px}
+  .app-chips{gap:8px}
+  .app-chips .niches{gap:6px;max-width:none}
+  .app-chips .niches .chip{min-height:36px;padding:0 4px;font-size:13px}
+  .app-desc{gap:4px;padding:12px 14px;background:var(--card);border-left:2px solid var(--accent)}
+  .app-desc .num{font-size:11px}
+  .app-desc h3{font-size:18px}
+  .app-desc p{font-size:14px;line-height:1.5}
+  .ph-scr{min-height:620px}
+  .port-grid{display:flex !important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px !important;margin:0 calc(-1 * clamp(16px,4vw,40px));padding:0 clamp(16px,4vw,40px) 6px;scrollbar-width:none}
+  .port-grid::-webkit-scrollbar{display:none}
+  .port-grid > *{flex:0 0 84%;scroll-snap-align:center;min-width:0}
+  .port-grid .work > div:last-child{padding:14px 16px 16px !important;gap:6px !important}
+  .port-grid h3{font-size:17px !important}
+  .port-grid p{font-size:13.5px !important;line-height:1.5 !important}
+  .swipe-hint{display:block;margin-top:-10px;font-size:12px;color:var(--muted-2)}
+  #portfolio .chip{min-height:34px;padding:0 12px;font-size:13px}
+  .sol-grid{grid-template-columns:1fr 1fr !important;gap:10px !important}
+  .sol-card{padding:16px;gap:8px}
+  .sol-card svg{width:24px;height:24px}
+  .sol-card h3{font-size:16px !important}
+  .sol-card p{font-size:13px !important;line-height:1.45 !important}
+  .sol-card .sol-for{display:none}
+  .proc-list{grid-template-columns:1fr 1fr !important}
+  .proc-list li{padding:16px 12px 0 0 !important;gap:6px !important}
+  .proc-list h3{font-size:16px !important}
+  .proc-list p{font-size:13px !important;line-height:1.45 !important}
+  #contato .sec-in > div:first-child{gap:14px !important}
+  #contato .sec-in > div:first-child > div > div{padding:12px 0 !important}
+  #contato form{padding:18px !important;gap:12px !important}
+  .field{min-height:44px;padding:10px 12px}
 }
-@media (max-width:520px){.hide-sm{display:none !important}}
-@media (max-width:860px){.hero{gap:28px !important;padding-top:32px !important}.hero-logo{order:-1;flex:none !important;width:min(46vw,190px)}}
-.wa-float{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:20;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#25D366;color:#FFFFFF !important;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:transform .25s ease}
-.wa-float:hover{transform:scale(1.08)}
-.site .btn-wa,.site .btn-wa:hover{background:#25D366;border:1px solid #25D366;color:#0B0B0B}
-@media (max-width:420px){.hide-xs{display:none !important}}
 
 /* O celular de exemplo: as cores vêm do negócio escolhido */
 .ph{width:100%;max-width:340px;border:1px solid var(--line-strong);border-radius:42px;padding:10px;background:#050505;box-shadow:var(--shadow)}
@@ -208,21 +284,21 @@ html{scroll-behavior:smooth}
 .go{margin-top:auto;padding-top:6px;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;color:var(--accent-ink)}
 a.work{text-decoration:none;color:var(--fg)}
 a.work:hover{color:var(--fg)}
-@media (prefers-reduced-motion:reduce){.lg-guide,.lg-circle{animation:none;stroke-dashoffset:0;opacity:.45}.lg-h,.lg-sq{animation:none;stroke-dashoffset:0;fill-opacity:1}.lg-label{animation:none;opacity:.5}.rise{animation:none;opacity:1;transform:none}html{scroll-behavior:auto}.ph-live::before{animation:none}}
+@media (prefers-reduced-motion:reduce){.hl-h,.hl-sq{animation:none;stroke-dashoffset:0;fill-opacity:1;stroke-opacity:0}.nudge .ph-ic i,.ph-badge::before{animation:none}.lg-guide,.lg-circle{animation:none;stroke-dashoffset:0;opacity:.45}.lg-h,.lg-sq{animation:none;stroke-dashoffset:0;fill-opacity:1}.lg-label{animation:none;opacity:.5}.rise{animation:none;opacity:1;transform:none}html{scroll-behavior:auto}.ph-live::before{animation:none}}
 </style>
 </helmet>
 <div class="site" style="--accent: {{accent}}">
 
 <header style="position: sticky; top: 0; z-index: 10; background: var(--head); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line)">
-<div class="wrap" style="height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+<div class="wrap head-in" style="height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
 <a href="#inicio" style="display: flex; align-items: center; gap: 12px; text-decoration: none">
-<svg width="30" height="30" viewBox="200.9 202.06 597.76 597.76" role="img" aria-label="Logo Hyra Tecnologia"><path d="M 600.86823,202.05692 H 798.66908 V 399.85725 H 600.86823 Z" fill="{{accent}}"></path><path class="logo-h" d="m 200.91538,202.0564 v 597.75421 h 0.90073 196.90115 v -5.1e-4 h 2.03089 a 99.044067,99.044067 0 0 1 0,-0.0481 99.044067,99.044067 0 0 1 99.04408,-99.04409 99.044067,99.044067 0 0 1 99.04409,99.04409 99.044067,99.044067 0 0 1 0,0.0481 h 198.93204 a 297.97617,297.97617 0 0 0 0,-0.0481 297.97617,297.97617 0 0 0 -297.97613,-297.97613 297.97617,297.97617 0 0 0 -101.07497,17.6661 v -317.39509 -5.2e-4 z"></path></svg>
+<svg class="hl" width="32" height="32" viewBox="189 190 622 622" role="img" aria-label="Logo Hyra Tecnologia"><path class="hl-sq" pathLength="1" d="M 600.86823,202.05692 H 798.66908 V 399.85725 H 600.86823 Z" fill="{{accent}}" stroke="{{accent}}"></path><path class="hl-h" pathLength="1" d="m 200.91538,202.0564 v 597.75421 h 0.90073 196.90115 v -5.1e-4 h 2.03089 a 99.044067,99.044067 0 0 1 0,-0.0481 99.044067,99.044067 0 0 1 99.04408,-99.04409 99.044067,99.044067 0 0 1 99.04409,99.04409 99.044067,99.044067 0 0 1 0,0.0481 h 198.93204 a 297.97617,297.97617 0 0 0 0,-0.0481 297.97617,297.97617 0 0 0 -297.97613,-297.97613 297.97617,297.97617 0 0 0 -101.07497,17.6661 v -317.39509 -5.2e-4 z"></path></svg>
 <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em">Hyra <span class="muted hide-xs" style="font-weight: 500">Tecnologia</span></span>
 </a>
 <nav class="nav-links" aria-label="Principal" style="display: flex; gap: 28px">
-<a class="nav-link" href="#solucoes">Soluções</a>
 <a class="nav-link" href="#sistema">Site + Agenda</a>
 <a class="nav-link" href="#portfolio">Portfólio</a>
+<a class="nav-link" href="#solucoes">Soluções</a>
 <a class="nav-link" href="#contato">Contato</a>
 </nav>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -238,16 +314,16 @@ a.work:hover{color:var(--fg)}
 <section id="inicio" class="wrap hero" style="padding-top: clamp(56px, 8vw, 104px); padding-bottom: clamp(64px, 8vw, 104px); display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
 <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
 <p class="rise eyebrow">Sites · Agendamento online · Sistemas web</p>
-<h1 class="rise rise2" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(40px, 6.2vw, 78px); line-height: 1.02; letter-spacing: -0.035em">Sites e sistemas que colocam seu negócio para trabalhar<span style="display: inline-block; width: 0.16em; height: 0.16em; margin-left: 0.06em; background: {{accent}}"></span></h1>
-<p class="rise rise3" style="margin: 0; max-width: 580px; font-size: clamp(17px, 1.6vw, 19px); line-height: 1.6; color: var(--lead)">Criamos sites que aparecem no Google, páginas com agendamento online e sistemas sob medida para comércios e prestadores de serviço de Aparecida de Goiânia e região.</p>
+<h1 class="rise rise2 hero-h1" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(40px, 6.2vw, 78px); line-height: 1.02; letter-spacing: -0.035em">Sites e sistemas que colocam seu negócio para trabalhar<span style="display: inline-block; width: 0.16em; height: 0.16em; margin-left: 0.06em; background: {{accent}}"></span></h1>
+<p class="rise rise3 hero-lead" style="margin: 0; max-width: 580px; font-size: clamp(17px, 1.6vw, 19px); line-height: 1.6; color: var(--lead)">Criamos sites que aparecem no Google, páginas com agendamento online e sistemas sob medida para comércios e prestadores de serviço de Aparecida de Goiânia e região.</p>
 <div class="rise rise3" style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px">
 <a class="btn btn-primary" href="#contato">Solicitar orçamento<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg></a>
-<a class="btn btn-wa" href="{{whats}}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Falar no WhatsApp</a>
-<a class="btn btn-ghost" href="#portfolio">Ver portfólio</a>
+<a class="btn btn-ghost" href="{{whats}}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Falar no WhatsApp</a>
+<a class="btn btn-ghost hide-sm" href="#portfolio">Ver portfólio</a>
 </div>
 </div>
 <div class="thumb hero-logo" style="flex: 1 1 340px; max-width: 470px; min-width: 0; aspect-ratio: 1 / 1; border: 1px solid var(--line)">
-<svg viewBox="100 101 800 800" width="100%" height="100%" aria-hidden="true" style="display: block">
+<svg class="hl" viewBox="100 101 800 800" width="100%" height="100%" aria-hidden="true" style="display: block">
 <path class="lg-guide lg-g1" pathLength="1" d="M 200.92 140 V 860"></path>
 <path class="lg-guide lg-g2" pathLength="1" d="M 398.72 140 V 860"></path>
 <path class="lg-guide lg-g3" pathLength="1" d="M 600.87 140 V 860"></path>
@@ -273,55 +349,12 @@ a.work:hover{color:var(--fg)}
 </div>
 </section>
 
-<section id="solucoes" class="sec">
-<div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 48px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
-<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
-<p class="eyebrow"><i></i>Soluções</p>
-<h2 class="h2">Da vitrine na internet ao sistema que organiza o seu dia.</h2>
-</div>
-<p class="muted" style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6">Cada solução é montada para o tamanho do seu negócio. Você só paga pelo que vai usar.</p>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px">
-
-<article class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"></rect><path d="M3 9h18"></path><path d="M7 13h6M7 16h4"></path></svg><span class="num" style="color: var(--muted-2)">01</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site vitrine<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Seus serviços, fotos, endereço e botão de WhatsApp num site rápido, pronto para celular e fácil de achar no Google.</p>
-<p style="margin: 0; margin-top: auto; font-size: 13px; color: var(--muted-2)">Lojas, oficinas, som automotivo, restaurantes</p>
-</article>
-
-<article class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"></rect><path d="M3 10h18M8 3v4M16 3v4"></path><path d="M9 15l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">02</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site + agenda + loja<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">O cliente marca o horário e compra pelo site. Você organiza agenda, equipe, clientes e caixa num painel no celular.</p>
-<p style="margin: 0; margin-top: auto; font-size: 13px; color: var(--muted-2)">Salões, barbearias, clínicas, estúdios, pet shops</p>
-</article>
-
-<article class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-6 6 6 6"></path><path d="M16 6l6 6-6 6"></path><path d="M14 4l-4 16"></path></svg><span class="num" style="color: var(--muted-2)">03</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Sistemas e apps web<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Cardápios online, catálogos, painéis e ferramentas feitas para a rotina da sua empresa, que abrem no navegador ou no celular.</p>
-<p style="margin: 0; margin-top: auto; font-size: 13px; color: var(--muted-2)">Sob medida para o seu processo</p>
-</article>
-
-<article class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 20px; min-height: 300px">
-<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">04</span></div>
-<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Hospedagem e suporte<span class="card-sq"></span></h3>
-<p style="margin: 0; font-size: 15px; line-height: 1.6">Domínio, hospedagem, backup e ajustes por uma mensalidade. Seu site no ar sem você precisar se preocupar.</p>
-<p style="margin: 0; margin-top: auto; font-size: 13px; color: var(--muted-2)">Para todos os projetos</p>
-</article>
-
-</div>
-</div>
-</section>
-
 <section id="sistema" class="sec" style="background: var(--bg-alt)">
 <div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 40px">
 <div style="display: flex; flex-direction: column; gap: 20px; max-width: 820px">
 <p class="eyebrow"><i></i>A solução completa</p>
 <h2 class="h2">Seu negócio inteiro no celular: site, agenda e loja num lugar só.</h2>
-<p style="margin: 0; max-width: 640px; font-size: 18px; line-height: 1.6; color: var(--lead)">O cliente marca sozinho pelo site, a equipe vê a própria agenda, você acompanha o caixa e os números na hora, e o sistema chama o cliente de volta pelo WhatsApp.</p>
+<p class="sis-lead" style="margin: 0; max-width: 640px; font-size: 18px; line-height: 1.6; color: var(--lead)">O cliente marca sozinho pelo site, a equipe vê a própria agenda, você acompanha o caixa e os números na hora, e o sistema chama o cliente de volta pelo WhatsApp.</p>
 <div class="sol-pills"><span class="sol-pill">Site <b>+</b> Agenda <b>+</b> Shop</span><span class="sol-pill">Mensagens <b>em 1 clique</b></span><span class="sol-pill">Gestão <b>em tempo real</b></span></div>
 </div>
 
@@ -337,6 +370,7 @@ a.work:hover{color:var(--fg)}
 
 <div class="app-phone">
 <div class="ph" aria-label="{{phoneLabel}}">
+<span class="ph-badge" aria-hidden="true">Exemplo interativo</span>
 <div class="ph-scr" style="--p-bg: {{p.bg}}; --p-card: {{p.card}}; --p-fg: {{p.fg}}; --p-mut: {{p.mut}}; --p-ac: {{p.ac}}; --p-acfg: {{p.acfg}}; --p-line: {{p.line}}; --p-font: {{p.font}}; --p-r: {{p.r}}">
 <div class="ph-bar" aria-hidden="true"><span>9:41</span><span><i style="height: 4px"></i><i style="height: 6px"></i><i style="height: 8px"></i><i style="height: 10px"></i></span></div>
 <sc-if value="{{notHome}}" hint-placeholder-val="{{ false }}">
@@ -346,9 +380,6 @@ a.work:hover{color:var(--fg)}
 <div class="ph-top" style="padding-left: 16px"><span class="ph-logo">{{n.ini}}</span><b>{{n.name}}</b><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg></div>
 </sc-if>
 <div class="ph-main">
-<sc-if value="{{notHome}}" hint-placeholder-val="{{ false }}">
-<div class="ph-tip"><b>{{cur.t}}</b><span>{{cur.d}}</span></div>
-</sc-if>
 
 <sc-if value="{{scr.home}}" hint-placeholder-val="{{ true }}">
 <div class="ph-body">
@@ -359,7 +390,7 @@ a.work:hover{color:var(--fg)}
 <span class="ph-mut">Próximo: 14:00 · {{n.c0first}} · {{n.s0.nome}} com {{n.team0}}</span>
 </div>
 <span class="ph-lbl">Toque para ver cada função</span>
-<div class="ph-tiles3">
+<div class="ph-tiles3 {{nudge}}">
 <button type="button" class="ph-ic" onClick="{{go.site}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M8 21h8M12 18v3"></path></svg></i>Meu site</button>
 <button type="button" class="ph-ic" onClick="{{go.agendar}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></i>Agendar</button>
 <button type="button" class="ph-ic" onClick="{{go.clientes}}"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"></path></svg></i>Clientes</button>
@@ -566,10 +597,10 @@ a.work:hover{color:var(--fg)}
 </sc-if>
 </div>
 <nav class="ph-tabs" aria-label="Menu do app de exemplo">
+<button type="button" class="ph-tab {{tab.site}}" onClick="{{go.site}}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M8 21h8M12 18v3"></path></svg>Site</button>
 <button type="button" class="ph-tab {{tab.home}}" onClick="{{go.home}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg>Início</button>
 <button type="button" class="ph-tab {{tab.agendar}}" onClick="{{go.agendar}}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Agenda</button>
 <button type="button" class="ph-tab {{tab.clientes}}" onClick="{{go.clientes}}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"></path></svg>Clientes</button>
-<button type="button" class="ph-tab {{tab.caixa}}" onClick="{{go.caixa}}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Caixa</button>
 <button type="button" class="ph-tab {{tab.massa}}" onClick="{{go.massa}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>Mensagens</button>
 </nav>
 </div>
@@ -577,12 +608,18 @@ a.work:hover{color:var(--fg)}
 <span class="muted" style="font-size: 13px; text-align: center">App de exemplo · toque nos ícones para navegar</span>
 </div>
 
-<div class="app-cap">
-<div class="app-desc" style="display: flex; flex-direction: column; gap: 12px">
+<div class="app-desc" aria-live="polite">
 <span class="num">{{cur.num}}</span>
 <h3>{{cur.t}}</h3>
 <p>{{cur.d}}</p>
 </div>
+<ol class="feat-list" aria-label="Funções do sistema">
+<sc-for list="{{featList}}" as="f" hint-placeholder-count="12">
+<li><button type="button" class="fl {{f.cls}}" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}"><span class="num">{{f.n}}</span><span class="fl-t">{{f.t}}</span></button>
+<sc-if value="{{f.on}}" hint-placeholder-val="{{ false }}"><p class="fl-d">{{f.d}}</p></sc-if></li>
+</sc-for>
+</ol>
+<div class="app-cta">
 <div style="display: flex; flex-wrap: wrap; gap: 12px">
 <a class="btn btn-primary" href="#contato">Quero no meu negócio</a>
 <a class="btn btn-ghost" href="https://afeto-628683916456.southamerica-east1.run.app" target="_blank" rel="noopener">Ver um site no ar ↗</a>
@@ -606,7 +643,8 @@ a.work:hover{color:var(--fg)}
 </sc-for>
 </div>
 </div>
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px">
+<span class="swipe-hint">Deslize para o lado para ver todos →</span>
+<div class="port-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px">
 
 <sc-if value="{{show.novovisual}}" hint-placeholder-val="{{ true }}">
 <a class="card work" href="https://afeto-udepsqtaoa-rj.a.run.app" target="_blank" rel="noopener" style="display: flex; flex-direction: column; height: 100%">
@@ -719,13 +757,56 @@ a.work:hover{color:var(--fg)}
 </div>
 </section>
 
+<section id="solucoes" class="sec">
+<div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+<p class="eyebrow"><i></i>Soluções</p>
+<h2 class="h2">Da vitrine na internet ao sistema que organiza o seu dia.</h2>
+</div>
+<p class="muted" style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6">Cada solução é montada para o tamanho do seu negócio. Você só paga pelo que vai usar.</p>
+</div>
+<div class="sol-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px">
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"></rect><path d="M3 9h18"></path><path d="M7 13h6M7 16h4"></path></svg><span class="num" style="color: var(--muted-2)">01</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site vitrine<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Seus serviços, fotos, endereço e botão de WhatsApp num site rápido, pronto para celular e fácil de achar no Google.</p>
+<p class="sol-for">Lojas, oficinas, som automotivo, restaurantes</p>
+</article>
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"></rect><path d="M3 10h18M8 3v4M16 3v4"></path><path d="M9 15l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">02</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Site + agenda + loja<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">O cliente marca o horário e compra pelo site. Você organiza agenda, equipe, clientes e caixa num painel no celular.</p>
+<p class="sol-for">Salões, barbearias, clínicas, estúdios, pet shops</p>
+</article>
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-6 6 6 6"></path><path d="M16 6l6 6-6 6"></path><path d="M14 4l-4 16"></path></svg><span class="num" style="color: var(--muted-2)">03</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Sistemas e apps web<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Cardápios online, catálogos, painéis e ferramentas feitas para a rotina da sua empresa, que abrem no navegador ou no celular.</p>
+<p class="sol-for">Sob medida para o seu processo</p>
+</article>
+
+<article class="card sol-card">
+<div style="display: flex; justify-content: space-between; align-items: flex-start"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg><span class="num" style="color: var(--muted-2)">04</span></div>
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px">Hospedagem e suporte<span class="card-sq"></span></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6">Domínio, hospedagem, backup e ajustes por uma mensalidade. Seu site no ar sem você precisar se preocupar.</p>
+<p class="sol-for">Para todos os projetos</p>
+</article>
+
+</div>
+</div>
+</section>
+
 <section id="processo" class="sec">
 <div class="wrap sec-in" style="display: flex; flex-direction: column; gap: 48px">
 <div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
 <p class="eyebrow"><i></i>Como trabalhamos</p>
 <h2 class="h2">Do primeiro papo ao site no ar.</h2>
 </div>
-<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 0; border-top: 1px solid var(--line-strong)">
+<ol class="proc-list" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 0; border-top: 1px solid var(--line-strong)">
 <li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">01</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Conversa</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Você conta como funciona o seu negócio e o que precisa resolver.</p></li>
 <li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">02</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Proposta</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Orçamento claro, com prazo e o que está incluso. Sem letras miúdas.</p></li>
 <li style="padding: 28px 24px 0 0; display: flex; flex-direction: column; gap: 12px"><span class="num">03</span><h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">Design e desenvolvimento</h3><p class="muted" style="margin: 0; font-size: 15px; line-height: 1.6">Você aprova o visual e acompanha cada etapa até ficar do seu jeito.</p></li>
@@ -751,7 +832,7 @@ a.work:hover{color:var(--fg)}
 <div style="display: flex; flex-direction: column; gap: 8px"><label for="f-neg" style="font-size: 14px; font-weight: 500; color: var(--fg-2)">Seu negócio</label><input id="f-neg" class="field" type="text" placeholder="Ex.: salão, oficina, loja"></div>
 <div style="display: flex; flex-direction: column; gap: 8px"><label for="f-tel" style="font-size: 14px; font-weight: 500; color: var(--fg-2)">WhatsApp</label><input id="f-tel" class="field" type="tel" autocomplete="tel"></div>
 <div style="display: flex; flex-direction: column; gap: 8px"><label for="f-serv" style="font-size: 14px; font-weight: 500; color: var(--fg-2)">O que você precisa?</label><select id="f-serv" class="field"><option>Site vitrine</option><option>Site + agenda + loja (sistema completo)</option><option>Sistema ou app web sob medida</option><option>Hospedagem e manutenção de site</option><option>Outro</option></select></div>
-<button type="button" class="btn btn-wa" onClick="{{enviarPedido}}" style="justify-content: center; cursor: pointer; font-family: Inter, system-ui, sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Enviar pedido pelo WhatsApp</button>
+<button type="button" class="btn btn-primary" onClick="{{enviarPedido}}" style="justify-content: center; cursor: pointer; font-family: Inter, system-ui, sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"></path></svg>Enviar pedido pelo WhatsApp</button>
 <p style="margin: 0; font-size: 13px; color: var(--muted-2)">Abre o WhatsApp com a mensagem pronta. Respondemos em horário comercial.</p>
 </form>
 </div>
@@ -773,11 +854,23 @@ a.work:hover{color:var(--fg)}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF9800","options":["#FF9800","#F5F5F5","#3B82F6","#22C55E"]},"$preview":{"width":1440,"height":8200}}'>
 // WhatsApp da Hyra (só números, com 55 e DDD). Usado no botão flutuante, no topo e no contato.
-var WHATSAPP = '55XXXXXXXXXXX';
+var WHATSAPP = '556299208147';
 var MSG_PADRAO = 'Olá! Vi o site da Hyra e quero um orçamento.';
+// Logo animada: passa o mouse ou toca e ela se desenha de novo.
+if (!window.__hyraLogo) {
+  window.__hyraLogo = true;
+  var redesenhar = function (e) {
+    var l = e.target.closest && e.target.closest('.hl');
+    if (!l || (e.type === 'mouseover' && e.relatedTarget && l.contains(e.relatedTarget))) return;
+    l.querySelectorAll('path, g').forEach(function (p) { p.getAnimations().forEach(function (a) { a.cancel(); a.play(); }); });
+  };
+  document.addEventListener('mouseover', redesenhar);
+  document.addEventListener('click', redesenhar);
+}
 function linkWhats(texto) { return 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto); }
 
 var PALS = {
+  hyra: { nome: 'Padrão', bg: '#111111', card: '#1A1A1A', fg: '#F5F5F5', mut: '#A3A3A3', ac: '#FF9800', acfg: '#0B0B0B', line: '#2A2A2A' },
   rose: { nome: 'Rosé', bg: '#FBF6F4', card: '#FFFFFF', fg: '#2B1D19', mut: '#7A6660', ac: '#B5546A', acfg: '#FFFFFF', line: '#EEDFDA' },
   noite: { nome: 'Noturno', bg: '#16120F', card: '#211B17', fg: '#F3EDE6', mut: '#A89A8E', ac: '#C9A227', acfg: '#16120F', line: '#3A3029' },
   salvia: { nome: 'Sálvia', bg: '#F2F6F4', card: '#FFFFFF', fg: '#1F332A', mut: '#5E7468', ac: '#3F7A63', acfg: '#FFFFFF', line: '#D9E5DF' },
@@ -785,6 +878,8 @@ var PALS = {
   oceano: { nome: 'Oceano', bg: '#F4F8FC', card: '#FFFFFF', fg: '#1A2B3C', mut: '#5B6B7B', ac: '#2F6FD6', acfg: '#FFFFFF', line: '#DCE6F0' },
   areia: { nome: 'Areia', bg: '#F7F2EA', card: '#FFFDF9', fg: '#2E2418', mut: '#7B6A55', ac: '#B86B1F', acfg: '#FFFFFF', line: '#E8DDCC' }
 };
+// O visual padrão acompanha o tema claro do site.
+var HYRA_CLARO = { nome: 'Padrão', bg: '#FAFAF8', card: '#FFFFFF', fg: '#141414', mut: '#5C5852', ac: '#C46A00', acfg: '#FFFFFF', line: '#E6E4E0' };
 var FONTS = {
   serif: { nome: 'Elegante', css: "Fraunces, Georgia, serif" },
   sans: { nome: 'Moderna', css: "'Space Grotesk', sans-serif" },
@@ -795,25 +890,31 @@ var CANTOS = { retos: { nome: 'Retos', r: '4px' }, redondos: { nome: 'Redondos',
 
 // Negócios de exemplo (nomes e números inventados) para mostrar cada função.
 var NICHES = [
-  { key: 'salao', label: 'Salão de beleza', name: 'Studio Lumi', tag: 'Cabelo, unhas e beleza com hora marcada.', pal: 'rose', font: 'serif', canto: 'redondos', total: 248,
-    services: [['Corte feminino', '1h', 90], ['Escova', '45 min', 60], ['Manicure', '40 min', 35]],
-    team: [['Ana', 'Cabeleireira', 40], ['Bia', 'Manicure', 50], ['Carla', 'Escovista', 40]],
-    products: [['Shampoo nutritivo', 49], ['Máscara capilar', 69]],
-    clients: ['Juliana Souza', 'Mariana Lima', 'Patrícia Alves', 'Fernanda Rocha', 'Camila Dias'],
-    massa: 'Abrimos horários no sábado à tarde. Quer garantir o seu?', volta: 'Essa semana tem 10% de desconto na escova. Quer marcar?', promo: '20% off na escova' },
+  { key: 'geral', label: 'Seu negócio', name: 'Seu Negócio', tag: 'Seus serviços com hora marcada.', pal: 'hyra', font: 'sans', canto: 'retos', total: 230,
+    services: [['Atendimento', '1h', 80], ['Retorno', '30 min', 50], ['Pacote completo', '2h', 150]],
+    team: [['Ana', 'Atendente', 40], ['Bruno', 'Especialista', 45], ['Carla', 'Atendente', 35]],
+    products: [['Produto da casa', 49], ['Vale-presente', 100]],
+    clients: ['Juliana Souza', 'Lucas Martins', 'Patrícia Alves', 'Rafael Costa', 'Camila Dias'],
+    massa: 'Abrimos novos horários nesta semana. Quer garantir o seu?', volta: 'Essa semana tem 10% de desconto para você voltar. Quer marcar?', promo: '10% off no pacote completo' },
   { key: 'barbearia', label: 'Barbearia', name: 'Barbearia Navalha', tag: 'Corte, barba e aquele papo bom.', pal: 'noite', font: 'sans', canto: 'retos', total: 312,
     services: [['Corte', '40 min', 45], ['Barba', '30 min', 35], ['Corte + barba', '1h', 70]],
     team: [['Marcos', 'Barbeiro', 45], ['Tiago', 'Barbeiro', 45], ['Rafa', 'Barbeiro', 40]],
     products: [['Pomada modeladora', 39], ['Óleo para barba', 45]],
     clients: ['Lucas Martins', 'Pedro Henrique', 'Rafael Costa', 'Gabriel Nunes', 'Thiago Reis'],
     massa: 'Agora tem horário a partir das 8h. Bora marcar o corte da semana?', volta: 'Seu corte está te esperando: essa semana a barba sai pela metade do preço.', promo: 'Corte + barba por R$ 59' },
-  { key: 'clinica', label: 'Clínica e consultório', name: 'Clínica Bem-Estar', tag: 'Saúde e cuidado, presencial ou online.', pal: 'salvia', font: 'serif', canto: 'redondos', total: 186,
+  { key: 'salao', label: 'Salão', name: 'Studio Lumi', tag: 'Cabelo, unhas e beleza com hora marcada.', pal: 'rose', font: 'serif', canto: 'redondos', total: 248,
+    services: [['Corte feminino', '1h', 90], ['Escova', '45 min', 60], ['Manicure', '40 min', 35]],
+    team: [['Ana', 'Cabeleireira', 40], ['Bia', 'Manicure', 50], ['Carla', 'Escovista', 40]],
+    products: [['Shampoo nutritivo', 49], ['Máscara capilar', 69]],
+    clients: ['Juliana Souza', 'Mariana Lima', 'Patrícia Alves', 'Fernanda Rocha', 'Camila Dias'],
+    massa: 'Abrimos horários no sábado à tarde. Quer garantir o seu?', volta: 'Essa semana tem 10% de desconto na escova. Quer marcar?', promo: '20% off na escova' },
+  { key: 'clinica', label: 'Clínica', name: 'Clínica Bem-Estar', tag: 'Saúde e cuidado, presencial ou online.', pal: 'salvia', font: 'serif', canto: 'redondos', total: 186,
     services: [['Consulta', '50 min', 180], ['Retorno', '30 min', 120], ['Avaliação', '1h', 150]],
     team: [['Dra. Helena', 'Psicóloga', 60], ['Dr. Paulo', 'Nutricionista', 60], ['Renata', 'Fisioterapeuta', 50]],
     products: [['Pacote 4 sessões', 640], ['Vale-presente', 180]],
     clients: ['Ana Beatriz Costa', 'Ricardo Mendes', 'Luana Prado', 'Sérgio Lopes', 'Vanessa Ramos'],
     massa: 'Abrimos novos horários à noite, presenciais e online. Quer agendar?', volta: 'Que tal retomar o seu acompanhamento? Temos horários essa semana.', promo: 'Pacote de 4 sessões com 10% off' },
-  { key: 'tattoo', label: 'Estúdio de tatuagem', name: 'Estúdio Traço', tag: 'Arte que fica na pele.', pal: 'tinta', font: 'got', canto: 'retos', total: 154,
+  { key: 'tattoo', label: 'Tatuagem', name: 'Estúdio Traço', tag: 'Arte que fica na pele.', pal: 'tinta', font: 'got', canto: 'retos', total: 154,
     services: [['Fineline', '1h30', 350], ['Orçamento', '30 min', 0], ['Piercing', '30 min', 120]],
     team: [['Léo', 'Tatuador', 50], ['Duda', 'Tatuadora', 50], ['Nina', 'Piercer', 40]],
     products: [['Pomada cicatrizante', 35], ['Vale-tattoo', 300]],
@@ -853,13 +954,13 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     var tema = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-    this.state = { filter: 'Todos', niche: 0, feat: -1, pal: null, font: null, canto: null, day: 0, slot: null, booked: false, canceled: false, theme: tema };
+    this.state = { filter: 'Todos', niche: 0, feat: -1, tocou: false, pal: null, font: null, canto: null, day: 0, slot: null, booked: false, canceled: false, theme: tema };
   }
   irPara(i) {
-    this.setState({ feat: i });
-    // A tela nova pode ter outra altura: se o topo do app sumiu, volta para ele.
-    var app = document.querySelector('.ph');
-    if (app && app.getBoundingClientRect().top < 72) window.scrollTo({ top: app.getBoundingClientRect().top + window.scrollY - 84 });
+    this.setState({ feat: i, tocou: true });
+    // Mostra a explicação da função: no celular ela fica logo acima do app; no computador, ao lado.
+    var alvo = document.querySelector(window.innerWidth <= 860 ? '.app-desc' : '.ph');
+    if (alvo && alvo.getBoundingClientRect().top < 64) window.scrollTo({ top: alvo.getBoundingClientRect().top + window.scrollY - 72 });
   }
   renderVals() {
     var self = this;
@@ -880,7 +981,7 @@ class Component extends DCLogic {
       return { label: x.label, cls: i === st.niche ? 'on' : '', pressed: i === st.niche ? 'true' : 'false', pick: function () { self.setState({ niche: i, pal: null, font: null, canto: null, slot: null, booked: false, canceled: false }); } };
     });
     var palKey = st.pal || N.pal, fontKey = st.font || N.font, cantoKey = st.canto || N.canto;
-    var P = PALS[palKey];
+    var P = palKey === 'hyra' && st.theme === 'light' ? HYRA_CLARO : PALS[palKey];
     var p = { bg: P.bg, card: P.card, fg: P.fg, mut: P.mut, ac: P.ac, acfg: P.acfg, line: P.line, font: FONTS[fontKey].css, r: CANTOS[cantoKey].r };
     var pals = Object.keys(PALS).map(function (k) {
       return { nome: 'Cores ' + PALS[k].nome, bg: PALS[k].bg, ac: PALS[k].ac, cls: k === palKey ? 'on' : '', pressed: k === palKey ? 'true' : 'false', pick: function () { self.setState({ pal: k }); } };
@@ -960,7 +1061,7 @@ class Component extends DCLogic {
     var go = { home: function () { self.irPara(-1); } };
     FEATS.forEach(function (f, i) { go[f.id] = function () { self.irPara(i); }; });
     var tab = {};
-    ['home', 'agendar', 'clientes', 'caixa', 'massa'].forEach(function (k) { tab[k] = (k === 'home' ? home : scr[k]) ? 'on' : ''; });
+    ['site', 'home', 'agendar', 'clientes', 'massa'].forEach(function (k) { tab[k] = (k === 'home' ? home : scr[k]) ? 'on' : ''; });
 
     return {
       accent: accent,
@@ -983,7 +1084,8 @@ class Component extends DCLogic {
       },
       filters: filters, show: show,
       niches: niches, n: n, p: p, pals: pals, fonts: fonts, cantos: cantos, r: r, cx: cx,
-      cur: cur, scr: scr, go: go, tab: tab, notHome: !home,
+      featList: feats.map(function (f, i) { var on = i === st.feat; return { n: dd(i + 1), t: f.t, d: f.d, on: on, cls: on ? 'on' : '', pressed: on ? 'true' : 'false', pick: function () { self.irPara(on ? -1 : i); } }; }),
+      cur: cur, scr: scr, go: go, tab: tab, notHome: !home, nudge: st.tocou ? '' : 'nudge',
       phoneLabel: 'App de exemplo para ' + N.label.toLowerCase() + ', tela ' + cur.s,
       lem: { quando: 'amanhã, ' + SEMANA_LONGA[amanha.getDay()] + ' ' + dd(amanha.getDate()) + '/' + dd(amanha.getMonth() + 1) + ', às 14:00', dia: 'amanhã' },
       days: days, slots: slots,
