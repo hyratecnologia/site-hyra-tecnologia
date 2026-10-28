@@ -146,14 +146,14 @@ html{scroll-behavior:smooth;scroll-padding-top:72px}
   .sol-pills{display:none}
   .feat-list{display:none !important}
   .app-phone{position:static}
-  .app-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"chips" "desc" "phone" "cta";row-gap:16px}
+  .app-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"chips" "phone" "cta";row-gap:16px}
   .app-chips{gap:8px}
   .app-chips .niches{gap:6px;max-width:none}
   .app-chips .niches .chip{min-height:36px;padding:0 4px;font-size:13px}
-  .app-desc{gap:4px;padding:12px 14px;background:var(--card);border-left:2px solid var(--accent)}
+  .app-desc{position:sticky;top:68px;z-index:5;width:100%;max-width:340px;gap:3px;padding:10px 14px;background:var(--card);border:1px solid var(--line-strong);border-left:3px solid var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.25)}
   .app-desc .num{font-size:11px}
-  .app-desc h3{font-size:18px}
-  .app-desc p{font-size:14px;line-height:1.5}
+  .app-desc h3{font-size:16px}
+  .app-desc p{font-size:13px;line-height:1.45}
   .ph-scr{min-height:620px}
   .port-grid{display:flex !important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px !important;margin:0 calc(-1 * clamp(16px,4vw,40px));padding:0 clamp(16px,4vw,40px) 6px;scrollbar-width:none}
   .port-grid::-webkit-scrollbar{display:none}
@@ -369,6 +369,11 @@ a.work:hover{color:var(--fg)}
 </div>
 
 <div class="app-phone">
+<div class="app-desc" aria-live="polite">
+<span class="num">{{cur.num}}</span>
+<h3>{{cur.t}}</h3>
+<p>{{cur.d}}</p>
+</div>
 <div class="ph" aria-label="{{phoneLabel}}">
 <span class="ph-badge" aria-hidden="true">Exemplo interativo</span>
 <div class="ph-scr" style="--p-bg: {{p.bg}}; --p-card: {{p.card}}; --p-fg: {{p.fg}}; --p-mut: {{p.mut}}; --p-ac: {{p.ac}}; --p-acfg: {{p.acfg}}; --p-line: {{p.line}}; --p-font: {{p.font}}; --p-r: {{p.r}}">
@@ -608,11 +613,6 @@ a.work:hover{color:var(--fg)}
 <span class="muted" style="font-size: 13px; text-align: center">App de exemplo · toque nos ícones para navegar</span>
 </div>
 
-<div class="app-desc" aria-live="polite">
-<span class="num">{{cur.num}}</span>
-<h3>{{cur.t}}</h3>
-<p>{{cur.d}}</p>
-</div>
 <ol class="feat-list" aria-label="Funções do sistema">
 <sc-for list="{{featList}}" as="f" hint-placeholder-count="12">
 <li><button type="button" class="fl {{f.cls}}" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}"><span class="num">{{f.n}}</span><span class="fl-t">{{f.t}}</span></button>
@@ -958,8 +958,9 @@ class Component extends DCLogic {
   }
   irPara(i) {
     this.setState({ feat: i, tocou: true });
-    // Mostra a explicação da função: no celular ela fica logo acima do app; no computador, ao lado.
-    var alvo = document.querySelector(window.innerWidth <= 860 ? '.app-desc' : '.ph');
+    // No celular a página não se mexe: a explicação fica presa no alto, por cima do app.
+    if (window.innerWidth <= 860) return;
+    var alvo = document.querySelector('.ph');
     if (alvo && alvo.getBoundingClientRect().top < 64) window.scrollTo({ top: alvo.getBoundingClientRect().top + window.scrollY - 72 });
   }
   renderVals() {
