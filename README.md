@@ -6,8 +6,8 @@ Página inicial do site da Hyra Tecnologia (seções: início, o que resolvemos,
 
 | Versão | Pasta | Link |
 | --- | --- | --- |
-| v1 — escura (com botão de tema claro), exportada do design | raiz (`Main.dc.html`) | https://hyratecnologia.github.io/site-hyra-tecnologia/ |
-| v2 — clara, foco no celular, HTML/CSS puro | `v2/` | https://hyratecnologia.github.io/site-hyra-tecnologia/v2/ |
+| v1 — escura (com botão de tema claro), exportada do design | raiz (`Main.dc.html`) | https://hyratecnologia.com/ |
+| v2 — clara, foco no celular, HTML/CSS puro | `v2/` | https://hyratecnologia.com/v2/ |
 
 ## Arquivos da v1
 
