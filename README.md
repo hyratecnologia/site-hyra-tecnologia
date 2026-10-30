@@ -16,10 +16,28 @@ Página inicial do site da Hyra Tecnologia (seções: início, o que resolvemos,
 - `support.js`, `vendor/react*.js` — runtime que renderiza a página no navegador.
 - `img/portfolio/` — prints dos sites no ar (pc e celular), usados no portfólio. Para atualizar, tirar novos prints
   em 1440x900 (pc) e 390x780 com tela 2x (celular).
-- Tema: escuro por padrão; o botão do topo troca para claro e lembra a escolha (`localStorage` `hyra-tema`).
+- Tema: claro por padrão; o botão do topo troca para escuro e lembra a escolha (`localStorage` `hyra-tema`).
   As cores ficam em variáveis CSS no começo do `<style>` (`:root` e `:root[data-theme="light"]`).
 - A solução de agendamento aparece SEM nome de produto (decisão de 27/10/2026). Os negócios do celular de
   exemplo (Studio Lumi, Barbearia Navalha etc.) são inventados.
+
+## Sites do portfólio (`portfolio/`)
+
+Seis sites completos, cada um numa pasta própria (HTML, CSS e JS puros), publicados em
+https://hyratecnologia.com/portfolio/<pasta>/ e ligados aos cards do portfólio (capas `capa-pc.jpg` e `capa-cel.jpg` de cada pasta).
+
+| Pasta | Negócio | Tipo |
+| --- | --- | --- |
+| `vibex/` | Vibex AudioCar, som automotivo (Aparecida de Goiânia) | Cliente real |
+| `restaurante/` | Casa Brasa, restaurante com cardápio online (`cardapio.html`, dados em `js/cardapio-dados.js`) | Conceito |
+| `oficina/` | Torque Oficina Mecânica (`servicos.html` com as fichas) | Conceito |
+| `solar/` | Raiar Energia Solar, com simulador de economia | Conceito |
+| `planejados/` | Veio Marcenaria, móveis planejados | Conceito |
+| `contabilidade/` | Âncora Contabilidade, com comparador de regimes | Conceito |
+
+- Os negócios "conceito" são fictícios (o rodapé de cada um avisa) e o WhatsApp deles é o da Hyra.
+- Fotos e logos ainda são provisórios: cada pasta tem um `FOTOS.md` com a lista do que trocar.
+- `_backup/v1/` guarda a primeira versão dos seis sites (o GitHub Pages não publica pastas com `_`).
 
 ## Como visualizar
 
