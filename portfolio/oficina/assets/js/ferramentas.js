@@ -75,7 +75,7 @@
       c: [[75, 'Disco de embreagem no fim', 'o giro sobe e o carro não ganha velocidade, pior na subida.'], [25, 'Óleo no disco', 'retentor do motor ou do câmbio vazando.']],
       d: 'Quanto mais rodar patinando, maior a chance de estragar o volante do motor, que é caro.' },
     { id: 'nao-pega', cat: 'eletrica', t: 'Demora a pegar ou não pega', s: 'principalmente de manhã', lv: 2,
-      c: [[55, 'Bateria no fim', 'dura de 2 a 4 anos. No calor de Goiânia, mais perto de 2.'], [30, 'Alternador não carrega', 'a luz da bateria fica acesa com o motor ligado.'], [20, 'Consumo fantasma', 'algo puxa energia com o carro desligado: som, rastreador, alarme.']],
+      c: [[55, 'Bateria no fim', 'dura de 2 a 4 anos. Em cidade quente, mais perto de 2.'], [30, 'Alternador não carrega', 'a luz da bateria fica acesa com o motor ligado.'], [20, 'Consumo fantasma', 'algo puxa energia com o carro desligado: som, rastreador, alarme.']],
       d: 'Se pegou na chupeta, não desligue o motor no caminho até aqui.' },
     { id: 'mancha', cat: 'vaz', t: 'Mancha embaixo do carro', s: 'pinga onde estaciona', lv: 1,
       c: [[50, 'Preta ou marrom: óleo do motor', 'cárter, junta ou retentor.'], [30, 'Verde, rosa ou laranja: arrefecimento', 'fique de olho no nível e no ponteiro de temperatura.'], [20, 'Água limpa perto da frente', 'é a água do ar-condicionado. Normal.']],
@@ -108,13 +108,13 @@
     }
 
     var VAZIO = '<div class="diag__vazio">' +
-      '<svg viewBox="0 0 360 150" aria-hidden="true" fill="none" stroke-linecap="round">' +
-      '<path d="M20 140 Q20 20 180 14 Q340 20 340 140" stroke="#3B3F45" stroke-width="1.5"/>' +
-      '<circle cx="115" cy="88" r="46" stroke="#5E636A" stroke-width="1.5"/><circle cx="245" cy="88" r="46" stroke="#5E636A" stroke-width="1.5"/>' +
-      '<path d="M84 104 a36 36 0 0 1 62 -36" stroke="#5E636A" stroke-width="1" stroke-dasharray="2 4"/><path d="M115 88 L92 70" stroke="#ECEAE3" stroke-width="2"/>' +
-      '<path d="M214 104 a36 36 0 0 1 62 -36" stroke="#5E636A" stroke-width="1" stroke-dasharray="2 4"/><path d="M245 88 L268 76" stroke="#ECEAE3" stroke-width="2"/>' +
-      '<g stroke="#F0642F" stroke-width="1.6"><path d="M164 126 h10 l3 -4 h8 l2 4 h6 v8 h-29z"/><circle cx="180" cy="62" r="8"/><path d="M180 57 v5 M180 66 v.5"/></g>' +
-      '<g stroke="#5E636A" stroke-width="1.4"><rect x="168" y="96" width="24" height="14" rx="2"/><path d="M172 96 v-3 h4 v3 M184 96 v-3 h4 v3"/></g>' +
+      '<svg viewBox="0 0 360 150" aria-hidden="true">' +
+      '<rect x="0" y="10" width="360" height="130" fill="#2A2F38"/>' +
+      '<circle cx="110" cy="80" r="50" fill="#14161B"/><circle cx="250" cy="80" r="50" fill="#14161B"/>' +
+      '<path d="M78 98 a40 40 0 0 1 64 -44" stroke="#3A404A" stroke-width="6" fill="none"/><path d="M218 98 a40 40 0 0 1 64 -44" stroke="#3A404A" stroke-width="6" fill="none"/>' +
+      '<path d="M110 80 L86 62" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M250 80 L276 70" stroke="#FF5A2E" stroke-width="4" stroke-linecap="round"/>' +
+      '<rect x="164" y="56" width="32" height="24" fill="#FFC21A"/><path d="M180 61 v8 M180 73 v2" stroke="#14161B" stroke-width="3"/>' +
+      '<rect x="160" y="104" width="40" height="18" fill="#D9310B"/>' +
       '</svg><h3>Nenhum sintoma marcado</h3><p>Marque o que você está percebendo no carro. Pode marcar mais de um, porque às vezes um defeito puxa o outro.</p></div>';
 
     function desenhaResultado() {

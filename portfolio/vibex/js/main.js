@@ -89,13 +89,13 @@
   /* ==================== HERO: carro girando ==================== */
   (function () {
     var svg = $('#heroCar'); if (!svg) return;
-    var angEl = $('#heroAng'), viewEl = $('#heroView'), hand = $('.hand-hero'), lastDeg = -1;
+    var angEl = $('#heroAng'), viewEl = $('#heroView'), hand = $('#heroStage .hint'), lastDeg = -1;
     var car = V.create(svg, {
       auto: 7, fps30: coarse,
       onRender: function (c) {
         var d = degOf(c.s.yaw);
         if (d !== lastDeg) {
-          lastDeg = d; angEl.textContent = 'vista ' + pad3(d) + '°';
+          lastDeg = d; angEl.textContent = pad3(d) + '°';
           var n = viewName(d); if (viewEl.textContent !== n) viewEl.textContent = n;
         }
       },
@@ -194,7 +194,7 @@
     var car = V.create(svg, {
       onRender: function (c) {
         var d = degOf(c.s.yaw);
-        if (d !== lastDeg) { lastDeg = d; ang.textContent = 'vista ' + pad3(d) + '°'; }
+        if (d !== lastDeg) { lastDeg = d; ang.textContent = pad3(d) + '°'; }
         var cf = CFG[cur];
         if (cf.anchor && !c.tw) {
           var p = c.toScreen(cf.anchor[0], cf.anchor[1], cf.anchor[2]), r = svg.getBoundingClientRect();

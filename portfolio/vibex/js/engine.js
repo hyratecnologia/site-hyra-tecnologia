@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Vibex AudioCar · motor 3D em traço (SVG puro, sem bibliotecas)
+   Vibex AudioCar · motor 3D em traço neon (SVG puro, sem bibliotecas)
    O perfil 2D do hatch é amostrado em polilinhas e extrudado em 3D.
    Portas e tampa traseira abrem por dobradiça; o sistema de som é dividido
    em camadas: portas, grave, modulos, midia, bateria.
@@ -323,9 +323,7 @@
         });
       });
     });
-    /* chão */
-    for (var x = 80; x <= 920; x += 40) model.push({ cls: 'g', floor: true, pts: [[x, 362, -210], [x, 362, 210]] });
-    for (var z = -200; z <= 200; z += 40) model.push({ cls: 'g', floor: true, pts: [[80, 362, z], [920, 362, z]] });
+    /* sem piso quadriculado: o chão é a luz do palco (CSS) */
 
     tmp.remove();
     return model;

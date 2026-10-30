@@ -25,7 +25,7 @@
   var msgGeral = 'Olá! Vim pelo site da Veio e quero conversar sobre móveis planejados.';
   [['#zapFlut', msgGeral], ['#zapRodape', msgGeral],
    ['#zapArq', 'Olá! Sou arquiteto(a) e quero enviar um projeto executivo para orçamento de marcenaria.'],
-   ['#zapVisita', 'Olá! Quero agendar uma visita ao showroom da Veio no Setor Marista. Qual horário vocês têm nesta semana?']
+   ['#zapVisita', 'Olá! Quero agendar uma visita ao showroom da Veio. Qual horário vocês têm nesta semana?']
   ].forEach(function (p) { var a = $(p[0]); if (a) a.href = zap(p[1]); });
 
   /* ---------- topo e menu ---------- */
@@ -441,7 +441,7 @@
     $$('input', medidasEl).forEach(function (i) { medidasVal[i.dataset.amb] = i.value; });
     var amb = selecionados().map(function (k) { var m = (medidasVal[k] || '').trim(); return V.ambientes[k].nome + (m ? ' (' + m + ')' : ''); }).join(', ');
     var l = [['Ambientes', amb], ['Imóvel', val('imovel')], ['Projeto', val('projeto')], ['Prazo', val('prazo')], ['Investimento', val('faixa')], ['Nome', $('[name="nome"]', ficha).value.trim()]];
-    var b = $('[name="bairro"]', ficha).value.trim(); if (b) l.push(['Bairro', b]);
+    var b = $('[name="local"]', ficha).value.trim(); if (b) l.push(['Local da obra', b]);
     var o = $('[name="obs"]', ficha).value.trim(); if (o) l.push(['Observação', o]);
     return l;
   }

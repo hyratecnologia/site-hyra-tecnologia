@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raiar Energia Solar · Projeto, homologação e instalação em Goiânia</title>
+<meta name="description" content="Integradora de energia solar em Goiânia-GO. Simule geração, economia e retorno com a regra da Lei 14.300, e receba uma proposta depois da visita técnica. Casas, comércios e propriedades rurais.">
+<meta name="theme-color" content="#F3EFE6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://hyratecnologia.com/portfolio/solar/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Raiar Energia Solar · Goiânia-GO">
+<meta property="og:description" content="Simulador de geração e economia com irradiação de Goiás, preço de 2026 e a cobrança do fio B. Projeto, homologação, instalação e monitoramento.">
+<meta property="og:url" content="https://hyratecnologia.com/portfolio/solar/">
+<meta property="og:image" content="https://hyratecnologia.com/portfolio/solar/capa-pc.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400;62..125,500;62..125,600;62..125,700;62..125,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "ProfessionalService"],
+  "name": "Raiar Energia Solar",
+  "description": "Integradora de energia solar fotovoltaica em Goiânia-GO: projeto, homologação na distribuidora, instalação e monitoramento de sistemas on-grid residenciais, comerciais e rurais.",
+  "url": "https://hyratecnologia.com/portfolio/solar/",
+  "image": "https://hyratecnologia.com/portfolio/solar/capa-pc.jpg",
+  "logo": "https://hyratecnologia.com/portfolio/solar/favicon.svg",
+  "telephone": "+55-62-9920-8147",
+  "priceRange": "$$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Rua Exemplo, 100, Setor Marista",
+    "addressLocality": "Goiânia",
+    "addressRegion": "GO",
+    "addressCountry": "BR"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": -16.70, "longitude": -49.26 },
+  "areaServed": [
+    { "@type": "City", "name": "Goiânia" },
+    { "@type": "City", "name": "Aparecida de Goiânia" },
+    { "@type": "City", "name": "Anápolis" },
+    { "@type": "State", "name": "Goiás" }
+  ],
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "08:00", "closes": "18:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00" }
+  ],
+  "knowsAbout": ["Energia solar fotovoltaica", "Geração distribuída", "Lei 14.300/2022", "Homologação de microgeração e minigeração"],
+  "makesOffer": [
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sistema solar residencial on-grid" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sistema solar comercial" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sistema solar rural (bombeamento, galpões, usina em solo)" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Monitoramento e manutenção de usinas" } }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- Sprite: cenas em traço usadas nos espaços de foto (trocar por <img> quando houver fotos) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="p-celulas" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#1E3029"/><path d="M9 0V9M0 9H9" stroke="#4C6359" stroke-width="1"/></pattern>
+    <pattern id="p-hachura" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V8" stroke="#14211C" stroke-opacity=".18" stroke-width="1.2"/></pattern>
+  </defs>
+  <symbol id="cena-casa" viewBox="0 0 400 300">
+    <rect width="400" height="300" fill="#EFE7D8"/>
+    <circle cx="318" cy="74" r="30" fill="none" stroke="#D9542B" stroke-width="2.5"/>
+    <path d="M0 250h400v50H0z" fill="url(#p-hachura)"/>
+    <path d="M70 250V170l90-62 90 62v80z" fill="#FBF8F2" stroke="#14211C" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M52 176l108-76 108 76" fill="none" stroke="#14211C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M96 166l64-45 64 45-8 6-56-39-56 39z" fill="url(#p-celulas)"/>
+    <rect x="140" y="196" width="40" height="54" fill="none" stroke="#14211C" stroke-width="2.5"/>
+    <rect x="92" y="196" width="30" height="24" fill="#F3EFE6" stroke="#14211C" stroke-width="2.5"/>
+    <rect x="198" y="196" width="30" height="24" fill="#F3EFE6" stroke="#14211C" stroke-width="2.5"/>
+    <path d="M300 250v-46m0 4c-14 0-22-10-22-22 10 0 22 8 22 22zm0-10c10 0 18-8 18-18-9 0-18 7-18 18z" fill="none" stroke="#14211C" stroke-width="2"/>
+    <path d="M20 250h360" stroke="#14211C" stroke-width="2.5"/>
+  </symbol>
+  <symbol id="cena-galpao" viewBox="0 0 400 300">
+    <rect width="400" height="300" fill="#EFE7D8"/>
+    <circle cx="80" cy="86" r="26" fill="none" stroke="#D9542B" stroke-width="2.5"/>
+    <path d="M0 248h400v52H0z" fill="url(#p-hachura)"/>
+    <path d="M60 248V150l140-46 140 46v98z" fill="#FBF8F2" stroke="#14211C" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M78 146l122-40 122 40-6 6-116-38-116 38z" fill="url(#p-celulas)"/>
+    <path d="M60 150l140-46 140 46" fill="none" stroke="#14211C" stroke-width="2.5" stroke-linejoin="round"/>
+    <rect x="160" y="182" width="80" height="66" fill="none" stroke="#14211C" stroke-width="2.5"/>
+    <path d="M160 198h80M160 214h80M160 230h80" stroke="#14211C" stroke-width="1.5" opacity=".45"/>
+    <rect x="86" y="176" width="44" height="18" fill="#F3EFE6" stroke="#14211C" stroke-width="2"/>
+    <rect x="270" y="176" width="44" height="18" fill="#F3EFE6" stroke="#14211C" stroke-width="2"/>
+    <path d="M20 248h360" stroke="#14211C" stroke-width="2.5"/>
+  </symbol>
+  <symbol id="cena-rural" viewBox="0 0 400 300">
+    <rect width="400" height="300" fill="#EFE7D8"/>
+    <circle cx="200" cy="66" r="24" fill="none" stroke="#D9542B" stroke-width="2.5"/>
+    <path d="M0 244h400v56H0z" fill="url(#p-hachura)"/>
+    <g fill="url(#p-celulas)" stroke="#14211C" stroke-width="2" stroke-linejoin="round">
+      <path d="M40 222l20-34h70l-20 34z"/><path d="M150 222l20-34h70l-20 34z"/><path d="M260 222l20-34h70l-20 34z"/>
+    </g>
+    <path d="M85 222v22M195 222v22M305 222v22" stroke="#14211C" stroke-width="2.5"/>
+    <path d="M354 244v-90M354 156c-14-10-28-10-38-3M354 156c-8-15-20-22-32-22M354 156c4-16 14-25 27-26M354 156c13-10 26-10 36-2" stroke="#14211C" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M20 244h360" stroke="#14211C" stroke-width="2.5"/>
+  </symbol>
+  <symbol id="cena-equipe" viewBox="0 0 400 300">
+    <rect width="400" height="300" fill="#EFE7D8"/>
+    <path d="M0 220h400v80H0z" fill="url(#p-hachura)"/>
+    <path d="M40 220l90-90h230l-90 90z" fill="url(#p-celulas)" stroke="#14211C" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M85 175h230M62 198h230M140 130l-56 90M200 130l-56 90M260 130l-56 90M320 130l-56 90" stroke="#4C6359" stroke-width="2"/>
+    <circle cx="300" cy="84" r="13" fill="#FBF8F2" stroke="#14211C" stroke-width="2.5"/>
+    <path d="M286 80c0-10 6-16 14-16s14 6 14 16z" fill="#D9542B" stroke="#14211C" stroke-width="2.5"/>
+    <path d="M300 97v44m0-30l-22 18m22-18l20 14m-20 16l-14 26m14-26l12 26" stroke="#14211C" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </symbol>
+</svg>
+
+<header class="topo" id="topo">
+  <div class="topo__in">
+    <a class="marca" href="#inicio" aria-label="Raiar Energia Solar, voltar ao início">
+      <svg class="marca__simbolo" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 31a15 15 0 0 1 30 0z" fill="#D9542B"/><g stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M24 6v5M10.5 12.5l3.5 3.5M37.5 12.5L34 16"/><path d="M4 36h40M12 42h24"/></g></svg>
+      <span class="marca__nome">Raiar<small>energia solar · goiânia</small></span>
+    </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+      <span class="menu-btn__txt">Menu</span><span class="menu-btn__ico" aria-hidden="true"><i></i><i></i></span>
+    </button>
+    <nav class="menu" id="menu" aria-label="Principal">
+      <ul>
+        <li><a href="#simulador"><span>01</span>Simulador</a></li>
+        <li><a href="#lei"><span>02</span>A regra da conta</a></li>
+        <li><a href="#como-funciona"><span>03</span>Como funciona</a></li>
+        <li><a href="#obras"><span>06</span>Obras</a></li>
+        <li><a href="#duvidas"><span>09</span>Dúvidas</a></li>
+      </ul>
+      <a class="btn btn--tinta" href="https://wa.me/556299208147?text=Ol%C3%A1%2C%20Raiar!%20Quero%20agendar%20uma%20visita%20t%C3%A9cnica%20para%20energia%20solar." target="_blank" rel="noopener">Agendar visita técnica</a>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<!-- HERO -->
+<section class="hero" id="inicio" aria-labelledby="hero-titulo">
+  <div class="hero__in">
+    <div class="hero__texto">
+      <p class="hero__pre">Integradora solar em Goiânia desde 2017</p>
+      <h1 id="hero-titulo">Energia solar com o cálculo aberto na mesa.</h1>
+      <p class="hero__lead">Projetamos, homologamos na Equatorial Goiás e instalamos sistemas fotovoltaicos para casas, comércios e fazendas. Antes de falar em preço, mostramos quanto o seu telhado gera, quanto a conta cai e em quantos meses o dinheiro volta. Com o fio B incluído.</p>
+      <form class="hero__rapido" id="form-rapido" novalidate>
+        <label for="rapido-valor">Sua conta de luz, em média por mês</label>
+        <div class="hero__campo">
+          <span aria-hidden="true">R$</span>
+          <input id="rapido-valor" name="valor" type="number" inputmode="decimal" min="50" step="10" placeholder="650">
+          <button class="btn btn--sol" type="submit">Calcular</button>
+        </div>
+      </form>
+    </div>
+
+    <figure class="hero__arte">
+      <svg class="cena" viewBox="0 0 560 470" role="img" aria-labelledby="cena-tit">
+        <title id="cena-tit">Desenho técnico: trajetória do sol sobre uma casa com módulos inclinados a 16 graus, e a curva de geração ao longo do dia</title>
+        <!-- trajetória do sol -->
+        <path d="M60 300 A220 220 0 0 1 500 300" fill="none" stroke="#14211C" stroke-opacity=".35" stroke-width="1" stroke-dasharray="2 5"/>
+        <g class="horas" font-family="IBM Plex Mono, monospace" font-size="14" fill="#14211C" fill-opacity=".6">
+          <g stroke="#14211C" stroke-opacity=".5"><path d="M60 300v-8"/><path d="M89.5 190 l7 4"/><path d="M170 109.5l4 7"/><path d="M280 80v8"/><path d="M390 109.5l-4 7"/><path d="M470.5 190l-7 4"/><path d="M500 300v-8"/></g>
+          <text x="46" y="320">6h</text><text x="60" y="186">8h</text><text x="140" y="100">10h</text><text x="266" y="68">12h</text><text x="396" y="100">14h</text><text x="476" y="186">16h</text><text x="486" y="320">18h</text>
+        </g>
+        <g class="sol"><circle r="17" fill="#D9542B"/><circle r="25" fill="none" stroke="#D9542B" stroke-width="1"/></g>
+        <!-- solo -->
+        <path d="M30 360h500v26H30z" fill="url(#p-hachura)"/>
+        <path d="M30 360h500" stroke="#14211C" stroke-width="2"/>
+        <!-- casa -->
+        <path d="M170 360V292l110-70 110 70v68z" fill="#FBF8F2" stroke="#14211C" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M150 300l130-84 130 84" fill="none" stroke="#14211C" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
+        <path d="M198 287l82-53 82 53-9 6-73-47-73 47z" fill="url(#p-celulas)"/>
+        <rect x="260" y="310" width="40" height="50" fill="none" stroke="#14211C" stroke-width="2.5"/>
+        <rect x="198" y="310" width="34" height="24" fill="#F3EFE6" stroke="#14211C" stroke-width="2.5"/>
+        <rect x="328" y="310" width="34" height="24" fill="#F3EFE6" stroke="#14211C" stroke-width="2.5"/>
+        <!-- cotas -->
+        <g stroke="#D9542B" stroke-width="1.2" fill="none">
+          <path d="M362 287h48"/><path d="M398 287a42 42 0 0 0-5-13"/>
+          <path d="M170 404h220M170 398v12M390 398v12"/>
+        </g>
+        <g font-family="IBM Plex Mono, monospace" font-size="14" fill="#A93D1A">
+          <text x="414" y="283">β = 16°</text>
+          <text x="234" y="397">10 × 610 W</text>
+        </g>
+        <!-- curva de geração -->
+        <g transform="translate(40 420)">
+          <path d="M0 40h480" stroke="#14211C" stroke-opacity=".4"/>
+          <path class="curva-linha" d="M0 40 C70 40 110 2 240 2 S410 40 480 40" fill="none" stroke="#14211C" stroke-width="2"/>
+          <circle class="curva-ponto" r="4.5" fill="#D9542B"/>
+        </g>
+      </svg>
+      <figcaption class="leitura">
+        <span><i>Sistema</i> <b>6,10 kWp</b></span>
+        <span><i>Hora</i> <b id="hora-sim">06:00</b></span>
+        <span><i>Potência</i> <b><span id="kw-agora">0,00</span> kW</b></span>
+        <span><i>Acumulado</i> <b><span id="kwh-dia">0,0</span> kWh</b></span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="carimbo" aria-label="Dados da empresa">
+    <div class="carimbo__c"><span>Sistemas ligados</span><strong>412</strong><em>desde mar/2017</em></div>
+    <div class="carimbo__c"><span>Potência monitorada</span><strong>7,86 MWp</strong><em>em 38 municípios</em></div>
+    <div class="carimbo__c"><span>Contrato até gerar</span><strong>34 dias</strong><em>média de 2025/26</em></div>
+    <div class="carimbo__c"><span>Irradiação de projeto</span><strong>5,0 kWh/m²·dia</strong><em>Goiânia, plano inclinado</em></div>
+  </div>
+</section>
+
+<!-- SIMULADOR -->
+<section class="folha sim" id="simulador" aria-labelledby="sim-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 01</span>
+    <span class="folha__nome">Simulador de economia</span>
+    <span class="folha__rev">rev. out/2026</span>
+  </header>
+  <div class="sim__intro">
+    <h2 id="sim-titulo">Quanto o seu telhado gera, e quanto sobra no bolso</h2>
+    <p>Mesma conta que fazemos no escritório antes da visita: irradiação mês a mês de Goiânia, 20% de perdas, preço instalado de 2026 e a cobrança do fio B pela Lei 14.300. A proposta definitiva sai depois que o engenheiro sobe no telhado.</p>
+  </div>
+
+  <div class="sim__grade">
+    <form class="sim__form" id="sim-form" novalidate>
+      <fieldset class="seg">
+        <legend>Informar por</legend>
+        <div class="seg__op">
+          <input type="radio" name="modo" id="modo-conta" value="conta" checked><label for="modo-conta">Valor da conta</label>
+          <input type="radio" name="modo" id="modo-kwh" value="kwh"><label for="modo-kwh">Consumo em kWh</label>
+        </div>
+      </fieldset>
+
+      <div class="campo">
+        <label for="sim-valor" id="sim-valor-rot">Conta média (R$ por mês)</label>
+        <div class="campo__num">
+          <span class="campo__pre" id="sim-pre">R$</span>
+          <input id="sim-valor" type="number" inputmode="decimal" min="1" step="10" value="650">
+          <span class="campo__suf" id="sim-suf">/mês</span>
+        </div>
+        <input class="faixa" id="sim-faixa" type="range" min="150" max="6000" step="10" value="650" aria-label="Ajustar o valor">
+        <p class="campo__ajuda">Some as 12 últimas contas e divida por 12. O histórico vem impresso na própria fatura.</p>
+      </div>
+
+      <fieldset class="chips">
+        <legend>Tipo de imóvel</legend>
+        <div class="chips__op">
+          <input type="radio" name="tipo" id="t-res" value="residencial" checked><label for="t-res">Residência</label>
+          <input type="radio" name="tipo" id="t-com" value="comercial"><label for="t-com">Comércio</label>
+          <input type="radio" name="tipo" id="t-rur" value="rural"><label for="t-rur">Rural</label>
+        </div>
+      </fieldset>
+
+      <div class="campo-duplo">
+        <div class="campo">
+          <label for="sim-telhado">Onde vão os módulos</label>
+          <select id="sim-telhado">
+            <option value="ceramico">Telha cerâmica</option>
+            <option value="fibrocimento">Fibrocimento</option>
+            <option value="metalico">Telha metálica</option>
+            <option value="laje">Laje plana</option>
+            <option value="solo">Estrutura no solo</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="sim-ligacao">Padrão de entrada</label>
+          <select id="sim-ligacao">
+            <option value="30">Monofásico</option>
+            <option value="50" selected>Bifásico</option>
+            <option value="100">Trifásico</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="sim-tarifa">Tarifa com impostos (R$/kWh)</label>
+        <div class="campo__num campo__num--pq">
+          <span class="campo__pre">R$</span>
+          <input id="sim-tarifa" type="number" inputmode="decimal" min="0.3" max="3" step="0.01" value="1.05">
+          <span class="campo__suf">/kWh</span>
+        </div>
+        <p class="campo__ajuda">R$ 1,05 é a nossa referência para o residencial B1 da Equatorial Goiás com ICMS e PIS/Cofins, depois do reajuste de 22/out/2026. A sua: total da conta ÷ kWh consumidos.</p>
+      </div>
+    </form>
+
+    <div class="memorial" id="sim-res" aria-live="polite">
+      <div class="memorial__cab">
+        <p>Memorial de cálculo · estimativa</p>
+        <p id="m-ref">Ref. RAI-0650</p>
+      </div>
+
+      <div class="memorial__principal">
+        <div class="memorial__kwp">
+          <span class="memorial__rot">Potência sugerida</span>
+          <p><span id="r-kwp">0</span> <small>kWp</small></p>
+        </div>
+        <div class="memorial__conta">
+          <span class="memorial__rot">Conta de luz por mês</span>
+          <p><s>R$ <span id="r-antes">0</span></s> <span class="seta" aria-hidden="true">→</span> <b>R$ <span id="r-depois">0</span></b></p>
+          <span class="memorial__nota" id="r-nota-conta">taxa mínima + fio B; iluminação pública à parte</span>
+        </div>
+      </div>
+
+      <table class="memorial__tab">
+        <caption class="sr">Resultado detalhado da simulação</caption>
+        <tbody>
+          <tr><th scope="row">Módulos de 610 W</th><td id="r-mod">0</td></tr>
+          <tr><th scope="row">Área ocupada</th><td>≈ <span id="r-area">0</span> m²</td></tr>
+          <tr><th scope="row">Geração média</th><td><span id="r-ger">0</span> kWh/mês</td></tr>
+          <tr><th scope="row">Economia por mês (1º ano)</th><td>R$ <span id="r-eco-mes">0</span></td></tr>
+          <tr><th scope="row">Economia no 1º ano</th><td>R$ <span id="r-eco-ano">0</span></td></tr>
+          <tr class="destaque"><th scope="row">Investimento estimado</th><td id="r-inv">R$ 0</td></tr>
+          <tr class="destaque"><th scope="row">Retorno do investimento</th><td id="r-pay">0</td></tr>
+          <tr><th scope="row">Saldo em 25 anos, já descontado o investimento</th><td>R$ <span id="r-25">0</span></td></tr>
+          <tr><th scope="row">CO₂ evitado em 25 anos</th><td><span id="r-co2">0</span> t</td></tr>
+        </tbody>
+      </table>
+
+      <div class="graf">
+        <div class="graf__abas" role="tablist" aria-label="Gráficos do resultado">
+          <button type="button" role="tab" id="aba-mes" aria-selected="true" aria-controls="graf-painel">Geração × consumo</button>
+          <button type="button" role="tab" id="aba-fluxo" aria-selected="false" aria-controls="graf-painel" tabindex="-1">Caixa acumulado</button>
+        </div>
+        <div class="graf__painel" id="graf-painel" role="tabpanel" aria-labelledby="aba-mes">
+          <svg id="graf-svg" viewBox="0 0 560 240" role="img" aria-label="Gráfico"></svg>
+          <p class="graf__leg" id="graf-leg"></p>
+        </div>
+      </div>
+
+      <p class="memorial__alerta" id="r-alerta" hidden></p>
+
+      <a class="btn btn--sol btn--grande" id="btn-proposta" href="https://wa.me/556299208147" target="_blank" rel="noopener">Receber proposta com estes números</a>
+      <p class="memorial__rodape">Valores estimados. A geração real depende de sombras, inclinação, orientação e do estado do telhado, conferidos na visita técnica.</p>
+    </div>
+  </div>
+
+  <details class="premissas">
+    <summary>Premissas do cálculo <span>(abrir)</span></summary>
+    <ol class="premissas__lista">
+      <li><b>Irradiação.</b> 5,0 kWh/m² por dia, em média, no plano dos módulos em Goiânia (referência: SunData/CRESESB). Cada mês tem seu valor: o menor é dezembro, por causa das chuvas, e o maior é agosto, no auge da seca.</li>
+      <li><b>Perdas.</b> 20% no total, somando calor nas células, cabos, inversor e sujeira. Resultado: cerca de 129 kWh por kWp instalado, por mês.</li>
+      <li><b>Dimensionamento.</b> O sistema cobre o consumo que passa da taxa mínima do padrão de entrada (30, 50 ou 100 kWh). Cada módulo de 610 W ocupa cerca de 2,7 m²; somamos folga para corredores e fixação.</li>
+      <li><b>Preço.</b> Custo instalado de mercado em 2026: de cerca de R$ 4,40/Wp num sistema de 3 kWp a R$ 2,90/Wp acima de 100 kWp, com projeto, homologação e mão de obra. Laje e solo pedem estrutura mais cara. Mostramos uma faixa de ±10%.</li>
+      <li><b>Uso simultâneo.</b> Parte da energia é consumida na hora em que é gerada e não paga fio B: 30% em casas, 55% em comércios e 45% no rural. O restante vira crédito.</li>
+      <li><b>Fio B.</b> Consideramos o fio B como 28% da tarifa. Sistemas ligados agora pagam 75% dele em 2027, 90% em 2028 e, por conservadorismo, 100% a partir de 2029.</li>
+      <li><b>25 anos.</b> Reajuste de tarifa de 5% ao ano, perda de 0,5% ao ano nos módulos, manutenção de 0,5% do investimento por ano e troca do inversor no 12º ano. Valores nominais, sem juros de financiamento.</li>
+      <li><b>CO₂.</b> 0,055 kg por kWh, fator médio do Sistema Interligado Nacional. A matriz brasileira já é bastante limpa, por isso o número é menor que em outros países.</li>
+    </ol>
+  </details>
+</section>
+
+<!-- LEI 14.300 -->
+<section class="folha lei" id="lei" aria-labelledby="lei-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 02</span>
+    <span class="folha__nome">Compensação de energia · Lei 14.300/2022</span>
+    <span class="folha__rev">art. 26 e 27</span>
+  </header>
+  <div class="lei__in">
+    <div class="lei__texto">
+      <h2 id="lei-titulo">Por que a conta não zera</h2>
+      <p class="lei__abre">Quem promete conta zero em 2026 está vendendo a regra de 2022.</p>
+      <p>A energia que você manda para a rede durante o dia vira crédito em kWh, e esse crédito abate o que a casa puxa à noite. Até aí, nada mudou. O que mudou com a Lei 14.300 é que, para quem ligou o sistema a partir de 2023, cada kWh compensado paga uma parte do <b>fio B</b>: a remuneração da distribuidora pelos postes, cabos e transformadores que levam e trazem a sua energia.</p>
+      <p>Essa parte sobe ano a ano até 2028. A energia que você consome <em>na hora</em> em que o sol bate não passa pelo medidor como crédito, então não paga fio B nenhum. É por isso que comércio, que trabalha de dia, tem retorno mais rápido que residência.</p>
+      <dl class="lei__regras">
+        <div><dt>Validade dos créditos</dt><dd>60 meses. Podem abater a conta de outro imóvel no mesmo CPF ou CNPJ, na mesma distribuidora.</dd></div>
+        <div><dt>Taxa mínima</dt><dd>Continua: 30, 50 ou 100 kWh conforme o padrão. Ela não é somada ao fio B; você paga o maior dos dois.</dd></div>
+        <div><dt>De 2029 em diante</dt><dd>A ANEEL define a regra. No simulador, usamos o pior cenário razoável: fio B cobrado por inteiro.</dd></div>
+      </dl>
+    </div>
+    <figure class="lei__graf">
+      <figcaption>Parcela do fio B paga sobre a energia compensada<br><small>sistemas com pedido de acesso a partir de 7/jan/2023</small></figcaption>
+      <ol class="escada">
+        <li style="--v:15"><span class="escada__ano">2023</span><span class="escada__barra"><b>15%</b></span></li>
+        <li style="--v:30"><span class="escada__ano">2024</span><span class="escada__barra"><b>30%</b></span></li>
+        <li style="--v:45"><span class="escada__ano">2025</span><span class="escada__barra"><b>45%</b></span></li>
+        <li style="--v:60" class="agora"><span class="escada__ano">2026</span><span class="escada__barra"><b>60%</b></span><span class="escada__marca">hoje</span></li>
+        <li style="--v:75"><span class="escada__ano">2027</span><span class="escada__barra"><b>75%</b></span></li>
+        <li style="--v:90"><span class="escada__ano">2028</span><span class="escada__barra"><b>90%</b></span></li>
+        <li style="--v:100" class="incerto"><span class="escada__ano">2029+</span><span class="escada__barra"><b>ANEEL define</b></span></li>
+      </ol>
+      <p class="lei__fonte">Quem protocolou o pedido até 6/jan/2023 segue na regra antiga até 2045.</p>
+    </figure>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="folha como" id="como-funciona" aria-labelledby="como-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 03</span>
+    <span class="folha__nome">Diagrama do sistema on-grid</span>
+    <span class="folha__rev">sem escala</span>
+  </header>
+  <div class="como__topo">
+    <h2 id="como-titulo">O caminho da energia, peça por peça</h2>
+    <div class="periodo" role="group" aria-label="Período do dia">
+      <button type="button" class="periodo__op" data-periodo="dia" aria-pressed="true">12h · sol a pino</button>
+      <button type="button" class="periodo__op" data-periodo="noite" aria-pressed="false">21h · sem sol</button>
+    </div>
+  </div>
+
+  <div class="fluxo" id="fluxo" data-periodo="dia">
+    <ol class="fluxo__pecas">
+      <li><button type="button" class="peca" data-peca="0" aria-pressed="true">
+        <span class="peca__tag">M1</span>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 36l6-22h28l-6 22z"/><path d="M11 25h28M17 14l-4 22M24 14l-3 22M31 14l-3 22M38 14l-4 22M24 36v6M18 42h12"/></svg>
+        <span class="peca__nome">Módulos</span></button></li>
+      <li class="fio" aria-hidden="true"><i></i><span>CC</span></li>
+      <li><button type="button" class="peca" data-peca="1" aria-pressed="false">
+        <span class="peca__tag">INV</span>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="6" width="28" height="36"/><rect x="16" y="12" width="16" height="9"/><path d="M17 30c2-3 4-3 6 0s4 3 6 0M16 42v2M32 42v2"/></svg>
+        <span class="peca__nome">Inversor</span></button></li>
+      <li class="fio" aria-hidden="true"><i></i><span>CA</span></li>
+      <li><button type="button" class="peca" data-peca="2" aria-pressed="false">
+        <span class="peca__tag">QD</span>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="6" width="32" height="36"/><path d="M14 14h20M14 22h20M14 30h20M18 12v4M24 20v4M30 28v4M14 37h8"/></svg>
+        <span class="peca__nome">Quadro e casa</span></button></li>
+      <li class="fio" aria-hidden="true"><i></i><span>CA</span></li>
+      <li><button type="button" class="peca" data-peca="3" aria-pressed="false">
+        <span class="peca__tag">MED</span>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><rect x="15" y="15" width="18" height="8"/><path d="M17 31h6m-3-3v6M27 31h6"/></svg>
+        <span class="peca__nome">Medidor bidirecional</span></button></li>
+      <li class="fio" aria-hidden="true"><i></i><span>BT</span></li>
+      <li><button type="button" class="peca" data-peca="4" aria-pressed="false">
+        <span class="peca__tag">REDE</span>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l-8 40M24 4l8 40M18 34h12M19 26h10M21 16h6M10 14h28M14 14l-2 6M34 14l2 6"/></svg>
+        <span class="peca__nome">Rede Equatorial</span></button></li>
+    </ol>
+
+    <div class="fluxo__det" id="fluxo-det" aria-live="polite">
+      <p class="fluxo__estado" id="fluxo-estado"></p>
+      <h3 id="det-titulo">Módulos fotovoltaicos</h3>
+      <p id="det-texto"></p>
+      <p class="fluxo__dado" id="det-dado"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ETAPAS (cronograma) -->
+<section class="folha etapas" id="etapas" aria-labelledby="etapas-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 04</span>
+    <span class="folha__nome">Cronograma típico · residencial até 10 kWp</span>
+    <span class="folha__rev">em dias corridos</span>
+  </header>
+  <div class="etapas__in">
+    <div class="etapas__texto">
+      <h2 id="etapas-titulo">34 dias entre assinar e ver o primeiro kWh</h2>
+      <p>O trecho mais longo não depende de nós: é o prazo da distribuidora para analisar o pedido de acesso. Por isso o pedido sai no mesmo dia em que o contrato é assinado, com o projeto e a ART do engenheiro já prontos.</p>
+    </div>
+    <div class="gantt" role="table" aria-label="Cronograma do projeto em dias">
+      <div class="gantt__eixo" role="row" aria-hidden="true">
+        <span role="columnheader"></span>
+        <span class="gantt__escala"><i>0</i><i>10</i><i>20</i><i>30</i><i>40</i></span>
+      </div>
+      <div class="gantt__linha" role="row" style="--ini:0;--dur:3">
+        <span role="rowheader"><b>Visita técnica</b><small>medição do telhado, sombras, padrão de entrada, 12 contas</small><em class="gantt__dias">dias 0 a 3</em></span>
+        <span role="cell" class="gantt__trilho"><i class="gantt__barra"></i></span>
+      </div>
+      <div class="gantt__linha" role="row" style="--ini:3;--dur:4">
+        <span role="rowheader"><b>Projeto e proposta</b><small>layout, estudo de sombreamento, unifilar, geração em contrato</small><em class="gantt__dias">dias 3 a 7</em></span>
+        <span role="cell" class="gantt__trilho"><i class="gantt__barra"></i></span>
+      </div>
+      <div class="gantt__linha" role="row" style="--ini:7;--dur:18">
+        <span role="rowheader"><b>Homologação</b><small>pedido de acesso na Equatorial, ART, respostas a exigências</small><em class="gantt__dias">dias 7 a 25 · prazo da distribuidora</em></span>
+        <span role="cell" class="gantt__trilho"><i class="gantt__barra gantt__barra--ext"></i></span>
+      </div>
+      <div class="gantt__linha" role="row" style="--ini:25;--dur:2">
+        <span role="rowheader"><b>Instalação</b><small>equipe própria NR-10 e NR-35, linha de vida, limpeza final</small><em class="gantt__dias">dias 25 a 27</em></span>
+        <span role="cell" class="gantt__trilho"><i class="gantt__barra"></i></span>
+      </div>
+      <div class="gantt__linha" role="row" style="--ini:27;--dur:7">
+        <span role="rowheader"><b>Vistoria e troca do medidor</b><small>a Equatorial instala o medidor bidirecional</small><em class="gantt__dias">dias 27 a 34</em></span>
+        <span role="cell" class="gantt__trilho"><i class="gantt__barra gantt__barra--ext"></i></span>
+      </div>
+      <div class="gantt__linha gantt__linha--fim" role="row" style="--ini:34;--dur:6">
+        <span role="rowheader"><b>Monitoramento</b><small>usina no app e no nosso painel, por 25 anos</small><em class="gantt__dias">a partir do dia 34</em></span>
+        <span role="cell" class="gantt__trilho"><i class="gantt__barra gantt__barra--seta"></i></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUEM (tabela comparativa) -->
+<section class="folha publico" id="para-quem" aria-labelledby="publico-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 05</span>
+    <span class="folha__nome">Perfis de consumo</span>
+    <span class="folha__rev">valores típicos</span>
+  </header>
+  <h2 id="publico-titulo">Casa, comércio e fazenda pedem projetos diferentes</h2>
+  <div class="tabela-rolagem" role="region" aria-label="Tabela comparativa de perfis">
+    <table class="comparativo">
+      <thead>
+        <tr><th scope="col"><span class="sr">Item</span></th><th scope="col">Residência</th><th scope="col">Comércio e indústria</th><th scope="col">Rural e agro</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Faixa usual</th><td data-p="Residência">3 a 15 kWp</td><td data-p="Comércio e indústria">15 a 300 kWp</td><td data-p="Rural e agro">10 a 500 kWp</td></tr>
+        <tr><th scope="row">Consumo na hora do sol</th><td data-p="Residência">25 a 35%</td><td data-p="Comércio e indústria">45 a 70%</td><td data-p="Rural e agro">30 a 60%</td></tr>
+        <tr><th scope="row">Onde instalamos</th><td data-p="Residência">Telhado cerâmico ou laje</td><td data-p="Comércio e indústria">Cobertura metálica, estacionamento</td><td data-p="Rural e agro">Solo, galpão, cobertura de pivô</td></tr>
+        <tr><th scope="row">Retorno típico</th><td data-p="Residência">2,5 a 4 anos</td><td data-p="Comércio e indústria">2 a 3,5 anos</td><td data-p="Rural e agro">2,5 a 4,5 anos</td></tr>
+        <tr><th scope="row">O que olhamos com cuidado</th><td data-p="Residência">Sombra de vizinho e caixa d’água; previsão de carro elétrico ou ar novo</td><td data-p="Comércio e indústria">Demanda contratada, horário de pico, estrutura da cobertura</td><td data-p="Rural e agro">Distância até a bomba, rede monofásica rural, rateio de créditos entre unidades</td></tr>
+        <tr><th scope="row">Conversar</th>
+          <td data-p="Residência"><a class="link-seta" href="https://wa.me/556299208147?text=Ol%C3%A1%2C%20Raiar!%20Quero%20energia%20solar%20para%20minha%20casa." target="_blank" rel="noopener">Minha casa</a></td>
+          <td data-p="Comércio e indústria"><a class="link-seta" href="https://wa.me/556299208147?text=Ol%C3%A1%2C%20Raiar!%20Quero%20energia%20solar%20para%20minha%20empresa." target="_blank" rel="noopener">Minha empresa</a></td>
+          <td data-p="Rural e agro"><a class="link-seta" href="https://wa.me/556299208147?text=Ol%C3%A1%2C%20Raiar!%20Quero%20energia%20solar%20para%20minha%20propriedade%20rural." target="_blank" rel="noopener">Minha propriedade</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- OBRAS -->
+<section class="folha obras" id="obras" aria-labelledby="obras-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 06</span>
+    <span class="folha__nome">Registro de obras</span>
+    <span class="folha__rev">economia medida no 1º ano</span>
+  </header>
+  <h2 id="obras-titulo">Algumas usinas que já estão gerando</h2>
+
+  <div class="obras__destaques">
+    <article class="obra obra--grande">
+      <figure class="foto" data-foto="obra-fazenda-rio-verde.jpg">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ilustração provisória: usina em solo numa fazenda"><use href="#cena-rural"/></svg>
+        <figcaption><span>Foto 01</span> Usina em solo ao lado da casa de bombas, Rio Verde</figcaption>
+      </figure>
+      <div class="obra__corpo">
+        <p class="obra__local">Obra 2025-117 · zona rural de Rio Verde</p>
+        <h3>Irrigação de 46 ha de feijão e milho safrinha</h3>
+        <p>As bombas do pivô rodavam de maio a setembro, justamente na seca, quando o sol é mais forte. Dimensionamos a usina pela conta da safra 2023/24 e rateamos os créditos de dezembro a março para a casa sede e o barracão.</p>
+        <dl class="obra__dados"><div><dt>Potência</dt><dd>112,24 kWp</dd></div><div><dt>Módulos</dt><dd>184 × 610 W</dd></div><div><dt>Economia</dt><dd>R$ 12.380/mês</dd></div><div><dt>Geração real × projeto</dt><dd>+3,1%</dd></div></dl>
+      </div>
+    </article>
+    <article class="obra">
+      <figure class="foto" data-foto="obra-jardim-goias.jpg">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ilustração provisória: sobrado com módulos no telhado"><use href="#cena-casa"/></svg>
+        <figcaption><span>Foto 02</span> Sobrado no Jardim Goiás, vista do telhado</figcaption>
+      </figure>
+      <div class="obra__corpo">
+        <p class="obra__local">Obra 2026-031 · Jardim Goiás, Goiânia</p>
+        <h3>Sobrado com bomba de calor na piscina</h3>
+        <dl class="obra__dados"><div><dt>Potência</dt><dd>9,15 kWp</dd></div><div><dt>Economia</dt><dd>R$ 1.012/mês</dd></div></dl>
+      </div>
+    </article>
+    <article class="obra">
+      <figure class="foto" data-foto="obra-clinica-setor-bueno.jpg">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ilustração provisória: prédio comercial com módulos na cobertura"><use href="#cena-galpao"/></svg>
+        <figcaption><span>Foto 03</span> Laje da clínica com estrutura inclinada</figcaption>
+      </figure>
+      <div class="obra__corpo">
+        <p class="obra__local">Obra 2025-208 · Setor Bueno, Goiânia</p>
+        <h3>Clínica odontológica, 6 consultórios</h3>
+        <dl class="obra__dados"><div><dt>Potência</dt><dd>18,30 kWp</dd></div><div><dt>Economia</dt><dd>R$ 2.146/mês</dd></div></dl>
+      </div>
+    </article>
+  </div>
+
+  <div class="tabela-rolagem" role="region" aria-label="Lista de outras obras">
+    <table class="registro">
+      <caption>Outras obras recentes</caption>
+      <thead><tr><th scope="col">Nº</th><th scope="col">Local</th><th scope="col">Tipo</th><th scope="col">kWp</th><th scope="col">Ligada em</th><th scope="col">Economia/mês</th></tr></thead>
+      <tbody>
+        <tr><td data-p="Nº">2026-044</td><td data-p="Local">Cidade Vera Cruz, Aparecida</td><td data-p="Tipo">Residencial</td><td data-p="kWp">4,88</td><td data-p="Ligada em">abr/2026</td><td data-p="Economia/mês">R$ 528</td></tr>
+        <tr><td data-p="Nº">2026-019</td><td data-p="Local">Jundiaí, Anápolis</td><td data-p="Tipo">Supermercado</td><td data-p="kWp">75,64</td><td data-p="Ligada em">mar/2026</td><td data-p="Economia/mês">R$ 8.870</td></tr>
+        <tr><td data-p="Nº">2025-251</td><td data-p="Local">Zona rural, Inhumas</td><td data-p="Tipo">Granja de postura</td><td data-p="kWp">48,80</td><td data-p="Ligada em">dez/2025</td><td data-p="Economia/mês">R$ 5.590</td></tr>
+        <tr><td data-p="Nº">2025-233</td><td data-p="Local">Setor Pedro Ludovico, Goiânia</td><td data-p="Tipo">Residencial</td><td data-p="kWp">6,71</td><td data-p="Ligada em">nov/2025</td><td data-p="Economia/mês">R$ 742</td></tr>
+        <tr><td data-p="Nº">2025-190</td><td data-p="Local">Centro, Trindade</td><td data-p="Tipo">Padaria</td><td data-p="kWp">24,40</td><td data-p="Ligada em">set/2025</td><td data-p="Economia/mês">R$ 3.115</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EQUIPAMENTOS -->
+<section class="folha equip" id="equipamentos" aria-labelledby="equip-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 07</span>
+    <span class="folha__nome">Lista de materiais e garantias</span>
+    <span class="folha__rev">prazos usuais de mercado</span>
+  </header>
+  <div class="equip__in">
+    <div class="equip__texto">
+      <h2 id="equip-titulo">O que vai no telhado, e quem responde por quanto tempo</h2>
+      <p>Só usamos módulos e inversores com registro no Inmetro e distribuidor oficial no Brasil. Garantia de fabricante estrangeiro sem representante aqui é papel bonito que ninguém consegue acionar.</p>
+    </div>
+    <div class="garantias">
+      <div class="garantias__eixo" aria-hidden="true"><i>0</i><i>5</i><i>10</i><i>15</i><i>20</i><i>25 anos</i></div>
+      <div class="garantia" style="--a:25">
+        <div class="garantia__txt"><h3>Módulos monocristalinos 610 W</h3><p>Desempenho linear: no mínimo 80 a 87% da potência após 25 a 30 anos, conforme o fabricante. Produto: 12 a 15 anos.</p></div>
+        <div class="garantia__barra"><i></i><span>25 anos de desempenho</span></div>
+      </div>
+      <div class="garantia" style="--a:10">
+        <div class="garantia__txt"><h3>Inversor string ou microinversor</h3><p>7 a 10 anos de fábrica; microinversores chegam a 12 ou mais. É a peça que mais trabalha, e a troca no 12º ano já está no nosso cálculo.</p></div>
+        <div class="garantia__barra"><i></i><span>10 anos</span></div>
+      </div>
+      <div class="garantia" style="--a:10">
+        <div class="garantia__txt"><h3>Estrutura de fixação</h3><p>Alumínio anodizado e parafusos de aço inox, calculados para a carga de vento de Goiás (NBR 6123).</p></div>
+        <div class="garantia__barra"><i></i><span>10 a 12 anos</span></div>
+      </div>
+      <div class="garantia garantia--raiar" style="--a:5">
+        <div class="garantia__txt"><h3>Instalação Raiar</h3><p>Mão de obra, vedação do telhado e conexões. E a geração mínima anual fica escrita no contrato.</p></div>
+        <div class="garantia__barra"><i></i><span>5 anos</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MONITORAMENTO + FINANCIAMENTO -->
+<section class="folha app" id="monitoramento" aria-labelledby="app-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 08</span>
+    <span class="folha__nome">Depois da obra</span>
+    <span class="folha__rev">monitoramento e pagamento</span>
+  </header>
+  <div class="app__in">
+    <div class="celular" aria-hidden="true">
+      <div class="celular__tela">
+        <div class="celular__topo"><span>09:41</span><span>Usina · Setor Bueno</span></div>
+        <p class="celular__rot">Gerado hoje</p>
+        <p class="celular__val">31,4 <small>kWh</small></p>
+        <p class="celular__sub">6% acima do previsto para outubro</p>
+        <svg class="celular__graf" viewBox="0 0 220 104">
+          <path d="M0 92h220" stroke="#14211C" stroke-opacity=".25"/>
+          <path d="M0 92 C30 92 50 88 70 62 S100 8 120 8 S160 34 180 72 C192 86 205 92 220 92" fill="none" stroke="#14211C" stroke-width="2"/>
+          <path d="M0 92 C30 92 50 88 70 62 S100 8 120 8 S160 34 180 72 C192 86 205 92 220 92" fill="#D9542B" fill-opacity=".12"/>
+          <g fill="#14211C" fill-opacity=".6" font-family="IBM Plex Mono, monospace" font-size="8"><text x="0" y="102">6h</text><text x="104" y="102">12h</text><text x="203" y="102">18h</text></g>
+        </svg>
+        <div class="celular__cartoes">
+          <div><span>Outubro</span><b>742 kWh</b></div>
+          <div><span>Economia</span><b>R$ 689</b></div>
+        </div>
+        <div class="celular__alerta"><b>Aviso</b> String 2 com 9% a menos que a string 1. Técnico agendado para 31/10.</div>
+      </div>
+    </div>
+    <div class="app__texto">
+      <h2 id="app-titulo">A gente continua olhando a sua usina</h2>
+      <p>Todo sistema sai ligado ao Wi-Fi do imóvel. Você acompanha pelo app do fabricante do inversor; nós acompanhamos todas as 412 usinas num painel só, comparando a geração de cada uma com o que foi prometido no projeto para aquele mês.</p>
+      <ol class="app__lista">
+        <li><b>Queda de geração</b> acima de 8% em relação ao esperado gera um chamado automático, antes de virar diferença na sua conta.</li>
+        <li><b>Inversor desligado</b> por queda de rede ou disjuntor desarmado aparece no painel em até 15 minutos.</li>
+        <li><b>Relatório anual</b> em PDF com geração mês a mês, economia e a data sugerida para a limpeza dos módulos.</li>
+      </ol>
+
+      <div class="fin" id="financiamento">
+        <h3>Financiamento</h3>
+        <p>Quando a parcela fica perto da economia mensal, o sistema se paga sozinho. Ajudamos a comparar:</p>
+        <ul>
+          <li><b>Linhas de energia solar</b> de bancos e cooperativas de crédito, muitas com carência para a primeira parcela cair depois que a usina já está gerando.</li>
+          <li><b>Crédito rural e para empresas</b>, com recursos de fundos constitucionais e programas de baixo carbono, conforme o enquadramento.</li>
+          <li><b>Cartão ou entrada + parcelas</b> direto com a Raiar, para sistemas menores. À vista tem condição melhor.</li>
+        </ul>
+        <p class="fin__nota">Não publicamos taxas: mudam toda semana e dependem da análise de crédito. Na proposta, simulamos as parcelas reais disponíveis para você.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="folha depo" id="depoimentos" aria-labelledby="depo-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 09</span>
+    <span class="folha__nome">Avaliações no Google</span>
+    <span class="folha__rev">4,9 · 187 avaliações</span>
+  </header>
+  <h2 id="depo-titulo">O que escreveram depois de um ano de conta</h2>
+  <div class="depo__grade">
+    <figure class="review review--grande">
+      <figcaption><span class="avatar" aria-hidden="true">MA</span><span><strong>Márcia Cristina Albuquerque</strong><small>há 2 meses · Setor Bueno</small></span><span class="estrelas" aria-label="5 de 5 estrelas">★★★★★</span></figcaption>
+      <blockquote><p>Colocamos 12 placas em dezembro de 2024. A conta era uns 780 reais e hoje vem entre 150 e 190 dependendo do mês, em janeiro veio 231 porque choveu demais. O Thiago tinha avisado isso na proposta, inclusive mostrou o tal do fio B, então não foi surpresa. Único ponto foi a Equatorial que demorou uns 15 dias pra trocar o relógio depois que tava tudo instalado, mas aí não é culpa deles.</p></blockquote>
+    </figure>
+    <figure class="review">
+      <figcaption><span class="avatar" aria-hidden="true">JR</span><span><strong>Joaquim Rezende Neto</strong><small>há 5 meses · Rio Verde</small></span><span class="estrelas" aria-label="5 de 5 estrelas">★★★★★</span></figcaption>
+      <blockquote><p>Usina de 112 kWp no chão pra tocar as bombas do pivô. Fizeram o estudo em cima das contas da safra passada e bateu, gerou 3% a mais que o projetado no primeiro ano. Recomendo pro pessoal do agro.</p></blockquote>
+    </figure>
+    <figure class="review">
+      <figcaption><span class="avatar" aria-hidden="true">LP</span><span><strong>Lorena Paiva</strong><small>há 3 semanas · Aparecida de Goiânia</small></span><span class="estrelas" aria-label="5 de 5 estrelas">★★★★★</span></figcaption>
+      <blockquote><p>Instalaram num sábado de manhã e deixaram o telhado mais limpo do que acharam kkkk. Respondem rápido no whats.</p></blockquote>
+    </figure>
+    <figure class="review">
+      <figcaption><span class="avatar" aria-hidden="true">RL</span><span><strong>Rafael Lemes Borges</strong><small>há 1 ano · Goiânia</small></span><span class="estrelas" aria-label="4 de 5 estrelas">★★★★<span class="apagada">★</span></span></figcaption>
+      <blockquote><p>Clínica no Bueno, 30 placas na laje. Gosto do relatório anual com a geração mês a mês, uso pra prestar contas pros sócios. Tiro uma estrela porque a proposta demorou uma semana pra chegar, mas a obra em si foi impecável.</p></blockquote>
+    </figure>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="folha faq" id="duvidas" aria-labelledby="faq-titulo">
+  <header class="folha__cab">
+    <span class="folha__n">FL. 10</span>
+    <span class="folha__nome">Perguntas frequentes</span>
+    <span class="folha__rev">respondidas pela equipe técnica</span>
+  </header>
+  <div class="faq__in">
+    <div class="faq__lado">
+      <h2 id="faq-titulo">O que perguntam antes de fechar</h2>
+      <p>Ficou alguma? Mande no WhatsApp; quem responde é o engenheiro, não um robô de vendas.</p>
+      <a class="link-seta" href="https://wa.me/556299208147?text=Ol%C3%A1%2C%20Raiar!%20Tenho%20uma%20d%C3%BAvida%20sobre%20energia%20solar%3A%20" target="_blank" rel="noopener">Perguntar no WhatsApp</a>
+    </div>
+    <div class="faq__lista">
+      <details>
+        <summary>Em dia de chuva ou nublado, gera?</summary>
+        <p>Gera menos, mas gera. A luz difusa das nuvens produz, em geral, de 10% a 40% de um dia de céu aberto. O dimensionamento usa a média do ano inteiro, e o gráfico do simulador já mostra dezembro e janeiro mais baixos. O crédito acumulado na seca cobre a diferença.</p>
+      </details>
+      <details>
+        <summary>E à noite?</summary>
+        <p>À noite os módulos não geram e a casa puxa energia da rede normalmente. No fim do mês, o medidor bidirecional soma o que você injetou de dia e o que consumiu da rede; a diferença é abatida com os créditos. Você não fica sem luz em momento nenhum.</p>
+      </details>
+      <details>
+        <summary>Se faltar energia na rua, minha casa fica com luz?</summary>
+        <p>Não. Por norma, o inversor on-grid se desliga em menos de um segundo quando a rede cai, para não energizar o cabo em que um eletricista da distribuidora pode estar trabalhando. Para ter energia na queda, só com sistema híbrido e baterias.</p>
+      </details>
+      <details>
+        <summary>Vale colocar baterias?</summary>
+        <p>Para a maioria das casas em Goiânia, ainda não: a bateria de lítio encarece o projeto e alonga o retorno. Faz sentido onde a energia cai com frequência, em fazenda com rede rural instável, ou para quem tem equipamento que não pode desligar. Dá para deixar o sistema preparado e instalar depois.</p>
+      </details>
+      <details>
+        <summary>Precisa de manutenção?</summary>
+        <p>Pouca. Uma limpeza por ano, de preferência em agosto ou setembro, quando a poeira da seca acumula. Água e rodo macio; nada de produto químico nem lavadora de alta pressão. Inspeção das conexões a cada um ou dois anos.</p>
+      </details>
+      <details>
+        <summary>Valoriza o imóvel?</summary>
+        <p>Em geral, sim: casa com custo de energia baixo pesa na decisão de quem compra ou aluga, e o sistema fica no imóvel. Quanto valoriza depende do mercado do bairro, e preferimos não chutar um percentual.</p>
+      </details>
+      <details>
+        <summary>Meu telhado aguenta?</summary>
+        <p>Módulos com estrutura pesam de 12 a 15 kg por m², parecido com telha cerâmica molhada. Na visita, o engenheiro avalia o madeiramento ou a estrutura metálica. Se precisar de reforço, vai descrito e orçado na proposta.</p>
+      </details>
+      <details>
+        <summary>E se o consumo aumentar depois?</summary>
+        <p>Dá para ampliar. Se você já planeja ar-condicionado, piscina aquecida ou carro elétrico, fale na visita: escolhemos um inversor com folga para receber mais módulos sem trocar o equipamento.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section class="contato" id="contato" aria-labelledby="contato-titulo">
+  <div class="contato__in">
+    <div class="contato__texto">
+      <h2 id="contato-titulo">Marque a visita técnica</h2>
+      <p>Gratuita em Goiânia e região metropolitana. No interior, encaixamos a data junto com outras obras da região para não cobrar deslocamento.</p>
+      <dl class="contato__dados">
+        <div><dt>Escritório</dt><dd>Rua Exemplo, 100, Setor Marista, Goiânia-GO<br><small>em frente à praça, estacionamento no recuo</small></dd></div>
+        <div><dt>Horário</dt><dd>Seg. a sex., 8h às 18h · sáb., 8h às 12h</dd></div>
+        <div><dt>WhatsApp</dt><dd><a href="https://wa.me/556299208147" target="_blank" rel="noopener">(62) 9920-8147</a></dd></div>
+      </dl>
+    </div>
+    <form class="contato__form" id="form-contato" novalidate>
+      <div class="campo">
+        <label for="c-nome">Nome</label>
+        <input id="c-nome" name="nome" type="text" autocomplete="name" required>
+      </div>
+      <div class="campo-duplo">
+        <div class="campo">
+          <label for="c-cidade">Cidade</label>
+          <input id="c-cidade" name="cidade" type="text" autocomplete="address-level2" value="Goiânia">
+        </div>
+        <div class="campo">
+          <label for="c-tipo">Imóvel</label>
+          <select id="c-tipo" name="tipo">
+            <option>Residência</option>
+            <option>Comércio ou empresa</option>
+            <option>Propriedade rural</option>
+          </select>
+        </div>
+      </div>
+      <div class="campo">
+        <label for="c-conta">Conta média (R$ por mês)</label>
+        <input id="c-conta" name="conta" type="number" inputmode="decimal" min="0" step="10" placeholder="650">
+      </div>
+      <div class="campo">
+        <label for="c-msg">Algo que o engenheiro deve saber? <span class="opc">(opcional)</span></label>
+        <textarea id="c-msg" name="msg" rows="3" placeholder="Telhado novo, previsão de carro elétrico, bomba de irrigação…"></textarea>
+      </div>
+      <p class="form__erro" id="c-erro" role="alert" hidden>Escreva seu nome para a gente saber com quem fala.</p>
+      <button class="btn btn--sol btn--grande" type="submit">Enviar pelo WhatsApp</button>
+      <p class="form__nota">Abre o WhatsApp com a mensagem pronta. Este site não guarda seus dados.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="rodape">
+  <div class="rodape__in">
+    <a class="marca" href="#inicio" aria-label="Raiar Energia Solar, voltar ao início">
+      <svg class="marca__simbolo" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 31a15 15 0 0 1 30 0z" fill="#D9542B"/><g stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M24 6v5M10.5 12.5l3.5 3.5M37.5 12.5L34 16"/><path d="M4 36h40M12 42h24"/></g></svg>
+      <span class="marca__nome">Raiar<small>energia solar · goiânia</small></span>
+    </a>
+    <nav class="rodape__links" aria-label="Rodapé">
+      <a href="#simulador">Simulador</a>
+      <a href="#lei">Lei 14.300</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#obras">Obras</a>
+      <a href="#financiamento">Financiamento</a>
+      <a href="#duvidas">Dúvidas</a>
+    </nav>
+  </div>
+  <div class="rodape__base">
+    <p>© <span id="ano">2026</span> Raiar Energia Solar · Goiânia-GO</p>
+    <p>Projeto conceito criado pela Hyra Tecnologia. Negócio fictício.</p>
+    <p>Site desenvolvido por <a href="https://hyratecnologia.com" target="_blank" rel="noopener">Hyra Tecnologia</a></p>
+  </div>
+</footer>
+
+<a class="zap-fixo" href="https://wa.me/556299208147?text=Ol%C3%A1%2C%20Raiar!%20Quero%20saber%20mais%20sobre%20energia%20solar." target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 1.8 2.5 4.2 4.6 4.8l1.2-1.1 1.7.8c-.2 1.3-1.2 2-2.3 2-3.2-.4-6.4-3.6-6.8-6.8 0-1.1.7-2.1 2-2.3l.8 1.7z" fill="currentColor" stroke="none"/></svg>
+  <span>WhatsApp</span>
+</a>
+
+<script src="app.js" defer></script>
+</body>
+</html>

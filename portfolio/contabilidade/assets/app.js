@@ -74,17 +74,6 @@
     d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
   });
 
-  // Carimbo do hero entra quando aparece
-  var carimbo = document.querySelector('.carimbo');
-  if (carimbo) {
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) {
-        es.forEach(function (en) { if (en.isIntersecting) { carimbo.classList.add('on'); io.disconnect(); } });
-      }, { threshold: .4 });
-      io.observe(carimbo.parentElement);
-    } else carimbo.classList.add('on');
-  }
-
   // Formulário de contato -> WhatsApp
   var form = document.getElementById('form-contato');
   form.addEventListener('submit', function (e) {

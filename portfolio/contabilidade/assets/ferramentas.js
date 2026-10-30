@@ -28,7 +28,7 @@
       III: [[180000, .06, 0], [360000, .112, 9360], [720000, .135, 17640], [1800000, .16, 35640], [3600000, .21, 125640], [4800000, .33, 648000]],
       V:   [[180000, .155, 0], [360000, .18, 4500], [720000, .195, 9900], [1800000, .205, 17100], [3600000, .23, 62100], [4800000, .305, 540000]]
     },
-    icmsGO: .19
+    icmsPadrao: .19
   };
 
   function aliqEfetiva(rbt12, anexo) {
@@ -110,13 +110,14 @@
     var bIR = fat * (com ? .08 : .32), bCS = fat * (com ? .12 : .32);
     var irpj = .15 * bIR + .10 * Math.max(0, bIR - 20000);
     var csll = .09 * bCS, pis = .0065 * fat, cofins = .03 * fat;
-    var local = com ? R.icmsGO * fat * (1 - e.cmv) : fat * e.iss;
+    var icms = e.icms || R.icmsPadrao;
+    var local = com ? icms * fat * (1 - e.cmv) : fat * e.iss;
     var cppP = .20 * (e.pl + e.sal) + .078 * e.sal;
     out.push({
       id: 'presumido', nome: 'Lucro Presumido', sub: com ? 'presunção de 8% (IRPJ) e 12% (CSLL)' : 'presunção de 32% sobre o faturamento',
       mes: irpj + csll + pis + cofins + local + cppP + inss + ir,
       linhas: [['IRPJ (15% + adicional de 10%)', irpj], ['CSLL (9%)', csll], ['PIS (0,65%)', pis], ['Cofins (3%)', cofins],
-        [com ? 'ICMS estimado sobre a margem (19%)' : 'ISS (' + PCT(e.iss).replace(',0', '') + ')', local],
+        [com ? 'ICMS estimado sobre a margem (' + PCT(icms).replace(',0', '') + ')' : 'ISS (' + PCT(e.iss).replace(',0', '') + ')', local],
         ['INSS patronal (20%) + RAT/terceiros', cppP], ['INSS do sócio (11% do pró-labore)', inss], ['IR retido do pró-labore', ir]]
     });
 
@@ -127,14 +128,14 @@
   var f = {
     fat: document.getElementById('fat'), fatR: document.getElementById('fat-r'),
     pl: document.getElementById('pl'), sal: document.getElementById('sal'),
-    iss: document.getElementById('iss'), cmv: document.getElementById('cmv'), cmvOut: document.getElementById('cmv-out')
+    iss: document.getElementById('iss'), icms: document.getElementById('icms'), cmv: document.getElementById('cmv'), cmvOut: document.getElementById('cmv-out')
   };
   if (f.fat) {
     var campoISS = document.getElementById('campo-iss'), campoCMV = document.getElementById('campo-cmv');
 
     function estado() {
       var ativ = document.querySelector('input[name="ativ"]:checked').value;
-      return { ativ: ativ, fat: Math.max(ler(f.fat), 0), pl: ler(f.pl), sal: ler(f.sal), iss: parseFloat(f.iss.value), cmv: parseInt(f.cmv.value, 10) / 100 };
+      return { ativ: ativ, fat: Math.max(ler(f.fat), 0), pl: ler(f.pl), sal: ler(f.sal), iss: parseFloat(f.iss.value), icms: parseFloat(f.icms.value), cmv: parseInt(f.cmv.value, 10) / 100 };
     }
 
     function render() {
@@ -174,13 +175,13 @@
       var p = [];
       var fr = r.regimes.filter(function (x) { return x.id === 'fatorR'; })[0];
       var sn = r.regimes.filter(function (x) { return x.id === 'simples'; })[0];
-      if (b.id === 'mei') p.push('Enquanto você faturar até R$ 81 mil por ano, o MEI é praticamente imbatível: o valor é fixo, não importa quanto entrou no mês. Fique de olho no limite: a média é de R$ 6.750 por mês.');
+      if (b.id === 'mei') p.push('Até R$ 81 mil por ano, o MEI tem a menor carga: o valor é fixo, independentemente do faturamento do mês. Acompanhe o limite, que equivale a uma média de R$ 6.750 por mês.');
       if (e.ativ === 'fatorR') {
         if (fr) p.push('Hoje seu fator R é de <b>' + PCT(r.fr) + '</b> (pró-labore e salários divididos pelo faturamento). Abaixo de 28%, serviço profissional cai no Anexo V, o mais caro. Com pró-labore de <b>' + m0(fr.plN) + '</b> a empresa passa para o Anexo III' +
           (fr.mes < sn.mes ? ' e, mesmo pagando mais INSS e IR sobre esse pró-labore, a conta fica ' + m0(sn.mes - fr.mes) + ' menor por mês.' : ', mas aqui o INSS e o IR extras comem a economia.'));
         else p.push('Seu fator R é de <b>' + PCT(r.fr) + '</b>, acima de 28%. Por isso a empresa fica no Anexo III, que começa em 6%. Mantenha o pró-labore nesse patamar todo mês.');
       }
-      if (e.ativ === 'comercio') p.push('No comércio, o DAS do Anexo I já inclui o ICMS. No Lucro Presumido, o ICMS foi estimado em 19% sobre a sua margem de ' + Math.round((1 - e.cmv) * 100) + '%; produtos com substituição tributária ou monofásicos mudam bastante essa conta.');
+      if (e.ativ === 'comercio') p.push('No comércio, o DAS do Anexo I já inclui o ICMS. No Lucro Presumido, o ICMS foi estimado em ' + PCT(e.icms).replace(',0', '') + ' sobre a sua margem de ' + Math.round((1 - e.cmv) * 100) + '%; produtos com substituição tributária ou monofásicos mudam bastante essa conta.');
       if (b.id === 'presumido') p.push('O Lucro Presumido saiu na frente porque, com esse faturamento, as alíquotas do Simples já estão altas. Ele exige mais controle (PIS e Cofins mensais, IRPJ e CSLL por trimestre) e vale confirmar com o histórico real.');
       if (b.id !== 'presumido' && e.fat * 12 > 1800000) p.push('Nessa faixa de faturamento, Simples e Presumido costumam ficar próximos. Uma análise com os números reais dos últimos 12 meses é obrigatória antes de decidir.');
       document.getElementById('explica').innerHTML = p.map(function (t) { return '<p>' + t + '</p>'; }).join('');
@@ -201,7 +202,7 @@
     }
     [f.fat, f.pl, f.sal].forEach(mascara);
     f.fatR.addEventListener('input', function () { escrever(f.fat, parseInt(f.fatR.value, 10)); render(); });
-    [f.iss, f.cmv].forEach(function (el) { el.addEventListener('input', render); el.addEventListener('change', render); });
+    [f.iss, f.icms, f.cmv].forEach(function (el) { el.addEventListener('input', render); el.addEventListener('change', render); });
     document.querySelectorAll('input[name="ativ"]').forEach(function (r) { r.addEventListener('change', render); });
     document.getElementById('sim-wa').target = '_blank';
     document.getElementById('sim-wa').rel = 'noopener';
@@ -306,10 +307,10 @@
      3. ABRIR EMPRESA: CHECKLIST
      ========================================================= */
   var ETAPAS = [
-    { id: 'conversa', t: 'Definir atividade, sócios e regime', p: '1 dia', q: 'Você e a Âncora', tipos: '*', d: 'Uma conversa de 30 minutos para escolher o CNAE certo (é ele que define o imposto) e o regime.', docs: ['O que você vai vender ou fazer', 'Quanto espera faturar no primeiro ano', 'Quem serão os sócios e a participação de cada um'] },
+    { id: 'conversa', t: 'Definir atividade, sócios e regime', p: '1 dia', q: 'Você e a Âncora', tipos: '*', d: 'Reunião de 30 minutos para escolher o CNAE certo (é ele que define o imposto) e o regime.', docs: ['O que você vai vender ou fazer', 'Quanto espera faturar no primeiro ano', 'Quem serão os sócios e a participação de cada um'] },
     { id: 'docs', t: 'Separar os documentos dos sócios', p: '1 dia', q: 'Você', tipos: '*', d: 'Fotos legíveis bastam.', docs: ['RG ou CNH e CPF', 'Comprovante de residência dos últimos 90 dias', 'Certidão de casamento, se for casado', 'Conta gov.br nível prata ou ouro (para assinar)'] },
     { id: 'viab', t: 'Consulta de viabilidade na prefeitura', p: '1 a 3 dias úteis', q: 'Âncora', tipos: '*', d: 'A prefeitura confirma se a atividade é permitida no endereço. Muitos serviços podem usar endereço residencial.', docs: ['Endereço completo', 'Inscrição do IPTU do imóvel'] },
-    { id: 'junta', t: 'Contrato social e registro na Junta Comercial', p: '2 a 5 dias úteis', q: 'Âncora redige, você assina', tipos: '*', d: 'Registro na JUCEG (ou na junta do seu estado). Assinatura digital pelo gov.br, sem cartório.', docs: ['Nome empresarial (2 ou 3 opções)', 'Capital social'] },
+    { id: 'junta', t: 'Contrato social e registro na Junta Comercial', p: '2 a 5 dias úteis', q: 'Âncora redige, você assina', tipos: '*', d: 'Registro na Junta Comercial do seu estado. Assinatura digital pelo gov.br, sem cartório.', docs: ['Nome empresarial (2 ou 3 opções)', 'Capital social'] },
     { id: 'cnpj', t: 'CNPJ emitido', p: 'junto com o registro', q: 'Automático', tipos: '*', d: 'O CNPJ sai pelo sistema integrado (REDESIM) assim que a junta aprova.', docs: [] },
     { id: 'municipal', t: 'Inscrição municipal e alvará', p: '1 a 10 dias úteis', q: 'Âncora', tipos: '*', d: 'Atividades de baixo risco costumam ter alvará automático. As demais passam por análise.', docs: [] },
     { id: 'ie', t: 'Inscrição estadual na SEFAZ', p: '1 a 5 dias úteis', q: 'Âncora', tipos: 'comercio', d: 'Obrigatória para vender mercadoria e emitir NF-e.', docs: [] },
@@ -333,7 +334,7 @@
       var v = visiveis(), n = v.filter(function (e) { return feitos.indexOf(e.id) > -1; }).length, pc = Math.round(n / v.length * 100);
       document.getElementById('prog-pct').textContent = pc + '%';
       document.getElementById('prog-arco').style.strokeDashoffset = (119.4 * (1 - n / v.length)).toFixed(1);
-      document.getElementById('prog-txt').textContent = n === v.length ? 'Tudo pronto. Empresa aberta!' : n + ' de ' + v.length + ' etapas concluídas';
+      document.getElementById('prog-txt').textContent = n === v.length ? 'Todas as etapas concluídas.' : n + ' de ' + v.length + ' etapas concluídas';
       document.getElementById('prog-prazo').textContent = 'Prazo médio total: ' + PRAZO[tipo];
       var falta = v.filter(function (e) { return feitos.indexOf(e.id) < 0; })[0];
       var msg = 'Olá! Quero abrir uma empresa ' + MSG_TIPO[tipo] + ' com a Âncora. Já fiz ' + n + ' de ' + v.length + ' etapas' + (falta ? '; a próxima é: ' + falta.t + '.' : '.');

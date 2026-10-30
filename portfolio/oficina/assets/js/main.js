@@ -63,21 +63,13 @@
   }, { passive: true });
   onScroll();
 
-  /* Aberto agora? (horário de Goiânia) */
-  function agoraGoiania() {
-    try {
-      var p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Sao_Paulo', weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(new Date());
-      var o = {};
-      p.forEach(function (x) { o[x.type] = x.value; });
-      var dias = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-      return { dia: dias[o.weekday], min: (parseInt(o.hour, 10) % 24) * 60 + parseInt(o.minute, 10) };
-    } catch (e) {
-      var d = new Date();
-      return { dia: d.getDay(), min: d.getHours() * 60 + d.getMinutes() };
-    }
+  /* Aberto agora? (hora local de quem visita) */
+  function agoraLocal() {
+    var d = new Date();
+    return { dia: d.getDay(), min: d.getHours() * 60 + d.getMinutes() };
   }
   var HORARIO = { 1: [450, 1080], 2: [450, 1080], 3: [450, 1080], 4: [450, 1080], 5: [450, 1080], 6: [480, 720] };
-  var t = agoraGoiania();
+  var t = agoraLocal();
   window.torqueAgora = t;
   var st = document.querySelector('[data-status]');
   if (st) {

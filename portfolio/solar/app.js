@@ -78,7 +78,7 @@
   /* ---------- Simulador ---------- */
   var HSP = 5.0, PERDAS = 0.20, MOD_W = 610, MOD_M2 = 2.7;
   var DIAS_MES = 30.42;
-  // irradiação relativa mês a mês em Goiânia, plano inclinado (perfil CRESESB)
+  // perfil mensal de irradiação de referência, plano inclinado (base CRESESB)
   var IRR_MES = [5.12, 5.40, 5.24, 5.47, 5.38, 5.30, 5.55, 6.05, 5.62, 5.42, 5.06, 5.03];
   var DIAS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   var MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
@@ -178,7 +178,6 @@
     set('r-pay', txtPayback(r.payback));
     set('r-25', milhar(r.saldo25));
     set('r-co2', nf1.format(r.co2));
-    set('m-ref', 'Ref. RAI-' + String(Math.round(r.consumo)).padStart(4, '0') + '-' + r.tipo.slice(0, 3).toUpperCase());
 
     var alerta = $('#r-alerta'), msg = '';
     if (r.consumo < 180) msg = 'Com consumo abaixo de 180 kWh, a taxa mínima pesa mais e o retorno fica mais longo. Ainda dá para fazer, mas vale conversar antes.';
@@ -230,23 +229,23 @@
     var y = function (v) { return M.t + ih - v / max * ih; };
     for (var g = 0; g <= 4; g++) {
       var val = max * g / 4;
-      svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: y(val), y2: y(val), stroke: '#14211C', 'stroke-opacity': g === 0 ? .8 : .12 }));
+      svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: y(val), y2: y(val), stroke: '#FFFFFF', 'stroke-opacity': g === 0 ? .55 : .1 }));
       svg.appendChild(el('text', { x: M.l - 8, y: y(val) + 4, 'text-anchor': 'end' }, nf0.format(val)));
     }
     var bw = iw / 12;
     r.gerMeses.forEach(function (v, i) {
       var x = M.l + i * bw + bw * 0.18, w = bw * 0.64;
-      var rect = el('rect', { class: 'barra', x: x.toFixed(1), y: y(v).toFixed(1), width: w.toFixed(1), height: (y(0) - y(v)).toFixed(1) });
+      var rect = el('rect', { class: 'barra', x: x.toFixed(1), y: y(v).toFixed(1), width: w.toFixed(1), height: (y(0) - y(v)).toFixed(1), rx: Math.min(4, w / 4).toFixed(1) });
       rect.appendChild(el('title', {}, MESES[i] + ': ' + nf0.format(Math.round(v)) + ' kWh gerados'));
       svg.appendChild(rect);
       svg.appendChild(el('text', { x: (x + w / 2).toFixed(1), y: H - 8, 'text-anchor': 'middle' }, MESES[i]));
     });
     var yc = y(r.consumo);
-    svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: yc, y2: yc, stroke: '#BF4520', 'stroke-width': 2, 'stroke-dasharray': '6 4' }));
-    var rot = el('text', { x: W - M.r, y: yc - 6, 'text-anchor': 'end', class: 'rot-forte' }, 'consumo ' + nf0.format(Math.round(r.consumo)) + ' kWh');
+    svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: yc, y2: yc, stroke: '#FF7A3D', 'stroke-width': 2.5, 'stroke-dasharray': '7 5' }));
+    var rot = el('text', { x: W - M.r, y: yc - 6, 'text-anchor': 'end', class: 'rot-forte rot-laranja' }, 'consumo ' + nf0.format(Math.round(r.consumo)) + ' kWh');
     svg.appendChild(rot);
     svg.setAttribute('aria-label', 'Geração estimada por mês, de ' + nf0.format(Math.round(Math.min.apply(null, r.gerMeses))) + ' a ' + nf0.format(Math.round(Math.max.apply(null, r.gerMeses))) + ' kWh, comparada ao consumo de ' + nf0.format(Math.round(r.consumo)) + ' kWh por mês.');
-    leg.innerHTML = '<span><i style="background:#14211C"></i>Geração estimada (kWh)</span><span><i style="background:repeating-linear-gradient(90deg,#BF4520 0 6px,transparent 6px 9px);height:2px;vertical-align:3px"></i>Seu consumo médio</span><span>Meses com menos sol usam os créditos da seca.</span>';
+    leg.innerHTML = '<span><i style="background:#FFC21A;border-radius:2px"></i>Geração estimada (kWh)</span><span><i style="background:repeating-linear-gradient(90deg,#FF7A3D 0 7px,transparent 7px 11px);height:3px;vertical-align:3px"></i>Seu consumo médio</span><span>Meses com menos sol usam os créditos dos meses secos.</span>';
   }
 
   function graficoFluxo(r) {
@@ -258,22 +257,22 @@
     var y = function (v) { return M.t + (topo - v) / (topo - base) * ih; };
     var passo = topo / 4;
     for (var v = base; v <= topo + 1; v += passo) {
-      svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: y(v), y2: y(v), stroke: '#14211C', 'stroke-opacity': Math.abs(v) < 1 ? .8 : .12 }));
+      svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: y(v), y2: y(v), stroke: '#FFFFFF', 'stroke-opacity': Math.abs(v) < 1 ? .55 : .1 }));
       svg.appendChild(el('text', { x: M.l - 8, y: y(v) + 4, 'text-anchor': 'end' }, (v / 1000 >= 1000 ? nf1.format(v / 1e6) + ' mi' : nf0.format(v / 1000) + ' mil')));
     }
     [0, 5, 10, 15, 20, 25].forEach(function (a) { svg.appendChild(el('text', { x: x(a), y: H - 8, 'text-anchor': a === 0 ? 'start' : a === 25 ? 'end' : 'middle' }, a === 0 ? 'hoje' : (W < 480 ? '' : 'ano ') + a)); });
     var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + x(p.ano).toFixed(1) + ' ' + y(p.acum).toFixed(1); }).join(' ');
-    svg.appendChild(el('path', { d: d + ' L' + x(25) + ' ' + y(0) + ' L' + x(0) + ' ' + y(0) + 'Z', fill: '#14211C', 'fill-opacity': .07 }));
-    svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#14211C', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }));
+    svg.appendChild(el('path', { d: d + ' L' + x(25) + ' ' + y(0) + ' L' + x(0) + ' ' + y(0) + 'Z', fill: '#2BC46A', 'fill-opacity': .16 }));
+    svg.appendChild(el('path', { d: d, fill: 'none', stroke: '#4BD27F', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
     // troca do inversor
     var pi = pts[ANO_INV];
-    svg.appendChild(el('circle', { cx: x(pi.ano), cy: y(pi.acum), r: 3.5, fill: '#FBF8F2', stroke: '#14211C', 'stroke-width': 1.5 }));
+    svg.appendChild(el('circle', { cx: x(pi.ano), cy: y(pi.acum), r: 4, fill: '#0E2A1F', stroke: '#FFFFFF', 'stroke-width': 2 }));
     svg.appendChild(el('text', { x: x(pi.ano) + 6, y: y(pi.acum) + 16 }, 'troca do inversor'));
     if (r.payback !== null) {
       var xp = x(r.payback);
-      svg.appendChild(el('line', { x1: xp, x2: xp, y1: y(0), y2: y(base), stroke: '#BF4520', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' }));
-      svg.appendChild(el('circle', { cx: xp, cy: y(0), r: 5, fill: '#BF4520' }));
-      svg.appendChild(el('text', { x: xp + 8, y: y(0) + 16, class: 'rot-forte' }, 'retorno: ' + txtPayback(r.payback)));
+      svg.appendChild(el('line', { x1: xp, x2: xp, y1: y(0), y2: y(base), stroke: '#FFC21A', 'stroke-width': 1.5, 'stroke-dasharray': '3 4' }));
+      svg.appendChild(el('circle', { cx: xp, cy: y(0), r: 6, fill: '#FFC21A', stroke: '#0E2A1F', 'stroke-width': 2 }));
+      svg.appendChild(el('text', { x: xp + 8, y: y(0) + 16, class: 'rot-forte rot-sol' }, 'retorno: ' + txtPayback(r.payback)));
     }
     var ult = pts[pts.length - 1];
     svg.appendChild(el('text', { x: x(25), y: y(ult.acum) - 8, 'text-anchor': 'end', class: 'rot-forte' }, 'R$ ' + milhar(ult.acum)));
@@ -349,7 +348,7 @@
       noite: 'A casa funciona normalmente, agora com energia da rede. Não há chave para virar nem nada para fazer; você não percebe a troca.',
       dado: 'Numa casa, de 25% a 35% da geração é usada na hora. Num comércio aberto de dia, de 45% a 70%.' },
     { t: 'Medidor bidirecional',
-      dia: 'A Equatorial troca o seu medidor por um que registra em separado a energia que entra e a que sai. O excedente do dia é injetado na rede e vira crédito em kWh.',
+      dia: 'A distribuidora troca o seu medidor por um que registra em separado a energia que entra e a que sai. O excedente do dia é injetado na rede e vira crédito em kWh.',
       noite: 'Agora o medidor conta energia entrando. No fechamento do mês, esse consumo é abatido com os créditos do dia, pagando a parcela do fio B.',
       dado: 'Na conta aparecem duas leituras: energia consumida e energia injetada. O crédito que sobra vale por 60 meses.' },
     { t: 'Rede da distribuidora',
@@ -398,7 +397,8 @@
     if (!nome) { erro.hidden = false; $('#c-nome').setAttribute('aria-invalid', 'true'); $('#c-nome').focus(); return; }
     erro.hidden = true; $('#c-nome').removeAttribute('aria-invalid');
     var conta = $('#c-conta').value, msg = $('#c-msg').value.trim();
-    var txt = 'Olá, Raiar! Sou ' + nome + ', de ' + ($('#c-cidade').value.trim() || 'Goiânia') + '.\n' +
+    var cidade = $('#c-cidade').value.trim();
+    var txt = 'Olá, Raiar! Sou ' + nome + (cidade ? ', de ' + cidade : '') + '.\n' +
       'Quero agendar uma visita técnica para ' + $('#c-tipo').value.toLowerCase() + '.' +
       (conta ? '\nConta média: R$ ' + conta + ' por mês.' : '') +
       (msg ? '\nObservação: ' + msg : '');
