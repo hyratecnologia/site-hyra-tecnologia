@@ -19,8 +19,8 @@
    - alergenos ..... lista: "glúten", "lactose", "ovo", "castanhas", "peixe",
                      "crustáceos", "moluscos", "soja", "sulfitos", "álcool".
    - harmoniza ..... ids de outros itens que combinam (aparecem no detalhe).
-   - ilustra ....... desenho usado enquanto não há foto. Opções: carne, espeto,
-                     peixe, frutos, ave, legume, cumbuca, salgado, queijo, sobremesa,
+   - ilustra ....... composição colorida usada enquanto não há foto (img/casa.svg). Opções: carne, bife, costela, espeto,
+                     peixe, frutos, ave, legume, cumbuca, salgado, pastel, mandioca, queijo, sobremesa,
                      fruta, milho, copo, drink, cerveja, vinho, prato.
    - foto .......... (opcional) caminho da foto, ex.: "img/pratos/picanha.jpg".
                      Quando preenchido, a foto substitui o desenho.
@@ -35,8 +35,7 @@ window.CASA_BRASA = {
   config: {
     nome: "Casa Brasa",
     whatsapp: "556299208147",          // só números, com 55 + DDD
-    endereco: "Rua Exemplo, 100 · Setor Marista",
-    cidade: "Goiânia - GO",
+    endereco: "Rua Exemplo, 100",
     taxaEntrega: 8.90,                 // taxa estimada (o atendente confirma pelo bairro)
     pedidoMinimoDelivery: 50.00,
     tempoDelivery: "40 a 60 min",
@@ -60,12 +59,12 @@ window.CASA_BRASA = {
   categorias: [
     { id: "entradas",   nome: "Entradas",          nota: "Para abrir a mesa enquanto a brasa trabalha." },
     { id: "brasa",      nome: "Da brasa",          nota: "Carnes e vegetais assados sobre lenha de eucalipto e carvão de coco. Os cortes saem com sal grosso e chimichurri de pequi." },
-    { id: "peixes",     nome: "Peixes e mar",      nota: "Peixes de rio do Centro-Oeste e frutos do mar, sempre na grelha ou na folha de bananeira." },
+    { id: "peixes",     nome: "Peixes e mar",      nota: "Peixes de rio e frutos do mar, sempre na grelha ou na folha de bananeira." },
     { id: "guarnicoes", nome: "Guarnições",        nota: "Acompanhamentos para dividir. Cada porção serve bem 2 pessoas." },
     { id: "executivo",  nome: "Almoço executivo",  nota: "De segunda a sexta, das 11h30 às 15h. Inclui salada da horta ou caldo do dia e uma sobremesa do dia." },
     { id: "sobremesas", nome: "Sobremesas",        nota: "Doces da casa, feitos aqui todos os dias." },
-    { id: "sem-alcool", nome: "Sem álcool",        nota: "Sucos de frutas do cerrado, feitos na hora." },
-    { id: "drinks",     nome: "Drinks",            nota: "Coquetéis com cachaças goianas e frutas da estação. Venda proibida para menores de 18 anos." },
+    { id: "sem-alcool", nome: "Sem álcool",        nota: "Sucos de fruta batidos na hora, limonada e café coado." },
+    { id: "drinks",     nome: "Drinks",            nota: "Coquetéis com cachaça de alambique e frutas da estação. Venda proibida para menores de 18 anos." },
     { id: "cervejas",   nome: "Cervejas",          nota: "Chopes e cervejas artesanais bem geladas. Venda proibida para menores de 18 anos." },
     { id: "vinhos",     nome: "Vinhos por taça",   nota: "Taça de 150 ml. Pergunte pela carta completa de garrafas. Venda proibida para menores de 18 anos." }
   ],
@@ -102,13 +101,13 @@ window.CASA_BRASA = {
       desc: "Seis pastéis de massa de milho, recheio de carne seca e queijo.",
       longa: "Receita de interior: massa de angu de milho, recheio de carne seca desfiada com cebola roxa e queijo meia-cura. Fritos na hora e servidos com geleia de pimenta biquinho.",
       preco: 38.00, serve: "2 pessoas", tags: ["sg", "dividir"],
-      alergenos: ["lactose"], harmoniza: ["caipirinha-limao", "chope-ipa"], ilustra: "salgado" },
+      alergenos: ["lactose"], harmoniza: ["caipirinha-limao", "chope-ipa"], ilustra: "pastel" },
 
     { id: "mandioca-pequi", cat: "entradas", nome: "Mandioca crocante com maionese de pequi",
       desc: "Mandioca cozida, prensada e frita, com maionese defumada de pequi.",
       longa: "A mandioca é cozida, prensada em placas e frita em duas etapas para ficar crocante por fora e macia por dentro. Acompanha maionese caseira defumada com pequi. Atenção: o pequi tem espinhos no caroço; aqui ele chega só em creme.",
       preco: 32.00, serve: "2 pessoas", tags: ["veg", "sg"],
-      alergenos: ["ovo"], harmoniza: ["pequi-tonic", "chope-pilsen"], ilustra: "salgado" },
+      alergenos: ["ovo"], harmoniza: ["pequi-tonic", "chope-pilsen"], ilustra: "mandioca" },
 
     { id: "bolinho-costela", cat: "entradas", nome: "Bolinho de arroz com costela",
       desc: "Oito bolinhos recheados com a costela de 12 horas e queijo.",
@@ -133,13 +132,13 @@ window.CASA_BRASA = {
       desc: "Costela bovina assada no fogo de chão por uma noite inteira, desmanchando.",
       longa: "Nosso prato mais pedido. A ripa de costela é amarrada em estacas e assada ao lado do fogo de chão por 12 horas, só com sal grosso. Chega desmanchando, com mandioca na manteiga e vinagrete. Produção limitada por dia.",
       preco: 149.00, serve: "2 a 3 pessoas", tags: ["sg", "casa", "dividir"],
-      alergenos: ["lactose"], harmoniza: ["vinho-syrah-cerrado", "mandioca-manteiga"], ilustra: "carne" },
+      alergenos: ["lactose"], harmoniza: ["vinho-syrah", "mandioca-manteiga"], ilustra: "costela" },
 
     { id: "ancho-maturado", cat: "brasa", nome: "Bife ancho maturado 30 dias",
       desc: "350 g de ancho com marmoreio alto, crosta de sal e manteiga de ervas.",
-      longa: "Corte do contrafilé dianteiro, com gordura entremeada que derrete na brasa. Maturado a seco por 30 dias na nossa câmara. Selado em fogo alto e finalizado com manteiga de ervas do cerrado.",
+      longa: "Corte do contrafilé dianteiro, com gordura entremeada que derrete na brasa. Maturado a seco por 30 dias na nossa câmara. Selado em fogo alto e finalizado com manteiga de ervas da horta.",
       preco: 139.00, serve: "1 pessoa", tags: ["sg"],
-      alergenos: ["lactose"], harmoniza: ["vinho-tannat", "batata-murro"], ilustra: "carne" },
+      alergenos: ["lactose"], harmoniza: ["vinho-tannat", "batata-murro"], ilustra: "bife" },
 
     { id: "fraldinha-ervas", cat: "brasa", nome: "Fraldinha na manteiga de ervas",
       desc: "300 g de fraldinha suculenta, manteiga de alho e alecrim.",
@@ -151,13 +150,13 @@ window.CASA_BRASA = {
       desc: "Cupim assado lentamente e casqueirado na hora, com mandioca.",
       longa: "Assamos o cupim por seis horas embrulhado em papel manteiga e, na hora de servir, levamos à grelha bem quente para formar a casquinha. Macio por dentro, crocante por fora. Acompanha mandioca cozida.",
       preco: 92.00, serve: "1 a 2 pessoas", tags: ["sg"],
-      alergenos: [], harmoniza: ["chope-ipa", "vinagrete"], ilustra: "carne" },
+      alergenos: [], harmoniza: ["chope-ipa", "vinagrete"], ilustra: "bife" },
 
     { id: "barriga-laqueada", cat: "brasa", nome: "Barriga de porco laqueada",
       desc: "Pururuca crocante, laca de rapadura e pimenta-de-cheiro.",
       longa: "Barriga suína cozida em baixa temperatura e terminada na brasa até a pele estourar em pururuca. Pincelamos com laca de rapadura, shoyu e pimenta-de-cheiro. Picância média.",
       preco: 88.00, serve: "1 a 2 pessoas", tags: ["picante"],
-      alergenos: ["soja", "glúten"], harmoniza: ["cerveja-baru", "salada-cagaita"], ilustra: "carne" },
+      alergenos: ["soja", "glúten"], harmoniza: ["cerveja-baru", "salada-cagaita"], ilustra: "costela" },
 
     { id: "galeto-limao-cravo", cat: "brasa", nome: "Galeto na brasa",
       desc: "Galeto inteiro marinado em limão-cravo, alho e ervas, com polenta frita.",
@@ -169,7 +168,7 @@ window.CASA_BRASA = {
       desc: "O corte com osso para a mesa toda. Fatiado na tábua, com três guarnições.",
       longa: "Contrafilé com o osso da costela, cerca de 1 kg, assado em fogo indireto e selado no final. Vai para a mesa na tábua, fatiado, com arroz de pequi, farofa de banana-da-terra e vinagrete.",
       preco: 289.00, serve: "3 pessoas", tags: ["sg", "dividir"],
-      alergenos: [], harmoniza: ["vinho-syrah-cerrado"], ilustra: "carne" },
+      alergenos: [], harmoniza: ["vinho-syrah"], ilustra: "bife" },
 
     { id: "prancha-casa-brasa", cat: "brasa", nome: "Prancha Casa Brasa",
       desc: "Picanha, costela de chão, linguiça artesanal e galeto, com quatro guarnições.",
@@ -192,7 +191,7 @@ window.CASA_BRASA = {
     /* ===== PEIXES E MAR ===== */
     { id: "pintado-bananeira", cat: "peixes", nome: "Pintado na folha de bananeira",
       desc: "Posta de pintado assada na folha, com moqueca de guariroba e pirão.",
-      longa: "O pintado é embrulhado na folha de bananeira com leite de coco, urucum e cheiro-verde e vai para a brasa. Acompanha moqueca de guariroba (o palmito amargo do cerrado), arroz branco e pirão.",
+      longa: "O pintado é embrulhado na folha de bananeira com leite de coco, urucum e cheiro-verde e vai para a brasa. Acompanha moqueca de guariroba (um palmito de sabor amarguinho), arroz branco e pirão.",
       preco: 112.00, serve: "1 pessoa", tags: ["sg", "casa"],
       alergenos: ["peixe"], harmoniza: ["vinho-sauvignon", "caipirinha-cagaita"], ilustra: "peixe" },
 
@@ -222,7 +221,7 @@ window.CASA_BRASA = {
 
     /* ===== GUARNIÇÕES ===== */
     { id: "arroz-pequi", cat: "guarnicoes", nome: "Arroz de pequi",
-      desc: "O clássico goiano, soltinho e perfumado. Cuidado com o caroço.",
+      desc: "Soltinho, perfumado e com pequi inteiro. Cuidado com o caroço.",
       longa: "Arroz refogado com pequi inteiro, alho e açafrão-da-terra. O pequi se come roendo a polpa, sem morder: o caroço tem espinhos. Se preferir, pedimos para servir só com a polpa.",
       preco: 32.00, serve: "2 pessoas", tags: ["veg", "sg", "casa"],
       alergenos: [], harmoniza: ["picanha-da-casa"], ilustra: "cumbuca" },
@@ -243,17 +242,17 @@ window.CASA_BRASA = {
       desc: "Mandioca cozida e dourada na manteiga de garrafa.",
       longa: "Mandioca amarela cozida até abrir, depois dourada na manteiga de garrafa com flor de sal.",
       preco: 24.00, serve: "2 pessoas", tags: ["veg", "sg"],
-      alergenos: ["lactose"], harmoniza: ["costela-de-chao"], ilustra: "cumbuca" },
+      alergenos: ["lactose"], harmoniza: ["costela-de-chao"], ilustra: "mandioca" },
 
     { id: "guariroba-milho", cat: "guarnicoes", nome: "Guariroba com milho verde",
-      desc: "O palmito amarguinho do cerrado, refogado com milho e cebolinha.",
-      longa: "A guariroba é um palmito nativo de Goiás, de sabor levemente amargo. Refogamos com milho verde, alho e cebolinha. Combina muito com carnes gordas.",
+      desc: "Palmito amarguinho refogado com milho verde e cebolinha.",
+      longa: "A guariroba é um palmito de sabor levemente amargo. Refogamos com milho verde, alho e cebolinha. Combina muito com carnes gordas.",
       preco: 29.00, serve: "2 pessoas", tags: ["veg", "sg"],
       alergenos: [], harmoniza: ["galeto-limao-cravo"], ilustra: "milho" },
 
     { id: "salada-cagaita", cat: "guarnicoes", nome: "Salada da horta",
       desc: "Folhas, tomates, rabanete e vinagrete de cagaita.",
-      longa: "Folhas da estação de produtores de Goianápolis, tomates, rabanete, cebola roxa e vinagrete de cagaita, uma fruta azedinha do cerrado.",
+      longa: "Folhas da estação de produtores parceiros, tomates, rabanete, cebola roxa e vinagrete de cagaita, uma fruta azedinha e perfumada.",
       preco: 34.00, serve: "2 pessoas", tags: ["veg", "sg"],
       alergenos: [], harmoniza: ["barriga-laqueada"], ilustra: "legume" },
 
@@ -272,7 +271,7 @@ window.CASA_BRASA = {
     /* ===== ALMOÇO EXECUTIVO (dia: 1 = segunda ... 5 = sexta) ===== */
     { id: "exec-galinhada", cat: "executivo", dia: 1, nome: "Galinhada com pequi",
       desc: "Arroz com frango caipira, pequi e açafrão, com salada e torresmo.",
-      longa: "A segunda-feira começa com o prato mais goiano que existe: galinhada de frango caipira com pequi, açafrão-da-terra e cheiro-verde. Acompanha salada da horta e torresmo. Inclui salada ou caldo do dia e sobremesa do dia.",
+      longa: "A segunda-feira começa com galinhada de frango caipira com pequi, açafrão-da-terra e cheiro-verde. Acompanha salada da horta e torresmo. Inclui salada ou caldo do dia e sobremesa do dia.",
       preco: 54.90, serve: "1 pessoa", tags: ["sg", "casa"],
       alergenos: [], harmoniza: ["suco-cagaita"], ilustra: "prato" },
 
@@ -298,12 +297,12 @@ window.CASA_BRASA = {
       desc: "Porção da costela de 12 horas, mandioca na manteiga e arroz.",
       longa: "Sexta é dia de costela: uma porção individual da nossa costela de chão, com mandioca na manteiga, arroz e vinagrete. Inclui salada ou caldo do dia e sobremesa do dia.",
       preco: 64.90, serve: "1 pessoa", tags: ["sg", "casa"],
-      alergenos: ["lactose"], harmoniza: ["chope-pilsen"], ilustra: "prato" },
+      alergenos: ["lactose"], harmoniza: ["chope-pilsen"], ilustra: "costela" },
 
     /* ===== SOBREMESAS ===== */
     { id: "pamonha-brulee", cat: "sobremesas", nome: "Pamonha brûlée",
       desc: "Creme de pamonha doce com casquinha queimada e sorvete de queijo.",
-      longa: "Nossa releitura da pamonha goiana: um creme de milho verde assado em ramequim, com açúcar queimado no maçarico. Acompanha sorvete de queijo canastra feito na casa.",
+      longa: "Nossa releitura da pamonha: um creme de milho verde assado em ramequim, com açúcar queimado no maçarico. Acompanha sorvete de queijo canastra feito na casa.",
       preco: 34.00, serve: "1 pessoa", tags: ["veg", "sg", "casa"],
       alergenos: ["lactose", "ovo"], harmoniza: ["cafe-coado"], ilustra: "milho" },
 
@@ -333,8 +332,8 @@ window.CASA_BRASA = {
 
     /* ===== SEM ÁLCOOL ===== */
     { id: "suco-cagaita", cat: "sem-alcool", nome: "Suco de cagaita",
-      desc: "Fruta azedinha do cerrado, batida na hora. 400 ml.",
-      longa: "A cagaita é uma fruta nativa de Goiás, ácida e refrescante. Batida com água e pouco açúcar (ou sem, se preferir).",
+      desc: "Fruta azedinha e refrescante, batida na hora. 400 ml.",
+      longa: "A cagaita é uma fruta pequena, ácida e muito perfumada. Batida com água e pouco açúcar (ou sem, se preferir).",
       preco: 14.00, serve: "", tags: ["veg", "sg", "casa"],
       alergenos: [], harmoniza: [], ilustra: "copo" },
 
@@ -369,15 +368,15 @@ window.CASA_BRASA = {
       alergenos: [], harmoniza: [], ilustra: "copo" },
 
     { id: "cafe-coado", cat: "sem-alcool", nome: "Café coado",
-      desc: "Café especial do Cerrado Mineiro, coado na hora.",
-      longa: "Grãos de torra média de produtores do cerrado, coados no pano na hora. Acompanha uma paçoquinha de baru.",
+      desc: "Café especial de torra média, coado na hora.",
+      longa: "Grãos especiais de torra média, coados no pano na hora. Acompanha uma paçoquinha de baru.",
       preco: 9.00, serve: "", tags: ["veg", "sg"],
       alergenos: ["castanhas"], harmoniza: [], ilustra: "copo" },
 
     /* ===== DRINKS ===== */
     { id: "caipirinha-cagaita", cat: "drinks", nome: "Caipirinha de cagaita",
-      desc: "Cachaça goiana envelhecida, cagaita macerada e limão.",
-      longa: "A caipirinha da casa: cachaça goiana envelhecida em amburana, cagaita macerada, um toque de limão e açúcar demerara.",
+      desc: "Cachaça envelhecida, cagaita macerada e limão.",
+      longa: "A caipirinha da casa: cachaça envelhecida em amburana, cagaita macerada, um toque de limão e açúcar demerara.",
       preco: 36.00, serve: "", tags: ["veg", "sg", "casa"],
       alergenos: ["álcool"], harmoniza: [], ilustra: "drink" },
 
@@ -389,7 +388,7 @@ window.CASA_BRASA = {
 
     { id: "pequi-tonic", cat: "drinks", nome: "Pequi tonic",
       desc: "Gin infusionado com pequi, tônica e casca de limão-cravo.",
-      longa: "Infusionamos gin com pequi por sete dias. Servido com tônica, gelo e casca de limão-cravo. Herbal, amarelinho e com o perfume do cerrado.",
+      longa: "Infusionamos gin com pequi por sete dias. Servido com tônica, gelo e casca de limão-cravo. Herbal, amarelinho e com o perfume inconfundível do pequi.",
       preco: 42.00, serve: "", tags: ["veg", "sg", "casa"],
       alergenos: ["álcool"], harmoniza: [], ilustra: "drink" },
 
@@ -414,7 +413,7 @@ window.CASA_BRASA = {
     /* ===== CERVEJAS ===== */
     { id: "chope-pilsen", cat: "cervejas", nome: "Chope pilsen",
       desc: "Leve, gelado e com colarinho cremoso. 300 ml.",
-      longa: "Chope pilsen de cervejaria goiana, tirado na pressão certa, com dois dedos de colarinho.",
+      longa: "Chope pilsen de cervejaria artesanal parceira, tirado na pressão certa, com dois dedos de colarinho.",
       preco: 14.00, serve: "", tags: ["veg"],
       alergenos: ["glúten", "álcool"], harmoniza: [], ilustra: "cerveja" },
 
@@ -426,7 +425,7 @@ window.CASA_BRASA = {
 
     { id: "cerveja-baru", cat: "cervejas", nome: "Brown ale de baru",
       desc: "Cerveja artesanal com baru tostado. Garrafa 500 ml.",
-      longa: "Brown ale produzida em parceria com uma cervejaria de Goiânia, com baru tostado na brasa. Notas de castanha, caramelo e café.",
+      longa: "Brown ale produzida em parceria com uma cervejaria artesanal, com baru tostado na brasa. Notas de castanha, caramelo e café.",
       preco: 32.00, serve: "", tags: ["veg", "casa"],
       alergenos: ["glúten", "castanhas", "álcool"], harmoniza: [], ilustra: "cerveja" },
 
@@ -473,9 +472,9 @@ window.CASA_BRASA = {
       preco: 46.00, serve: "", tags: ["veg", "sg"],
       alergenos: ["sulfitos", "álcool"], harmoniza: [], ilustra: "vinho" },
 
-    { id: "vinho-syrah-cerrado", cat: "vinhos", nome: "Syrah do cerrado",
-      desc: "Vinho de colheita de inverno do Planalto Central. Especiarias e fruta escura.",
-      longa: "Syrah de dupla poda, colhido no inverno seco do Planalto Central. Pimenta-preta, amora e um final longo. Nossa recomendação para a costela de chão.",
+    { id: "vinho-syrah", cat: "vinhos", nome: "Syrah de inverno",
+      desc: "Colheita de inverno, por dupla poda. Especiarias e fruta escura.",
+      longa: "Syrah de dupla poda, colhido no inverno seco. Pimenta-preta, amora e um final longo. Nossa recomendação para a costela de chão.",
       preco: 52.00, serve: "", tags: ["veg", "sg", "casa"],
       alergenos: ["sulfitos", "álcool"], harmoniza: [], ilustra: "vinho" }
   ]

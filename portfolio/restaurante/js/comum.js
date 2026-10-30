@@ -8,9 +8,9 @@
 
   function min(hhmm) { var p = hhmm.split(":"); return (+p[0]) * 60 + (+p[1]); }
   function hora(m) { m = m % 1440; var h = Math.floor(m / 60), mm = m % 60; return h + "h" + (mm ? String(mm).padStart(2, "0") : ""); }
-  function reais(v) { return "R$ " + v.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+  function reais(v) { return "R$ " + v.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-  /* Hora de Goiânia (Brasília), seja qual for o fuso do visitante */
+  /* Hora oficial de Brasília, seja qual for o fuso do visitante */
   function agora() {
     var d = new Date();
     try {
@@ -90,7 +90,7 @@
       el.textContent = el.getAttribute("data-status") === "curto" ? s.curto : s.texto;
     });
     var d = agora();
-    document.querySelectorAll("[data-hoje-data]").forEach(function (el) { el.textContent = "Goiânia, " + dataExtenso(d); });
+    document.querySelectorAll("[data-hoje-data]").forEach(function (el) { var t = dataExtenso(d); el.textContent = t.charAt(0).toUpperCase() + t.slice(1); });
   }
 
   /* Menu mobile */

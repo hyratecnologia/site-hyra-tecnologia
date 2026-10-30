@@ -9,12 +9,14 @@
   D.categorias.forEach(function (c) { catPorId[c.id] = c; });
   var NOMES_DIA = ["", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
   var TAGS = {
-    veg: { nome: "Vegetariano", html: '<span class="m m-v" title="Vegetariano">V</span>' },
-    sg: { nome: "Sem glúten", html: '<span class="m m-sg" title="Sem glúten">SG</span>' },
-    picante: { nome: "Picante", html: '<span class="m m-picante" title="Picante"><svg aria-hidden="true"><use href="img/tracos.svg#ic-pimenta"/></svg></span>' },
-    casa: { nome: "Da casa", html: '<span class="m m-casa" title="Receita da casa">da casa</span>' },
-    dividir: { nome: "Para dividir", html: '<span class="m m-dividir" title="Para dividir">para dividir</span>' }
+    veg: { nome: "Vegetariano", html: '<span class="m m-v"><svg aria-hidden="true"><use href="img/casa.svg#ic-folha"/></svg>Veg</span>' },
+    sg: { nome: "Sem glúten", html: '<span class="m m-sg">Sem glúten</span>' },
+    picante: { nome: "Picante", html: '<span class="m m-picante"><svg aria-hidden="true"><use href="img/casa.svg#ic-pimenta"/></svg>Picante</span>' },
+    casa: { nome: "Da casa", html: '<span class="m m-casa"><svg aria-hidden="true"><use href="img/casa.svg#chama"/></svg>Da casa</span>' },
+    dividir: { nome: "Para dividir", html: '<span class="m m-dividir">Para dividir</span>' }
   };
+  /* cor do fundo da miniatura por categoria (troque à vontade) */
+  var CORES = { entradas: "pequi", brasa: "tijolo", peixes: "folha", guarnicoes: "pequi", executivo: "brasa", sobremesas: "brasa", "sem-alcool": "folha", drinks: "carvao", cervejas: "tijolo", vinhos: "carvao" };
 
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
@@ -23,11 +25,10 @@
 
   function ilu(it, alt) {
     if (it.foto) return '<img src="' + esc(it.foto) + '" alt="' + esc(alt ? it.nome : "") + '" loading="lazy">';
-    return '<svg viewBox="0 0 64 64" aria-hidden="true"><use href="img/tracos.svg#' + esc(it.ilustra || "prato") + '"/></svg>';
+    return '<svg viewBox="0 0 100 100" aria-hidden="true"><use href="img/casa.svg#' + esc(it.ilustra || "prato") + '"/></svg>';
   }
   function marcas(it, sr) {
-    var h = (it.tags || []).map(function (t) { return TAGS[t] ? TAGS[t].html + (sr ? '<span class="sr">' + TAGS[t].nome + '</span>' : "") : ""; }).join("");
-    return h;
+    return (it.tags || []).map(function (t) { return TAGS[t] ? TAGS[t].html : ""; }).join("");
   }
 
   /* ================= Montagem do cardápio ================= */
@@ -35,26 +36,27 @@
   function monta() {
     var box = $("#categorias"), nav = $("#cats");
     var html = "", navHtml = "";
-    D.categorias.forEach(function (cat, n) {
+    D.categorias.forEach(function (cat) {
       var itens = D.itens.filter(function (i) { return i.cat === cat.id; });
       if (!itens.length) return;
+      var cor = CORES[cat.id] || "pequi";
       navHtml += '<a href="#cat-' + cat.id + '" data-cat="' + cat.id + '">' + esc(cat.nome) + "</a>";
-      html += '<section class="cat" id="cat-' + cat.id + '" data-cat="' + cat.id + '" aria-labelledby="h-' + cat.id + '">' +
-        '<header class="cat-cab"><span class="cat-num">' + String(n + 1).padStart(2, "0") + '</span><h2 id="h-' + cat.id + '">' + esc(cat.nome) + "</h2>" +
-        (cat.nota ? "<p>" + esc(cat.nota) + "</p>" : "") + "</header><div class=\"itens\">";
+      html += '<section class="cat cat--' + cor + '" id="cat-' + cat.id + '" data-cat="' + cat.id + '" aria-labelledby="h-' + cat.id + '">' +
+        '<header class="cat-cab"><h2 id="h-' + cat.id + '">' + esc(cat.nome) + '</h2><span class="cat-qtd">' + itens.length + (itens.length === 1 ? " item" : " itens") + "</span>" +
+        (cat.nota ? "<p>" + esc(cat.nota) + "</p>" : "") + '</header><div class="itens">';
       itens.forEach(function (it) {
-        var dia = it.dia ? '<span class="item-dia">' + NOMES_DIA[it.dia] + (it.dia === hoje ? ' <span class="carimbo">hoje</span>' : "") + "</span>" : "";
+        var dia = it.dia ? '<span class="item-dia">' + NOMES_DIA[it.dia] + (it.dia === hoje ? ' <span class="tag-hoje">hoje</span>' : "") + "</span>" : "";
         var serve = it.serve ? '<span class="item-serve">serve ' + esc(it.serve) + "</span>" : "";
-        var esgot = it.esgotado ? '<span class="item-serve" style="color:var(--brasa)">esgotado hoje</span>' : "";
+        var esgot = it.esgotado ? '<span class="item-esgotado">esgotado hoje</span>' : "";
         html += '<article class="item' + (it.esgotado ? " esgotado" : "") + '" id="' + it.id + '" data-id="' + it.id + '" data-busca="' + esc(norm(it.nome + " " + it.desc + " " + cat.nome + " " + (it.longa || ""))) + '">' +
+          '<div class="item-ilu foto--' + cor + '">' + ilu(it, false) + "</div>" +
           '<div class="item-texto">' + dia +
-            '<h3 class="linha-preco"><button type="button" class="item-abrir" data-abrir="' + it.id + '">' + esc(it.nome) + '</button><span class="pontos" aria-hidden="true"></span><span class="preco">' + C.reais(it.preco) + "</span></h3>" +
+            '<h3><button type="button" class="item-abrir" data-abrir="' + it.id + '">' + esc(it.nome) + "</button></h3>" +
             '<p class="item-desc">' + esc(it.desc) + "</p>" +
-            '<p class="item-marcas">' + marcas(it, true) + serve + esgot + "</p>" +
+            '<p class="item-marcas">' + marcas(it) + serve + esgot + "</p>" +
           "</div>" +
-          '<div class="item-ilu">' + ilu(it, false) + "</div>" +
-          '<span class="item-qtd" data-qtd="' + it.id + '" aria-hidden="true"></span>' +
-          '<button type="button" class="item-add" data-add="' + it.id + '" aria-label="Adicionar ' + esc(it.nome) + ' à sacola"' + (it.esgotado ? " disabled" : "") + '><svg aria-hidden="true"><use href="img/tracos.svg#ic-mais"/></svg></button>' +
+          '<div class="item-pe"><span class="preco">' + C.reais(it.preco) + "</span>" +
+          '<button type="button" class="item-add" data-add="' + it.id + '" aria-label="Adicionar ' + esc(it.nome) + ' à sacola"' + (it.esgotado ? " disabled" : "") + '><svg aria-hidden="true"><use href="img/casa.svg#ic-mais"/></svg><span class="item-qtd" data-qtd="' + it.id + '" aria-hidden="true"></span></button></div>' +
           "</article>";
       });
       html += "</div></section>";
@@ -215,10 +217,10 @@
         '<span class="preco">' + C.reais(it.preco * l.qtd) + "</span>" +
         (l.obs ? '<p class="linha-obs">Obs.: ' + esc(l.obs) + "</p>" : "") +
         '<div class="linha-acoes"><div class="contador contador--peq" role="group" aria-label="Quantidade de ' + esc(it.nome) + '">' +
-        '<button type="button" data-l="' + i + '" data-d="-1" aria-label="Diminuir"><svg aria-hidden="true"><use href="img/tracos.svg#ic-menos"/></svg></button>' +
+        '<button type="button" data-l="' + i + '" data-d="-1" aria-label="Diminuir"><svg aria-hidden="true"><use href="img/casa.svg#ic-menos"/></svg></button>' +
         "<output>" + l.qtd + "</output>" +
-        '<button type="button" data-l="' + i + '" data-d="1" aria-label="Aumentar"><svg aria-hidden="true"><use href="img/tracos.svg#ic-mais"/></svg></button></div>' +
-        '<button type="button" class="remover" data-rm="' + i + '"><svg aria-hidden="true"><use href="img/tracos.svg#ic-lixo"/></svg> Tirar</button></div>' +
+        '<button type="button" data-l="' + i + '" data-d="1" aria-label="Aumentar"><svg aria-hidden="true"><use href="img/casa.svg#ic-mais"/></svg></button></div>' +
+        '<button type="button" class="remover" data-rm="' + i + '"><svg aria-hidden="true"><use href="img/casa.svg#ic-lixo"/></svg> Tirar</button></div>' +
         "</li>";
     }).join("");
     var vazia = S.itens.length === 0;
@@ -347,10 +349,12 @@
     var dlg = $("#folha");
     atual = it; qtd = 1;
     var cat = catPorId[it.cat];
-    $("#folha-ilu").innerHTML = ilu(it, true);
+    var ilEl = $("#folha-ilu");
+    ilEl.className = "folha-ilu foto--" + (CORES[it.cat] || "pequi");
+    ilEl.innerHTML = ilu(it, true);
     $("#folha-cat").textContent = cat.nome + (it.dia ? " · " + NOMES_DIA[it.dia] : "");
     $("#folha-nome").textContent = it.nome;
-    $("#folha-marcas").innerHTML = (it.tags || []).map(function (t) { return TAGS[t] ? '<span style="display:inline-flex;align-items:center;gap:6px">' + TAGS[t].html + (t === "casa" || t === "dividir" ? "" : '<span style="font:500 .9rem/1 var(--f-rotulo);letter-spacing:.04em">' + TAGS[t].nome + "</span>") + "</span>" : ""; }).join("");
+    $("#folha-marcas").innerHTML = marcas(it);
     $("#folha-longa").textContent = it.longa || it.desc;
     $("#folha-serve-box").classList.toggle("oculto", !it.serve);
     $("#folha-serve").textContent = it.serve ? it.serve.charAt(0).toUpperCase() + it.serve.slice(1) : "";

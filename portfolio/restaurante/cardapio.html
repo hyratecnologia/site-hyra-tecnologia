@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cardápio · Casa Brasa, cozinha de fogo em Goiânia</title>
-<meta name="description" content="Cardápio completo da Casa Brasa: entradas, cortes na brasa, peixes de rio, guarnições do cerrado, almoço executivo, sobremesas, drinks, cervejas e vinhos. Peça delivery ou retirada pelo WhatsApp.">
-<meta name="theme-color" content="#231a14">
+<title>Cardápio · Casa Brasa, cozinha de fogo</title>
+<meta name="description" content="Cardápio completo da Casa Brasa: entradas, cortes na brasa, peixes de rio, guarnições, almoço executivo, sobremesas, drinks, cervejas e vinhos. Peça delivery ou retirada pelo WhatsApp.">
+<meta name="theme-color" content="#1a0f0b">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Cardápio · Casa Brasa">
@@ -14,7 +14,7 @@
 <meta property="og:locale" content="pt_BR">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Gloock&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/casa.css">
 <link rel="stylesheet" href="css/cardapio.css">
 <script type="application/ld+json">
@@ -23,37 +23,24 @@
   "@type": "Restaurant",
   "name": "Casa Brasa",
   "url": "https://hyratecnologia.com/portfolio/restaurante/",
-  "servesCuisine": ["Brasileira", "Churrasco", "Cozinha goiana"],
+  "servesCuisine": ["Brasileira", "Churrasco", "Peixes"],
   "priceRange": "$$$",
   "menu": "https://hyratecnologia.com/portfolio/restaurante/cardapio.html",
   "acceptsReservations": true,
-  "address": { "@type": "PostalAddress", "streetAddress": "Rua Exemplo, 100", "addressLocality": "Goiânia", "addressRegion": "GO", "addressCountry": "BR" }
+  "address": { "@type": "PostalAddress", "streetAddress": "Rua Exemplo, 100" }
 }
 </script>
 </head>
 <body class="pag-cardapio">
 <a class="pular" href="#lista">Pular para o cardápio</a>
 
-<div class="faixa">
-  <div class="caixa">
-    <span class="faixa-data" data-hoje-data>Goiânia</span>
-    <span class="status" data-status data-aberto="sim">Consultando horário…</span>
-    <a href="index.html#reservas">Reservar mesa</a>
-  </div>
-</div>
-
 <header class="topo">
-  <div class="caixa">
+  <div class="caixa topo-linha">
     <a class="marca" href="index.html" aria-label="Casa Brasa, página inicial">
-      <svg viewBox="0 0 188 48" aria-hidden="true">
-        <path d="M16 4c2.4 7 10 11 10 22a10 10 0 0 1-20 0c0-5.5 3-8.5 4.6-11.6.8 3.8 2.3 5.4 3.9 6.2C14.4 14.6 13.6 9.8 16 4z" fill="#b0381a"/>
-        <path d="M16 26c1.6 3 4.4 4.6 4.4 8.2a4.4 4.4 0 0 1-8.8 0c0-2.2 1.2-3.8 2.2-5.2.8 1.5 1.4 2.2 2.2 2.2z" fill="#f2e8d5"/>
-        <path d="M3 44h26" stroke="currentColor" stroke-width="1.6"/>
-        <text x="38" y="29" font-family="Libre Caslon Display, Georgia, serif" font-size="29" fill="currentColor">Casa Brasa</text>
-        <text x="39.5" y="43" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="9.4" font-weight="600" letter-spacing="2.35" fill="currentColor">COZINHA DE FOGO · GOIÂNIA</text>
-      </svg>
+      <svg class="marca-sinal" aria-hidden="true"><use href="img/casa.svg#marca"/></svg>
+      <span class="marca-nome">Casa Brasa<small>cozinha de fogo</small></span>
     </a>
-    <a class="voltar" href="index.html"><svg aria-hidden="true"><use href="img/tracos.svg#ic-voltar"/></svg> Site</a>
+    <a class="voltar" href="index.html"><svg aria-hidden="true"><use href="img/casa.svg#ic-voltar"/></svg> Site</a>
   </div>
 </header>
 
@@ -61,43 +48,33 @@
   <section class="cab-cardapio" aria-labelledby="titulo-cardapio">
     <div class="caixa cab-grade">
       <div>
-        <p class="rotulo rotulo--brasa">Casa Brasa · cozinha de fogo</p>
+        <p class="cab-data"><span data-hoje-data></span><span class="status" data-status data-aberto="sim">…</span></p>
         <h1 id="titulo-cardapio">Cardápio</h1>
-        <p class="data"><span data-hoje-data>Goiânia</span> · <span class="status" data-status data-aberto="sim">…</span></p>
       </div>
-      <div class="cab-info">
-        <p><b>Delivery</b> em <span id="t-delivery">40 a 60 min</span> · taxa a partir de <span id="t-taxa">R$ 8,90</span> · pedido mínimo <span id="t-minimo">R$ 50,00</span>. <b>Retirada</b> em <span id="t-retirada">25 a 35 min</span>.</p>
-        <p>Os cortes saem ao ponto para malpassado. Se preferir diferente, é só escrever na observação.</p>
-        <p class="na-mesa"><span class="mao">na mesa?</span> Pode olhar à vontade e chamar o garçom para pedir. A sacola é para delivery e retirada.</p>
-        <p class="legenda" aria-label="Legenda das marcas">
-          <span><span class="m m-v" aria-hidden="true">V</span> vegetariano</span>
-          <span><span class="m m-sg" aria-hidden="true">SG</span> sem glúten</span>
-          <span><span class="m m-picante" aria-hidden="true"><svg><use href="img/tracos.svg#ic-pimenta"/></svg></span> picante</span>
-          <span><span class="m m-casa" aria-hidden="true">casa</span> receita da casa</span>
-          <span><span class="m m-dividir" aria-hidden="true">dividir</span> para dividir</span>
-        </p>
-      </div>
+      <ul class="cab-info">
+        <li><b>Delivery</b> <span id="t-delivery">40 a 60 min</span> · taxa a partir de <span id="t-taxa">R$ 8,90</span> · mínimo <span id="t-minimo">R$ 50,00</span></li>
+        <li><b>Retirada</b> <span id="t-retirada">25 a 35 min</span></li>
+        <li>Os cortes saem ao ponto para malpassado. Prefere diferente? Escreva na observação.</li>
+      </ul>
     </div>
   </section>
-
+  <p class="na-mesa"><span class="caixa"><b>Está na mesa?</b> Olhe à vontade e chame o garçom para pedir. A sacola é para delivery e retirada.</span></p>
   <div class="barra">
     <div class="caixa">
       <div class="barra-linha">
         <div class="busca">
           <label class="sr" for="busca">Buscar no cardápio</label>
-          <svg aria-hidden="true"><use href="img/tracos.svg#ic-busca"/></svg>
+          <svg aria-hidden="true"><use href="img/casa.svg#ic-busca"/></svg>
           <input id="busca" type="search" placeholder="Buscar prato, ingrediente…" autocomplete="off" enterkeyhint="search">
         </div>
-        <button class="btn-filtro" type="button" id="btn-filtro" aria-expanded="false" aria-controls="filtros"><span class="t">Filtrar</span><span class="sr">Filtros</span><span class="qtd-filtro" id="qtd-filtro"></span>
-          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-        <button class="btn-sacola" type="button" id="btn-sacola" aria-haspopup="dialog"><svg aria-hidden="true"><use href="img/tracos.svg#ic-sacola"/></svg><span class="t">Sacola</span> <span class="n" id="sacola-n" data-zero>0</span><span class="sr"> itens na sacola</span></button>
+        <button class="btn-filtro" type="button" id="btn-filtro" aria-expanded="false" aria-controls="filtros"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="t">Filtrar</span><span class="sr">Filtros</span><span class="qtd-filtro" id="qtd-filtro"></span></button>
+        <button class="btn-sacola" type="button" id="btn-sacola" aria-haspopup="dialog"><svg aria-hidden="true"><use href="img/casa.svg#ic-sacola"/></svg><span class="t">Sacola</span> <span class="n" id="sacola-n" data-zero>0</span><span class="sr"> itens na sacola</span></button>
       </div>
       <div class="filtros" id="filtros" role="group" aria-label="Filtrar por">
-        <button type="button" aria-pressed="false" data-tag="veg"><span class="m m-v" aria-hidden="true">V</span> Vegetariano</button>
-        <button type="button" aria-pressed="false" data-tag="sg"><span class="m m-sg" aria-hidden="true">SG</span> Sem glúten</button>
-        <button type="button" aria-pressed="false" data-tag="picante"><span class="m m-picante" aria-hidden="true"><svg><use href="img/tracos.svg#ic-pimenta"/></svg></span> Picante</button>
-        <button type="button" aria-pressed="false" data-tag="casa">Da casa</button>
+        <button type="button" aria-pressed="false" data-tag="veg"><svg aria-hidden="true"><use href="img/casa.svg#ic-folha"/></svg> Vegetariano</button>
+        <button type="button" aria-pressed="false" data-tag="sg">Sem glúten</button>
+        <button type="button" aria-pressed="false" data-tag="picante"><svg aria-hidden="true"><use href="img/casa.svg#ic-pimenta"/></svg> Picante</button>
+        <button type="button" aria-pressed="false" data-tag="casa"><svg aria-hidden="true"><use href="img/casa.svg#chama"/></svg> Da casa</button>
         <button type="button" aria-pressed="false" data-tag="dividir">Para dividir</button>
         <button type="button" class="limpar" id="limpar-filtros">Limpar</button>
       </div>
@@ -109,28 +86,27 @@
     <p class="sr" id="resultado" aria-live="polite"></p>
     <div id="categorias"></div>
     <div class="vazio" id="vazio" hidden>
-      <p>Nada com esse nome por aqui. Tente “pequi”, “costela” ou “sem glúten”.</p>
-      <button class="btn btn--linha" type="button" id="limpar-busca">Limpar busca e filtros</button>
+      <p class="vazio-titulo">Nada com esse nome por aqui.</p><p>Tente “pequi”, “costela” ou “sem glúten”.</p>
+      <button class="btn btn--escuro" type="button" id="limpar-busca">Limpar busca e filtros</button>
     </div>
     <div class="rodape-cardapio">
-      <hr class="regua">
-      <p style="margin-top:16px">No salão cobramos 10% de serviço, opcional. Alguns pratos podem conter traços de glúten, leite e castanhas, porque tudo é preparado na mesma cozinha. Se tiver alergia, avise o garçom ou escreva na observação do pedido.</p>
+      <p>No salão cobramos 10% de serviço, opcional. Alguns pratos podem conter traços de glúten, leite e castanhas, porque tudo é preparado na mesma cozinha. Se tiver alergia, avise o garçom ou escreva na observação do pedido.</p>
       <p>Venda de bebidas alcoólicas proibida para menores de 18 anos. Se beber, não dirija.</p>
     </div>
   </div>
 </main>
 
 <button class="barra-sacola" type="button" id="barra-sacola" aria-haspopup="dialog" tabindex="-1" aria-hidden="true">
-  <span style="display:inline-flex;align-items:center;gap:10px"><svg aria-hidden="true"><use href="img/tracos.svg#ic-sacola"/></svg> <span id="barra-txt">Ver sacola</span></span>
+  <span class="barra-esq"><svg aria-hidden="true"><use href="img/casa.svg#ic-sacola"/></svg> <span id="barra-txt">Ver sacola</span></span>
   <span class="total" id="barra-total">R$ 0,00</span>
 </button>
 
 <!-- Detalhe do prato -->
 <dialog class="folha" id="folha" aria-labelledby="folha-nome">
-  <button class="fechar" type="button" data-fechar aria-label="Fechar detalhes do prato"><svg aria-hidden="true"><use href="img/tracos.svg#ic-fechar"/></svg></button>
+  <button class="fechar" type="button" data-fechar aria-label="Fechar detalhes do prato"><svg aria-hidden="true"><use href="img/casa.svg#ic-fechar"/></svg></button>
   <div class="dlg-corpo">
-    <div class="foto-quadro" id="folha-ilu"></div>
-    <p class="rotulo rotulo--brasa" id="folha-cat"></p>
+    <div class="folha-ilu" id="folha-ilu"></div>
+    <p class="folha-cat" id="folha-cat"></p>
     <h2 id="folha-nome"></h2>
     <p class="folha-marcas" id="folha-marcas"></p>
     <p class="folha-longa" id="folha-longa"></p>
@@ -140,15 +116,15 @@
       <div id="folha-harm-box"><dt>Vai bem com</dt><dd class="harmoniza" id="folha-harm"></dd></div>
     </dl>
     <div class="campo">
-      <label for="folha-obs">Observação para a cozinha <span style="text-transform:none;letter-spacing:0;font-weight:500">(opcional)</span></label>
+      <label for="folha-obs">Observação para a cozinha <span class="opcional">(opcional)</span></label>
       <textarea id="folha-obs" rows="2" maxlength="140" placeholder="Ex.: ao ponto, sem cebola, molho à parte"></textarea>
     </div>
   </div>
   <div class="dlg-pe">
     <div class="contador contador--peq" role="group" aria-label="Quantidade">
-      <button type="button" id="folha-menos" aria-label="Diminuir quantidade"><svg aria-hidden="true"><use href="img/tracos.svg#ic-menos"/></svg></button>
+      <button type="button" id="folha-menos" aria-label="Diminuir quantidade"><svg aria-hidden="true"><use href="img/casa.svg#ic-menos"/></svg></button>
       <output id="folha-qtd" aria-live="polite">1</output>
-      <button type="button" id="folha-mais" aria-label="Aumentar quantidade"><svg aria-hidden="true"><use href="img/tracos.svg#ic-mais"/></svg></button>
+      <button type="button" id="folha-mais" aria-label="Aumentar quantidade"><svg aria-hidden="true"><use href="img/casa.svg#ic-mais"/></svg></button>
     </div>
     <button class="btn btn--brasa" type="button" id="folha-add">Adicionar · R$ 0,00</button>
   </div>
@@ -156,15 +132,15 @@
 
 <!-- Sacola -->
 <dialog class="sacola" id="sacola" aria-labelledby="sacola-titulo">
-  <button class="fechar" type="button" data-fechar aria-label="Fechar sacola"><svg aria-hidden="true"><use href="img/tracos.svg#ic-fechar"/></svg></button>
+  <button class="fechar" type="button" data-fechar aria-label="Fechar sacola"><svg aria-hidden="true"><use href="img/casa.svg#ic-fechar"/></svg></button>
   <form id="form-pedido" class="dlg-corpo" novalidate>
     <div class="sacola-cab">
       <h2 id="sacola-titulo">Sua sacola</h2>
-      <span class="rotulo" id="sacola-conta"></span>
+      <span class="sacola-conta" id="sacola-conta"></span>
     </div>
     <div class="sacola-vazia" id="sacola-vazia">
-      <span class="mao">ainda vazia</span>
-      <p>Toque no <b>+</b> ao lado de um prato para começar o pedido.</p>
+      <svg aria-hidden="true"><use href="img/casa.svg#ic-sacola"/></svg>
+      <p><b>A sacola está vazia.</b> Toque no <b>+</b> de um prato para começar o pedido.</p>
     </div>
     <ul class="linhas" id="linhas"></ul>
 
@@ -197,7 +173,7 @@
         </div>
         <p class="erro-campo" id="e-bairro"></p>
         <div class="campo">
-          <label for="p-ref">Ponto de referência <span style="text-transform:none;letter-spacing:0;font-weight:500">(opcional)</span></label>
+          <label for="p-ref">Ponto de referência <span class="opcional">(opcional)</span></label>
           <input id="p-ref" name="referencia" type="text">
         </div>
       </div>
@@ -210,34 +186,34 @@
           <label><input type="radio" name="pag" value="Cartão de débito"><span>Débito</span></label>
           <label><input type="radio" name="pag" value="Dinheiro"><span>Dinheiro</span></label>
         </div>
-        <p class="aviso-campo" id="pag-nota" style="color:var(--tinta-2)"></p>
+        <p class="pag-nota" id="pag-nota"></p>
       </fieldset>
       <div class="campo oculto" id="bloco-troco">
         <label for="p-troco">Troco para quanto?</label>
         <input id="p-troco" name="troco" type="text" inputmode="decimal" placeholder="Ex.: 200">
       </div>
       <div class="campo">
-        <label for="p-obs">Observação do pedido <span style="text-transform:none;letter-spacing:0;font-weight:500">(opcional)</span></label>
+        <label for="p-obs">Observação do pedido <span class="opcional">(opcional)</span></label>
         <textarea id="p-obs" name="obs" rows="2" placeholder="Ex.: mandar talheres, interfone quebrado"></textarea>
       </div>
 
       <div class="resumo">
-        <div class="linha-preco"><span>Subtotal</span><span class="pontos" aria-hidden="true"></span><span class="preco" id="r-sub">R$ 0,00</span></div>
-        <div class="linha-preco" id="r-taxa-linha"><span>Taxa de entrega (estimada)</span><span class="pontos" aria-hidden="true"></span><span class="preco" id="r-taxa">R$ 0,00</span></div>
-        <div class="linha-preco total-final"><span>Total</span><span class="pontos" aria-hidden="true"></span><span class="preco" id="r-total">R$ 0,00</span></div>
+        <div class="linha-preco"><span>Subtotal</span><span class="preco" id="r-sub">R$ 0,00</span></div>
+        <div class="linha-preco" id="r-taxa-linha"><span>Taxa de entrega (estimada)</span><span class="preco" id="r-taxa">R$ 0,00</span></div>
+        <div class="linha-preco total-final"><span>Total</span><span class="preco" id="r-total">R$ 0,00</span></div>
       </div>
       <p class="alerta" id="alerta-pedido" role="status"></p>
     </div>
   </form>
   <div class="dlg-pe" id="sacola-pe">
-    <button class="btn btn--brasa" type="submit" form="form-pedido" id="enviar-pedido"><svg aria-hidden="true"><use href="img/tracos.svg#ic-whats"/></svg> Enviar pedido pelo WhatsApp</button>
+    <button class="btn btn--brasa" type="submit" form="form-pedido" id="enviar-pedido"><svg aria-hidden="true"><use href="img/casa.svg#ic-whats"/></svg> Enviar pedido pelo WhatsApp</button>
     <small>O atendente confirma a taxa pelo bairro e o tempo de entrega.</small>
   </div>
 </dialog>
 
-<footer class="rodape" style="padding-top:36px">
+<footer class="rodape rodape--curto">
   <div class="caixa">
-    <p style="margin:0">Casa Brasa · Rua Exemplo, 100 · Setor Marista · Goiânia, GO · <a href="index.html#visita">Horários e como chegar</a></p>
+    <p>Casa Brasa · Rua Exemplo, 100 · <a href="index.html#visita">Horários e como chegar</a> · <a href="index.html#reservas">Reservar mesa</a></p>
     <div class="rodape-legal">
       <span>Projeto conceito criado pela Hyra Tecnologia. Negócio fictício.</span>
       <span>Site desenvolvido por <a href="https://hyratecnologia.com" target="_blank" rel="noopener">Hyra Tecnologia</a></span>

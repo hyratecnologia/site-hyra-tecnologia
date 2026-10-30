@@ -3,40 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Casa Brasa · Cozinha de fogo no Setor Marista, Goiânia</title>
-<meta name="description" content="Restaurante de cozinha brasileira na brasa em Goiânia: costela de chão de 12 horas, picanha maturada, peixes de rio e ingredientes do cerrado. Almoço executivo, jantar, reservas, delivery e retirada.">
-<meta name="theme-color" content="#231a14">
+<title>Casa Brasa · Cozinha de fogo, almoço executivo e reservas</title>
+<meta name="description" content="Cozinha brasileira na brasa: costela de chão de 12 horas, picanha maturada 21 dias, peixe de rio na folha de bananeira e arroz de pequi. Almoço executivo, jantar, reservas, delivery e retirada pelo WhatsApp.">
+<meta name="theme-color" content="#8e1b10">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="restaurant">
-<meta property="og:title" content="Casa Brasa · Cozinha de fogo em Goiânia">
-<meta property="og:description" content="Costela de chão de 12 horas, picanha maturada, peixes de rio e o tempero do cerrado. Reservas e delivery pelo WhatsApp.">
+<meta property="og:title" content="Casa Brasa · Cozinha de fogo">
+<meta property="og:description" content="Costela de chão de 12 horas, picanha maturada e peixe de rio na brasa. Reservas e delivery pelo WhatsApp.">
 <meta property="og:image" content="https://hyratecnologia.com/portfolio/restaurante/capa-pc.jpg">
 <meta property="og:locale" content="pt_BR">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Gloock&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/casa.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "Casa Brasa",
-  "description": "Cozinha brasileira na brasa com ingredientes do cerrado goiano. Projeto conceito da Hyra Tecnologia.",
+  "description": "Cozinha brasileira na brasa: costela de chão, cortes maturados, peixes de rio e almoço executivo. Projeto conceito da Hyra Tecnologia.",
   "url": "https://hyratecnologia.com/portfolio/restaurante/",
   "image": "https://hyratecnologia.com/portfolio/restaurante/capa-pc.jpg",
-  "telephone": "+55 62 99208-147",
-  "servesCuisine": ["Brasileira", "Churrasco", "Cozinha goiana", "Peixes"],
+  "telephone": "+556299208147",
+  "servesCuisine": ["Brasileira", "Churrasco", "Peixes"],
   "priceRange": "$$$",
   "menu": "https://hyratecnologia.com/portfolio/restaurante/cardapio.html",
   "hasMenu": "https://hyratecnologia.com/portfolio/restaurante/cardapio.html",
   "acceptsReservations": true,
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Rua Exemplo, 100",
-    "addressLocality": "Goiânia",
-    "addressRegion": "GO",
-    "addressCountry": "BR"
-  },
+  "address": { "@type": "PostalAddress", "streetAddress": "Rua Exemplo, 100" },
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "11:30", "closes": "15:00" },
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday"], "opens": "18:30", "closes": "23:00" },
@@ -50,41 +44,27 @@
 <body>
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
-<div class="faixa">
-  <div class="caixa">
-    <span class="faixa-data" data-hoje-data>Goiânia</span>
-    <span class="status" data-status data-aberto="sim">Consultando horário…</span>
-    <a href="#" data-wa="Olá, Casa Brasa! Tenho uma dúvida.">WhatsApp (62) 9920-8147</a>
-  </div>
-</div>
-
 <header class="topo">
-  <div class="caixa">
+  <div class="caixa topo-linha">
     <a class="marca" href="index.html" aria-label="Casa Brasa, página inicial">
-      <svg viewBox="0 0 188 48" aria-hidden="true">
-        <path d="M16 4c2.4 7 10 11 10 22a10 10 0 0 1-20 0c0-5.5 3-8.5 4.6-11.6.8 3.8 2.3 5.4 3.9 6.2C14.4 14.6 13.6 9.8 16 4z" fill="#b0381a"/>
-        <path d="M16 26c1.6 3 4.4 4.6 4.4 8.2a4.4 4.4 0 0 1-8.8 0c0-2.2 1.2-3.8 2.2-5.2.8 1.5 1.4 2.2 2.2 2.2z" fill="#f2e8d5"/>
-        <path d="M3 44h26" stroke="currentColor" stroke-width="1.6"/>
-        <text x="38" y="29" font-family="Libre Caslon Display, Georgia, serif" font-size="29" fill="currentColor">Casa Brasa</text>
-        <text x="39.5" y="43" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="9.4" font-weight="600" letter-spacing="2.35" fill="currentColor">COZINHA DE FOGO · GOIÂNIA</text>
-      </svg>
+      <svg class="marca-sinal" aria-hidden="true"><use href="img/casa.svg#marca"/></svg>
+      <span class="marca-nome">Casa Brasa<small>cozinha de fogo</small></span>
     </a>
     <nav class="nav" id="nav" aria-label="Principal">
       <ul>
-        <li><a href="#casa" data-n="I">A casa</a></li>
-        <li><a href="cardapio.html" data-n="II">Cardápio</a></li>
-        <li><a href="#executivo" data-n="III">Executivo</a></li>
-        <li><a href="#reservas" data-n="IV">Reservas</a></li>
-        <li><a href="#espaco" data-n="V">O espaço</a></li>
-        <li><a href="#visita" data-n="VI">Como chegar</a></li>
+        <li><a href="cardapio.html">Cardápio</a></li>
+        <li><a href="#executivo">Executivo</a></li>
+        <li><a href="#casa">A casa</a></li>
+        <li><a href="#espaco">Eventos</a></li>
+        <li><a href="#visita">Horários</a></li>
+        <li class="nav-reserva"><a href="#reservas">Reservar mesa</a></li>
       </ul>
     </nav>
-    <div class="topo-acoes">
-      <a class="btn btn--reserva" href="#reservas">Reservar mesa</a>
-      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">
-        <svg aria-hidden="true"><use href="img/tracos.svg#ic-menu"/></svg><span>Menu</span>
-      </button>
-    </div>
+    <span class="topo-status status" data-status="curto" data-aberto="sim">…</span>
+    <a class="btn btn--pequi topo-cta" href="#reservas">Reservar</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">
+      <svg aria-hidden="true"><use href="img/casa.svg#ic-menu"/></svg><span>Menu</span>
+    </button>
   </div>
 </header>
 
@@ -92,494 +72,331 @@
 
   <!-- ===== Abertura ===== -->
   <section class="abre" aria-labelledby="titulo-abre">
-    <div class="caixa">
-      <div class="abre-grade">
-        <div>
-          <p class="rotulo rotulo--brasa">Cozinha brasileira de fogo · Setor Marista · desde 2016</p>
-          <h1 id="titulo-abre">A costela entra na estaca às <em>seis da manhã.</em></h1>
-          <p class="abre-texto">E só sai à noite, desmanchando. Aqui, <strong>carne, peixe de rio e legume do cerrado</strong> vão para a lenha sem pressa. Almoço executivo de segunda a sexta, jantar à la carte, delivery e retirada pelo WhatsApp.</p>
-          <div class="abre-acoes">
-            <a class="btn" href="cardapio.html">Abrir o cardápio <svg aria-hidden="true"><use href="img/tracos.svg#ic-seta"/></svg></a>
-            <a class="link-seta" href="#reservas">Reservar uma mesa <svg aria-hidden="true"><use href="img/tracos.svg#ic-seta"/></svg></a>
-          </div>
+    <div class="caixa abre-grade">
+      <div class="abre-texto">
+        <p class="sobre sobre--pequi">Cozinha brasileira na lenha · desde 2016</p>
+        <h1 id="titulo-abre">A costela entra no fogo às <span>seis da manhã.</span></h1>
+        <p class="abre-lead">E sai à noite, desmanchando. Carne, peixe de rio e legume vão para a lenha de eucalipto sem pressa. Almoço executivo de segunda a sexta, jantar à la carte, delivery e retirada pelo WhatsApp.</p>
+        <div class="abre-acoes">
+          <a class="btn btn--pequi" href="cardapio.html">Ver o cardápio <svg aria-hidden="true"><use href="img/casa.svg#ic-seta"/></svg></a>
+          <a class="btn btn--linha-clara" href="#reservas">Reservar mesa</a>
         </div>
+      </div>
+      <figure class="foto foto--brasa abre-foto" data-foto="img/abertura-costela-fogo-de-chao.jpg">
+        <svg viewBox="0 0 600 750" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Costela presa na estaca ao lado do fogo de chão"><use href="img/casa.svg#cena-fogo"/></svg>
+      </figure>
+    </div>
+  </section>
 
-        <figure class="foto" data-foto="img/abertura-costela-fogo-de-chao.jpg">
-          <div class="foto-quadro">
-            <svg viewBox="0 0 400 500" role="img" aria-label="Desenho da costela presa na estaca ao lado do fogo de chão">
-              <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <!-- chão -->
-                <path d="M18 446c60-4 120 3 190-1s120 2 176-2"/>
-                <path d="M40 458h40M120 462h70M240 458h60M320 464h40" stroke-width="1.2"/>
-                <path d="M330 446c2-10 6-16 10-20M338 446c0-12-2-20-6-26M346 446c3-8 8-12 13-14" stroke-width="1.4"/>
-                <path d="M28 446c1-8 4-12 8-15M33 446c0-9-3-14-6-17" stroke-width="1.4"/>
-                <!-- estaca -->
-                <path d="M268 450L200 62"/><path d="M190 70l24-9"/>
-                <!-- costela -->
-                <g transform="rotate(-10 236 250)">
-                  <path d="M176 128c26-12 86-12 114 4l4 222c-30 14-90 14-122 0z" stroke-width="2.2"/>
-                  <path d="M180 166c30 6 78 6 110 0M180 202c30 6 78 6 111 0M181 238c30 6 78 6 111 0M181 274c30 6 79 6 112 0M182 310c30 6 79 6 112 0" stroke-width="1.5"/>
-                  <path d="M176 166h-12M176 202h-13M177 238h-12M177 274h-13M178 310h-12" stroke-width="5"/>
-                  <path d="M200 150c6 4 14 4 20 0M244 186c6 4 14 4 20 0M206 222c6 4 14 4 20 0M252 258c6 4 14 4 20 0M214 294c6 4 14 4 20 0M232 332c6 4 14 4 20 0" stroke-width="1.1"/>
-                  <path d="M226 128v-10M226 356v10" stroke-width="1.4"/>
-                  <path d="M218 118h16M218 366h16" stroke-width="1.4"/>
-                </g>
-                <!-- lenha -->
-                <path d="M36 436l120-28M50 410l116 34M30 424h132" stroke-width="2.4"/>
-                <path d="M40 432c-5-2-6-8 0-10M160 412c5-1 7 5 2 8" stroke-width="1.4"/>
-              </g>
-              <!-- fogo -->
-              <g fill="none" stroke="#b0381a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M96 414c-26-18-20-46-6-64 2 20 12 26 16 20-4-24 4-38 18-52 0 30 24 44 16 76-4 14-20 22-44 20z"/>
-                <path d="M106 410c-10-8-8-22 0-30 2 10 8 12 10 8 0-10 4-16 10-22 2 16 12 22 6 36-4 8-14 10-26 8z" stroke-width="1.5"/>
-                <path d="M62 404c-8-8-6-18 0-24 2 8 6 10 8 6M150 402c6-8 4-16-2-22-1 7-4 9-6 6" stroke-width="1.4"/>
-                <path d="M74 392h.1M140 370h.1M60 372h.1M156 384h.1M120 340h.1" stroke-width="3.2"/>
-              </g>
-              <!-- fumaça -->
-              <g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity=".55" stroke-dasharray="2 6">
-                <path d="M118 300c-22-30 18-48-2-80-14-24 14-44 0-74"/>
-                <path d="M92 318c-16-24 12-36-2-60"/>
-              </g>
-            </svg>
-          </div>
-          <figcaption><b>Foto 01</b>A costela na estaca, perto das duas da tarde. Faltam seis horas.</figcaption>
-        </figure>
+  <div class="hoje" aria-label="Hoje na Casa Brasa">
+    <div class="caixa hoje-grade">
+      <div class="hoje-item">
+        <svg aria-hidden="true"><use href="img/casa.svg#ic-relogio"/></svg>
+        <div><span class="hoje-rotulo">Agora</span><span class="hoje-valor status" data-status data-aberto="sim">Consultando horário…</span></div>
+      </div>
+      <div class="hoje-item">
+        <svg aria-hidden="true"><use href="img/casa.svg#chama"/></svg>
+        <div><span class="hoje-rotulo" id="hoje-exec-rotulo">Executivo de hoje</span><span class="hoje-valor" id="hoje-exec"><a href="#executivo">Veja o prato do dia</a></span></div>
+      </div>
+      <div class="hoje-item">
+        <svg aria-hidden="true"><use href="img/casa.svg#ic-sacola"/></svg>
+        <div><span class="hoje-rotulo">Delivery e retirada</span><span class="hoje-valor"><a href="cardapio.html">Monte a sacola no cardápio</a></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Da brasa ===== -->
+  <section class="secao destaques" id="destaques" aria-labelledby="titulo-destaques">
+    <div class="caixa">
+      <div class="cab-lado">
+        <h2 id="titulo-destaques">O que faz fila no sábado.</h2>
+        <p>Três pratos que a cozinha prepara desde a manhã. A costela tem produção limitada: quando acaba, acabou.</p>
       </div>
 
-      <div class="hoje" aria-label="Hoje na Casa Brasa">
-        <div>
-          <span class="rotulo">Agora</span>
-          <span class="hoje-valor status" data-status data-aberto="sim">Consultando horário…</span>
-        </div>
-        <div>
-          <span class="rotulo" id="hoje-exec-rotulo">Executivo de hoje</span>
-          <span class="hoje-valor" id="hoje-exec"><a href="#executivo">Veja o prato do dia</a></span>
-        </div>
-        <div>
-          <span class="rotulo">Delivery e retirada</span>
-          <span class="hoje-valor"><a href="cardapio.html">Monte o pedido no cardápio</a></span>
-        </div>
+      <div class="vitrine">
+        <a class="prato-grande" href="cardapio.html#costela-de-chao">
+          <figure class="foto foto--pequi" data-foto="img/destaque-costela-de-chao.jpg">
+            <svg viewBox="0 0 600 600" role="img" aria-label="Costela de chão desfiando na tábua, com mandioca e vinagrete"><use href="img/casa.svg#cena-costela"/></svg>
+          </figure>
+          <div class="prato-info">
+            <span class="prato-tag">Mais pedido</span>
+            <h3>Costela de chão 12 horas</h3>
+            <p>Ripa inteira amarrada na estaca, só com sal grosso. Mandioca na manteiga e vinagrete. Serve 2 a 3.</p>
+            <span class="prato-preco" id="preco-costela">R$ 149,00</span>
+          </div>
+        </a>
+        <a class="prato-medio" href="cardapio.html#picanha-da-casa">
+          <figure class="foto foto--brasa" data-foto="img/destaque-picanha-da-casa.jpg">
+            <svg viewBox="0 0 600 600" role="img" aria-label="Picanha fatiada na tábua com chimichurri e farofa"><use href="img/casa.svg#cena-picanha"/></svg>
+          </figure>
+          <div class="prato-info">
+            <h3>Picanha da casa</h3>
+            <p>Maturada 21 dias, fatiada na mesa.</p>
+            <span class="prato-preco" id="preco-picanha">R$ 169,00</span>
+          </div>
+        </a>
+        <a class="prato-medio" href="cardapio.html#pintado-bananeira">
+          <figure class="foto foto--folha" data-foto="img/destaque-pintado-bananeira.jpg">
+            <svg viewBox="0 0 600 600" role="img" aria-label="Pintado assado na folha de bananeira com limão"><use href="img/casa.svg#cena-peixe"/></svg>
+          </figure>
+          <div class="prato-info">
+            <h3>Pintado na folha de bananeira</h3>
+            <p>Leite de coco, urucum e pirão.</p>
+            <span class="prato-preco" id="preco-pintado">R$ 112,00</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="mais-pedidos">
+        <h3 class="mais-titulo">Também sai muito</h3>
+        <ul id="lista-destaques" class="lista-pratos"></ul>
+        <a class="link-forte" href="cardapio.html">Cardápio completo, drinks e vinhos <svg aria-hidden="true"><use href="img/casa.svg#ic-seta"/></svg></a>
       </div>
     </div>
   </section>
 
   <!-- ===== A casa ===== -->
-  <section class="secao" id="casa" aria-labelledby="titulo-casa">
+  <section class="secao casa" id="casa" aria-labelledby="titulo-casa">
     <div class="caixa">
       <div class="casa-grade">
-        <div class="casa-cab">
-          <p class="num-secao">I. A casa</p>
-          <h2 id="titulo-casa" style="font-size:clamp(2.3rem,6vw,4rem);margin-top:10px">Lenha, sal grosso e <em style="color:var(--brasa)">paciência.</em></h2>
-          <div class="assinatura">
-            <div>
-              <span class="mao">Tião Rezende</span>
-              <small>Sebastião Rezende, cozinheiro e dono</small>
-            </div>
-          </div>
-        </div>
-
         <div class="casa-texto">
-          <p>Meu pai assava costela no fogo de chão em Pirenópolis todo domingo. Acendia antes do café e só servia de tarde, e ninguém reclamava da espera. Abri a Casa Brasa em março de 2016 para trazer esse ritmo para a cidade: uma cozinha onde quase tudo passa pelo fogo, e o fogo não tem pressa.<sup><a href="#nota-1" aria-label="Nota 1">1</a></sup></p>
-          <p>A lenha é eucalipto de reflorestamento, que chega toda terça de Bela Vista de Goiás, e o carvão é de casca de coco, que queima limpo e dura mais. As carnes vêm de dois criadores de Goiás que eu visito pessoalmente, e a maturação é feita aqui, na nossa câmara: 21 dias para a picanha, 30 para o ancho.<sup><a href="#nota-2" aria-label="Nota 2">2</a></sup></p>
-          <p>Do cerrado, trago o que a gente comia em casa. Pequi, guariroba, baru, cagaita, pamonha. Não está no cardápio para enfeitar. É o tempero da minha infância, e eu gosto de ver quem é de fora provando pela primeira vez.<sup><a href="#nota-3" aria-label="Nota 3">3</a></sup></p>
+          <p class="sobre sobre--pequi">A casa</p>
+          <h2 id="titulo-casa">Lenha, sal grosso e paciência.</h2>
+          <p>Meu pai assava costela no fogo de chão todo domingo, no sítio da família. Acendia antes do café e só servia de tarde, e ninguém reclamava da espera. Abri a Casa Brasa em março de 2016 para trazer esse ritmo para a cidade: quase tudo passa pelo fogo, e o fogo não tem pressa.</p>
+          <p>A lenha é eucalipto de reflorestamento, que chega toda terça. O carvão é de casca de coco, que queima limpo e dura mais. As carnes vêm de dois criadores que eu visito pessoalmente, e a maturação é feita aqui, na nossa câmara.</p>
+          <p>Pequi, guariroba, baru, cagaita e pamonha estão no cardápio porque são a comida da minha infância. Gosto de ver quem nunca provou pequi aprendendo a roer, sem morder o caroço.</p>
+          <p class="casa-assina"><strong>Sebastião “Tião” Rezende</strong> cozinheiro e dono</p>
         </div>
-
-        <ol class="notas" aria-label="Notas">
-          <li id="nota-1"><span>1</span>O fogo de chão fica aceso das 5h às 23h. Dá para ver do salão, pelo vidro atrás do balcão.</li>
-          <li id="nota-2"><span>2</span>O nome dos criadores e dos produtores da semana fica escrito na lousa da entrada.</li>
-          <li id="nota-3"><span>3</span>Pequi se rói, não se morde: o caroço tem espinhos. O garçom explica, e a gente nunca cansa de explicar.</li>
-        </ol>
-      </div>
-
-      <div class="casa-foto">
-        <figure class="foto surge" data-foto="img/casa-salao-balcao-do-fogo.jpg">
-          <div class="foto-quadro">
-            <svg viewBox="0 0 600 400" role="img" aria-label="Desenho do balcão do fogo: luminárias pendentes, vidro com o fogo de chão ao fundo e bancos altos" style="width:92%;max-height:none">
-              <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <!-- luminárias -->
-                <path d="M150 0v58M300 0v48M450 0v58"/>
-                <path d="M134 58h32l8 18h-48zM284 48h32l8 18h-48zM434 58h32l8 18h-48z"/>
-                <path d="M138 86l-14 30M162 86l14 30M288 76l-12 26M312 76l12 26M438 86l-14 30M462 86l14 30" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
-                <!-- vidro -->
-                <rect x="110" y="118" width="380" height="132"/>
-                <path d="M236 118v132M364 118v132" stroke-width="1.4"/>
-                <path d="M126 132l30-12M380 140l40-18M250 136l22-10" stroke-width="1" opacity=".5"/>
-                <!-- estacas com costela atrás do vidro -->
-                <path d="M300 250l-28-112M256 162c10-4 26-4 34 0l6 54c-10 4-26 4-36 0z" stroke-width="1.4"/>
-                <path d="M258 178c10 2 22 2 32 0M260 194c10 2 22 2 32 0" stroke-width="1"/>
-                <path d="M420 250l-18-90M392 176c8-3 20-3 26 0l4 40c-8 3-20 3-28 0z" stroke-width="1.4"/>
-                <!-- lenha -->
-                <path d="M300 246l60-12M310 236l56 12M180 246l52-10" stroke-width="2"/>
-                <!-- balcão -->
-                <path d="M50 262h500" stroke-width="3"/>
-                <path d="M60 270h480v58H60z"/>
-                <path d="M100 270v58M140 270v58M180 270v58M220 270v58M260 270v58M300 270v58M340 270v58M380 270v58M420 270v58M460 270v58M500 270v58" stroke-width=".9" opacity=".55"/>
-                <!-- copos e prato no balcão -->
-                <path d="M150 238h14c0 10-3 14-7 14s-7-4-7-14zM157 252v8M151 261h12" stroke-width="1.3"/>
-                <ellipse cx="380" cy="257" rx="26" ry="4" stroke-width="1.3"/>
-                <path d="M366 254c4-6 22-6 28 0" stroke-width="1.2"/>
-                <path d="M470 240h12l-2 20h-8z" stroke-width="1.3"/>
-                <!-- bancos -->
-                <g stroke-width="1.6">
-                  <ellipse cx="130" cy="344" rx="22" ry="6"/><path d="M116 348l-6 46M144 348l6 46M118 376h24"/>
-                  <ellipse cx="240" cy="344" rx="22" ry="6"/><path d="M226 348l-6 46M254 348l6 46M228 376h24"/>
-                  <ellipse cx="350" cy="344" rx="22" ry="6"/><path d="M336 348l-6 46M364 348l6 46M338 376h24"/>
-                  <ellipse cx="460" cy="344" rx="22" ry="6"/><path d="M446 348l-6 46M474 348l6 46M448 376h24"/>
-                </g>
-              </g>
-              <g fill="none" stroke="#b0381a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M196 240c-14-10-10-28 0-38 2 12 8 14 10 10-2-14 2-22 10-30 0 18 14 26 8 46-2 8-12 14-28 12z"/>
-                <path d="M330 236c-10-8-8-20 0-28 2 8 6 10 8 6 0-10 4-16 10-20 0 14 10 20 5 34-2 6-10 9-23 8z"/>
-              </g>
-            </svg>
-          </div>
-          <figcaption><b>Foto 02</b>O salão visto do balcão do fogo, num jantar de sexta.</figcaption>
-        </figure>
-        <blockquote class="citacao surge">
-          “Se a costela acabar às nove da noite, acabou. Não tem como apressar doze horas.”
-          <footer>Tião, para quem chega tarde no sábado</footer>
-        </blockquote>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Pedidos da casa ===== -->
-  <section class="secao cartao-secao" id="destaques" aria-labelledby="titulo-destaques">
-    <div class="caixa">
-      <div class="cartao-grade">
-        <div class="destaque">
-          <p class="num-secao">II. Da brasa</p>
-          <figure class="foto destaque-foto" data-foto="img/destaque-costela-de-chao.jpg" style="margin-top:14px">
-            <div class="foto-quadro">
-              <svg viewBox="0 0 64 64" aria-hidden="true"><use href="img/tracos.svg#carne"/></svg>
-            </div>
-            <figcaption><b>Foto 03</b>Costela de chão desfiando na tábua, com mandioca e vinagrete.</figcaption>
+        <div class="casa-lado">
+          <figure class="foto foto--carvao casa-foto" data-foto="img/casa-salao-balcao-do-fogo.jpg">
+            <svg viewBox="0 0 600 400" role="img" aria-label="Salão visto do balcão: bancos altos, luminárias e o fogo de chão atrás do vidro"><use href="img/casa.svg#cena-salao"/></svg>
           </figure>
-          <div class="destaque-legenda">
-            <span class="mao">acaba cedo no sábado!</span>
-            <h3 id="titulo-destaques">Costela de chão 12 horas</h3>
-            <p style="color:var(--tinta-2);margin:0">Ripa inteira amarrada na estaca, só com sal grosso. Chega desmanchando, com mandioca na manteiga e vinagrete. Serve 2 a 3 pessoas.</p>
-            <div class="linha-preco" style="margin-top:6px">
-              <a class="link-seta" href="cardapio.html#costela-de-chao">Ver no cardápio <svg aria-hidden="true"><use href="img/tracos.svg#ic-seta"/></svg></a>
-              <span class="pontos" aria-hidden="true"></span>
-              <span class="preco" id="preco-costela" style="font-size:1.4rem">R$ 149,00</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cartao surge">
-          <div class="cartao-topo">
-            <p class="rotulo">Casa Brasa · folha de sugestões</p>
-            <h3>Pedidos da casa</h3>
-            <p class="ornamento" aria-hidden="true"><svg viewBox="0 0 64 64" width="18" height="18"><use href="img/tracos.svg#chama"/></svg></p>
-          </div>
-          <ol id="lista-destaques"></ol>
-          <div class="cartao-rodape">
-            <a class="link-seta" href="cardapio.html">Cardápio completo, bebidas e vinhos <svg aria-hidden="true"><use href="img/tracos.svg#ic-seta"/></svg></a>
-          </div>
+          <blockquote class="casa-citacao">
+            <p>“Se a costela acabar às nove da noite, acabou. Não tem como apressar doze horas.”</p>
+            <footer>Tião, para quem chega tarde no sábado</footer>
+          </blockquote>
         </div>
       </div>
+
+      <ul class="numeros" aria-label="A cozinha em números">
+        <li><b>12 h</b><span>de costela na estaca, ao lado do fogo de chão</span></li>
+        <li><b>21 dias</b><span>de maturação a seco para a picanha</span></li>
+        <li><b>30 dias</b><span>para o bife ancho, na câmara da casa</span></li>
+        <li><b>5h às 23h</b><span>o fogo fica aceso, à vista do salão</span></li>
+      </ul>
     </div>
   </section>
 
   <!-- ===== Executivo ===== -->
   <section class="secao exec" id="executivo" aria-labelledby="titulo-exec">
-    <div class="caixa">
-      <div class="secao-cab">
-        <p class="num-secao" style="color:#f0a77f">III. Almoço executivo</p>
-        <h2 id="titulo-exec">Um prato por dia, <em>de segunda a sexta.</em></h2>
-        <p>Das 11h30 às 15h, no salão, para retirar ou por delivery. Vem com salada da horta ou caldo do dia e a sobremesa do dia.</p>
-      </div>
-      <div class="exec-grade">
+    <div class="caixa exec-grade">
+      <div>
+        <h2 id="titulo-exec">Um prato por dia, de segunda a sexta.</h2>
+        <p class="exec-lead">Das 11h30 às 15h, no salão, para retirar ou por delivery. Vem com salada da horta ou caldo do dia e a sobremesa do dia.</p>
         <table class="exec-tabela">
-          <caption class="sr">Cardápio do almoço executivo por dia da semana</caption>
+          <caption class="sr">Almoço executivo por dia da semana</caption>
           <tbody id="exec-corpo"></tbody>
         </table>
-        <aside class="exec-lado" aria-live="polite">
-          <span class="mao" id="exec-nota">hoje tem</span>
-          <p class="rotulo" id="exec-dia" style="margin-top:10px">Executivo de hoje</p>
-          <p class="prato-nome" id="exec-nome" style="font-size:1.6rem;font-family:var(--f-titulo);font-weight:400;color:#fff;margin:6px 0 0"></p>
+      </div>
+      <aside class="exec-cartao" aria-live="polite">
+        <figure class="foto foto--brasa exec-foto" data-foto="img/executivo-prato-do-dia.jpg">
+          <svg viewBox="0 0 100 100" role="img" aria-label="Prato executivo com arroz, feijão, carne fatiada e salada"><use href="img/casa.svg#prato"/></svg>
+        </figure>
+        <div class="exec-cartao-corpo">
+          <p class="exec-nota" id="exec-nota">hoje tem</p>
+          <p class="exec-dia" id="exec-dia">Executivo de hoje</p>
+          <p class="exec-nome" id="exec-nome"></p>
           <p class="exec-preco" id="exec-preco"></p>
           <p class="exec-aviso" id="exec-aviso"></p>
-          <a class="btn btn--claro" id="exec-pedir" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="img/tracos.svg#ic-whats"/></svg> Pedir pelo WhatsApp</a>
-        </aside>
-      </div>
+          <a class="btn btn--pequi" id="exec-pedir" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="img/casa.svg#ic-whats"/></svg> Pedir pelo WhatsApp</a>
+        </div>
+      </aside>
     </div>
   </section>
 
   <!-- ===== Reservas ===== -->
-  <section class="secao" id="reservas" aria-labelledby="titulo-reservas">
-    <div class="caixa">
-      <div class="reserva-grade">
-        <div>
-          <p class="num-secao">IV. Reservas</p>
-          <h2 id="titulo-reservas" style="font-size:clamp(2.3rem,6vw,4rem);margin:10px 0 18px">Guardamos sua mesa.</h2>
-          <p style="color:var(--tinta-2);max-width:32em">Preencha o livro de reservas e o pedido chega pronto no nosso WhatsApp. Respondemos confirmando em poucos minutos durante o horário de funcionamento.</p>
-          <ul class="politica">
-            <li><span>a.</span><div>A mesa fica segurada por <b>15 minutos</b> depois do horário marcado. Se atrasar, avise pelo WhatsApp.</div></li>
-            <li><span>b.</span><div>Grupos de <b>13 a 18 pessoas</b> ficam na Sala da Brasa, com cardápio fechado combinado antes.</div></li>
-            <li><span>c.</span><div>É aniversário? Marque abaixo. A sobremesa vai para a mesa com vela, por conta da casa.</div></li>
-            <li><span>d.</span><div>No sábado à noite a casa enche. Para jantar depois das 20h, reserve até sexta.</div></li>
-          </ul>
+  <section class="secao reservas" id="reservas" aria-labelledby="titulo-reservas">
+    <div class="caixa reserva-grade">
+      <div class="reserva-texto">
+        <p class="sobre sobre--brasa">Reservas</p>
+        <h2 id="titulo-reservas">Sua mesa perto do fogo.</h2>
+        <p>Preencha ao lado e o pedido de reserva chega pronto no nosso WhatsApp. Confirmamos em poucos minutos durante o horário de funcionamento.</p>
+        <ul class="politica">
+          <li>A mesa fica guardada por <b>15 minutos</b> depois do horário marcado. Se atrasar, avise.</li>
+          <li>Grupos de <b>13 a 18 pessoas</b> ficam na Sala da Brasa, com cardápio fechado combinado antes.</li>
+          <li>É aniversário? Marque no formulário. A sobremesa vai para a mesa com vela, por conta da casa.</li>
+          <li>No sábado à noite a casa enche. Para jantar depois das 20h, reserve até sexta.</li>
+        </ul>
+      </div>
+
+      <form class="reserva-form" id="form-reserva" novalidate>
+        <h3>Pedido de reserva</h3>
+        <div class="campo-duplo">
+          <div class="campo">
+            <label for="r-data">Data</label>
+            <input id="r-data" name="data" type="date" required>
+          </div>
+          <div class="campo">
+            <label for="r-hora">Horário</label>
+            <select id="r-hora" name="hora" required><option value="">Escolha a data</option></select>
+          </div>
+        </div>
+        <p class="aviso-campo" id="r-aviso-data"></p>
+
+        <div class="campo">
+          <span class="campo-rotulo" id="r-pessoas-rotulo">Pessoas</span>
+          <div class="contador" role="group" aria-labelledby="r-pessoas-rotulo">
+            <button type="button" data-passo="-1" aria-label="Uma pessoa a menos"><svg aria-hidden="true"><use href="img/casa.svg#ic-menos"/></svg></button>
+            <input id="r-pessoas" name="pessoas" type="number" inputmode="numeric" min="1" max="18" value="2" aria-labelledby="r-pessoas-rotulo">
+            <button type="button" data-passo="1" aria-label="Uma pessoa a mais"><svg aria-hidden="true"><use href="img/casa.svg#ic-mais"/></svg></button>
+          </div>
+          <p class="aviso-campo" id="r-aviso-pessoas"></p>
         </div>
 
-        <form class="livro" id="form-reserva" novalidate>
-          <div class="livro-cab">
-            <h3>Livro de reservas</h3>
-            <span class="rotulo">Folha nº <span id="folha-num">1</span></span>
+        <fieldset class="campo">
+          <legend>Ocasião</legend>
+          <div class="opcoes">
+            <label><input type="radio" name="ocasiao" value="" checked><span>Nenhuma</span></label>
+            <label><input type="radio" name="ocasiao" value="Aniversário"><span>Aniversário</span></label>
+            <label><input type="radio" name="ocasiao" value="Encontro a dois"><span>A dois</span></label>
+            <label><input type="radio" name="ocasiao" value="Almoço de negócios"><span>Negócios</span></label>
+            <label><input type="radio" name="ocasiao" value="Comemoração em família"><span>Família</span></label>
           </div>
+        </fieldset>
 
-          <div class="campo-duplo">
-            <div class="campo">
-              <label for="r-data">Data</label>
-              <input id="r-data" name="data" type="date" required>
-            </div>
-            <div class="campo">
-              <label for="r-hora">Horário</label>
-              <select id="r-hora" name="hora" required><option value="">Escolha a data</option></select>
-            </div>
+        <fieldset class="campo">
+          <legend>Onde prefere sentar</legend>
+          <div class="opcoes">
+            <label><input type="radio" name="area" value="Tanto faz" checked><span>Tanto faz</span></label>
+            <label><input type="radio" name="area" value="Salão"><span>Salão</span></label>
+            <label><input type="radio" name="area" value="Varanda do pequizeiro"><span>Varanda</span></label>
+            <label><input type="radio" name="area" value="Balcão do fogo"><span>Balcão do fogo</span></label>
           </div>
-          <p class="aviso-campo" id="r-aviso-data"></p>
+        </fieldset>
 
-          <div class="campo">
-            <span class="campo-rotulo" id="r-pessoas-rotulo">Pessoas</span>
-            <div class="contador" role="group" aria-labelledby="r-pessoas-rotulo">
-              <button type="button" data-passo="-1" aria-label="Uma pessoa a menos"><svg aria-hidden="true"><use href="img/tracos.svg#ic-menos"/></svg></button>
-              <input id="r-pessoas" name="pessoas" type="number" inputmode="numeric" min="1" max="18" value="2" aria-labelledby="r-pessoas-rotulo">
-              <button type="button" data-passo="1" aria-label="Uma pessoa a mais"><svg aria-hidden="true"><use href="img/tracos.svg#ic-mais"/></svg></button>
-            </div>
-            <p class="aviso-campo" id="r-aviso-pessoas"></p>
-          </div>
-
-          <fieldset class="campo">
-            <legend>Ocasião</legend>
-            <div class="opcoes">
-              <label><input type="radio" name="ocasiao" value="" checked><span>Nenhuma em especial</span></label>
-              <label><input type="radio" name="ocasiao" value="Aniversário"><span>Aniversário</span></label>
-              <label><input type="radio" name="ocasiao" value="Encontro a dois"><span>Encontro a dois</span></label>
-              <label><input type="radio" name="ocasiao" value="Almoço de negócios"><span>Negócios</span></label>
-              <label><input type="radio" name="ocasiao" value="Comemoração em família"><span>Família</span></label>
-            </div>
-          </fieldset>
-
-          <fieldset class="campo">
-            <legend>Onde prefere sentar</legend>
-            <div class="opcoes">
-              <label><input type="radio" name="area" value="Tanto faz" checked><span>Tanto faz</span></label>
-              <label><input type="radio" name="area" value="Salão"><span>Salão</span></label>
-              <label><input type="radio" name="area" value="Varanda do pequizeiro"><span>Varanda</span></label>
-              <label><input type="radio" name="area" value="Balcão do fogo"><span>Balcão do fogo</span></label>
-            </div>
-          </fieldset>
-
-          <div class="campo">
-            <label for="r-nome">Reserva em nome de</label>
-            <input id="r-nome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome">
-          </div>
+        <div class="campo">
+          <label for="r-nome">Reserva em nome de</label>
+          <input id="r-nome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome">
           <p class="aviso-campo" id="r-aviso-nome"></p>
+        </div>
 
-          <div class="campo">
-            <label for="r-obs">Alguma observação? <span style="text-transform:none;letter-spacing:0;font-weight:500">(opcional)</span></label>
-            <textarea id="r-obs" name="obs" rows="2" placeholder="Cadeirão, restrição alimentar, mesa perto do fogo…"></textarea>
-          </div>
+        <div class="campo">
+          <label for="r-obs">Observação <span class="opcional">(opcional)</span></label>
+          <textarea id="r-obs" name="obs" rows="2" placeholder="Cadeirão, restrição alimentar, mesa perto do fogo…"></textarea>
+        </div>
 
-          <button class="btn btn--brasa" type="submit"><svg aria-hidden="true"><use href="img/tracos.svg#ic-whats"/></svg> Enviar reserva pelo WhatsApp</button>
-          <p class="livro-rodape">A reserva só vale depois da nossa confirmação.</p>
-        </form>
-      </div>
+        <button class="btn btn--brasa btn--largo" type="submit"><svg aria-hidden="true"><use href="img/casa.svg#ic-whats"/></svg> Enviar pelo WhatsApp</button>
+        <p class="form-rodape">A reserva vale depois da nossa confirmação.</p>
+      </form>
     </div>
   </section>
 
   <!-- ===== O espaço ===== -->
-  <section class="secao cartao-secao" id="espaco" aria-labelledby="titulo-espaco">
+  <section class="secao espaco" id="espaco" aria-labelledby="titulo-espaco">
     <div class="caixa">
       <div class="espaco-grade">
-        <figure class="planta surge">
-          <svg viewBox="0 0 600 420" role="img" aria-label="Planta baixa da Casa Brasa com salão, balcão do fogo, sala da brasa e varanda">
-            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <!-- paredes -->
-              <path d="M20 20h420v340H262M222 360H20V20" stroke-width="4"/>
-              <path d="M20 112h180M200 20v92M320 20v130M320 150h120M320 150v-22" stroke-width="2.5"/>
-              <!-- varanda aberta -->
-              <path d="M440 110h140v250H440" stroke-width="1.6" stroke-dasharray="6 6"/>
-              <!-- fogo de chão (hachura) -->
-              <rect x="212" y="30" width="96" height="50" stroke-width="1.4"/>
-              <path d="M222 80l30-50M242 80l30-50M262 80l30-50M282 80l26-44M212 66l20-36" stroke-width=".9" opacity=".6"/>
-              <!-- balcão do fogo -->
-              <path d="M206 100h108" stroke-width="7" opacity=".8"/>
-              <circle cx="214" cy="116" r="5" stroke-width="1.3"/><circle cx="230" cy="116" r="5" stroke-width="1.3"/><circle cx="246" cy="116" r="5" stroke-width="1.3"/><circle cx="262" cy="116" r="5" stroke-width="1.3"/><circle cx="278" cy="116" r="5" stroke-width="1.3"/><circle cx="294" cy="116" r="5" stroke-width="1.3"/><circle cx="308" cy="116" r="5" stroke-width="1.3"/>
-              <!-- sala da brasa: mesa comprida -->
-              <rect x="350" y="36" width="60" height="78" stroke-width="1.6"/>
-              <path d="M342 44v8M342 62v8M342 80v8M342 98v8M418 44v8M418 62v8M418 80v8M418 98v8" stroke-width="3"/>
-              <!-- salão: mesas -->
-              <g stroke-width="1.5">
-                <rect x="52" y="160" width="34" height="34"/><rect x="122" y="160" width="34" height="34"/><rect x="192" y="160" width="34" height="34"/><rect x="262" y="160" width="34" height="34"/><rect x="352" y="186" width="44" height="34"/>
-                <rect x="52" y="230" width="34" height="34"/><rect x="122" y="230" width="34" height="34"/><rect x="192" y="230" width="34" height="34"/><rect x="262" y="230" width="34" height="34"/><rect x="352" y="244" width="44" height="34"/>
-                <rect x="52" y="300" width="34" height="34"/><rect x="122" y="300" width="34" height="34"/><rect x="292" y="300" width="34" height="34"/><rect x="352" y="300" width="44" height="34"/>
-              </g>
-              <!-- varanda: mesas redondas e pequizeiro -->
-              <g stroke-width="1.5">
-                <circle cx="478" cy="210" r="16"/><circle cx="478" cy="270" r="16"/><circle cx="478" cy="326" r="16"/><circle cx="540" cy="270" r="16"/><circle cx="540" cy="326" r="16"/>
-              </g>
-              <path d="M540 128c8-6 20-2 22 6 10 0 16 10 12 18 6 6 2 18-8 18-2 8-14 12-22 6-8 6-20 2-22-6-10 0-14-10-10-18-6-8 0-18 10-18 2-6 10-10 18-6z" stroke-width="1.3"/>
-              <path d="M540 150l-8-8M540 150l10-6M540 150v14" stroke-width="1.2"/>
-              <text x="512" y="196" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="10" letter-spacing="1.2" fill="currentColor" stroke="none">PEQUIZEIRO</text>
-              <!-- cozinha -->
-              <path d="M36 40h40v20H36zM90 40h40v20H90zM144 40h40v20h-40z" stroke-width="1.2"/>
-              <!-- entrada -->
-              <path d="M242 404v-34M234 378l8-8 8 8" stroke-width="1.6"/>
-            </g>
-            <g font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="13" font-weight="600" letter-spacing="1.6" fill="currentColor">
-              <text x="70" y="92">COZINHA</text>
-              <text x="222" y="56" font-size="11">FOGO DE CHÃO</text>
-              <text x="270" y="400" font-size="12">ENTRADA · RUA EXEMPLO</text>
-              <text x="510" y="400" font-size="12">VARANDA</text>
-            </g>
-            <g font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="15" font-weight="700" text-anchor="middle">
-              <circle cx="244" cy="282" r="13" fill="#b0381a"/><text x="244" y="287" fill="#fff">1</text>
-              <circle cx="330" cy="116" r="13" fill="#b0381a"/><text x="330" y="121" fill="#fff">2</text>
-              <circle cx="510" cy="232" r="13" fill="#b0381a"/><text x="510" y="237" fill="#fff">3</text>
-              <circle cx="380" cy="132" r="13" fill="#b0381a"/><text x="380" y="137" fill="#fff">4</text>
-            </g>
-          </svg>
-          <figcaption>Planta do térreo, sem escala. O fogo de chão fica atrás do balcão, protegido por vidro.</figcaption>
+        <figure class="foto foto--folha espaco-foto" data-foto="img/espaco-varanda-pequizeiro.jpg">
+          <svg viewBox="0 0 600 400" role="img" aria-label="Varanda à noite, com mesas ao redor do pequizeiro e luzes penduradas"><use href="img/casa.svg#cena-varanda"/></svg>
         </figure>
-
-        <div>
-          <p class="num-secao">V. O espaço</p>
-          <h2 id="titulo-espaco" style="font-size:clamp(2.3rem,6vw,4rem);margin:10px 0 18px">Quatro lugares para sentar.</h2>
-          <p style="color:var(--tinta-2)">Fazemos aniversários, almoços de empresa e confraternizações de fim de ano. Para eventos com a casa fechada (até 120 pessoas), fale com a gente com pelo menos 20 dias de antecedência.</p>
-          <ol class="ambientes">
-            <li><h3>Salão</h3><span class="cap">64 lugares</span><p>Mesas de madeira de demolição, ar-condicionado e vista para o fogo.</p></li>
-            <li><h3>Balcão do fogo</h3><span class="cap">7 bancos</span><p>De frente para a grelha. O lugar de quem gosta de ver o corte saindo.</p></li>
-            <li><h3>Varanda do pequizeiro</h3><span class="cap">36 lugares</span><p>Aberta, ao redor de um pequizeiro de mais de 30 anos que já estava no terreno. Aceita pets.</p></li>
-            <li><h3>Sala da Brasa</h3><span class="cap">até 18</span><p>Sala privativa com mesa única, som próprio e TV para apresentação. Cardápio fechado a partir de R$ 189 por pessoa.</p></li>
-          </ol>
-          <a class="btn" href="#" style="margin-top:24px" data-wa="Olá, Casa Brasa! Quero orçar um evento. Data: ___ · Número de pessoas: ___ · Tipo de evento: ___"><svg aria-hidden="true"><use href="img/tracos.svg#ic-whats"/></svg> Orçar um evento</a>
+        <div class="espaco-texto">
+          <h2 id="titulo-espaco">Quatro lugares para sentar.</h2>
+          <p>Fazemos aniversários, almoços de empresa e confraternizações. Para fechar a casa (até 120 pessoas), fale com a gente com pelo menos 20 dias de antecedência.</p>
+          <a class="btn btn--escuro" href="#" data-wa="Olá, Casa Brasa! Quero orçar um evento. Data: ___ · Número de pessoas: ___ · Tipo de evento: ___"><svg aria-hidden="true"><use href="img/casa.svg#ic-whats"/></svg> Orçar um evento</a>
         </div>
       </div>
+      <ol class="ambientes">
+        <li class="amb amb--tijolo"><span class="amb-cap">64 lugares</span><h3>Salão</h3><p>Mesas de madeira de demolição, ar-condicionado e vista para o fogo.</p></li>
+        <li class="amb amb--pequi"><span class="amb-cap">7 bancos</span><h3>Balcão do fogo</h3><p>De frente para a grelha. O lugar de quem gosta de ver o corte saindo.</p></li>
+        <li class="amb amb--folha"><span class="amb-cap">36 lugares</span><h3>Varanda do pequizeiro</h3><p>Aberta, ao redor de um pequizeiro de mais de 30 anos que já estava no terreno. Aceita pets.</p></li>
+        <li class="amb amb--carvao"><span class="amb-cap">até 18</span><h3>Sala da Brasa</h3><p>Privativa, mesa única, som próprio e TV. Cardápio fechado a partir de R$ 189 por pessoa.</p></li>
+      </ol>
     </div>
   </section>
 
   <!-- ===== Avaliações ===== -->
-  <section class="secao" id="avaliacoes" aria-labelledby="titulo-avaliacoes">
+  <section class="secao avaliacoes" id="avaliacoes" aria-labelledby="titulo-avaliacoes">
     <div class="caixa">
-      <div class="secao-cab" style="max-width:760px">
-        <p class="num-secao">VI. Quem já veio</p>
-        <h2 id="titulo-avaliacoes">Do livro de visitas e do Google.</h2>
-      </div>
-      <div class="avaliacoes">
-        <figure class="avaliacao avaliacao--grande">
+      <h2 id="titulo-avaliacoes">Quem já sentou aqui.</h2>
+      <div class="aval-grade">
+        <figure class="aval aval--grande">
           <span class="estrelas" aria-label="5 de 5 estrelas">★★★★★</span>
-          <blockquote>Comemorei os 60 anos do meu pai na Sala da Brasa, éramos 16. Montaram a mesa comprida, serviram a prancha pra todo mundo e no fim trouxeram a pamonha brûlée com vela. Meu pai é de Pirenópolis e disse que o arroz de pequi lembrou o da minha avó. Não tem elogio maior que esse.</blockquote>
-          <figcaption><strong>Ana Beatriz Fonseca</strong>agosto de 2026 · Sala da Brasa</figcaption>
+          <blockquote>Comemorei os 60 anos do meu pai na Sala da Brasa, éramos 16. Montaram a mesa comprida, serviram a prancha pra todo mundo e no fim trouxeram a pamonha brûlée com vela. Meu pai disse que o arroz de pequi lembrou o da minha avó. Não tem elogio maior que esse.</blockquote>
+          <figcaption><strong>Ana Beatriz Fonseca</strong> agosto de 2026 · Sala da Brasa</figcaption>
         </figure>
-        <figure class="avaliacao">
+        <figure class="aval">
           <span class="estrelas" aria-label="5 de 5 estrelas">★★★★★</span>
-          <blockquote>Almoço aqui toda quarta por causa da feijoada. Preço justo pro bairro, vem com caldo e sobremesa e dá pra voltar pro escritório em 1h.</blockquote>
-          <figcaption><strong>Rafael Mendonça</strong>setembro de 2026 · executivo</figcaption>
+          <blockquote>Almoço aqui toda quarta por causa da feijoada. Preço justo, vem com caldo e sobremesa e dá pra voltar pro escritório em 1h.</blockquote>
+          <figcaption><strong>Rafael Mendonça</strong> setembro de 2026 · executivo</figcaption>
         </figure>
-        <figure class="avaliacao">
+        <figure class="aval">
           <span class="estrelas" aria-label="5 de 5 estrelas">★★★★★</span>
-          <blockquote>Fomos num sábado à noite, 4 pessoas, pedimos a costela e a picanha. A costela realmente desmancha, nem precisou de faca. O garçom (acho que era o Wellington) explicou pra minha cunhada que é de SP como comer pequi sem morder o caroço, foi ótimo kkk. Só a espera pra sentar que foi grande, uns 25 min mesmo com reserva.</blockquote>
-          <figcaption><strong>Lorena Siqueira Prado</strong>outubro de 2026 · costela de chão</figcaption>
+          <blockquote>Fomos num sábado à noite, 4 pessoas, costela e picanha. A costela desmancha mesmo, nem precisou de faca. O garçom (acho que era o Wellington) ensinou minha cunhada a comer pequi sem morder o caroço, foi ótimo kkk. Só a espera pra sentar que foi grande, uns 25 min mesmo com reserva.</blockquote>
+          <figcaption><strong>Lorena Siqueira Prado</strong> outubro de 2026 · costela de chão</figcaption>
         </figure>
-        <figure class="avaliacao">
-          <span class="estrelas" aria-label="4 de 5 estrelas">★★★★☆</span>
-          <blockquote>Pedi delivery pelo WhatsApp pro Jardim América. Chegou em uns 50 min, carne ainda quente e a farofa veio separada pra não murchar. Detalhe que faz diferença. Tiro uma estrela pela taxa, achei salgada.</blockquote>
-          <figcaption><strong>Thiago Rocha Albuquerque</strong>outubro de 2026 · delivery</figcaption>
+        <figure class="aval">
+          <span class="estrelas" aria-label="4 de 5 estrelas">★★★★<span class="estrela-off">★</span></span>
+          <blockquote>Pedi delivery pelo WhatsApp, moro a uns 7 km. Chegou em uns 50 min, carne quente e a farofa veio separada pra não murchar. Detalhe que faz diferença. Tiro uma estrela pela taxa, achei salgada.</blockquote>
+          <figcaption><strong>Thiago Rocha Albuquerque</strong> outubro de 2026 · delivery</figcaption>
         </figure>
-        <figure class="avaliacao">
+        <figure class="aval">
           <span class="estrelas" aria-label="5 de 5 estrelas">★★★★★</span>
           <blockquote>Sou vegetariana e em churrascaria normalmente como só guarnição. Aqui a couve-flor na brasa é prato de verdade. Meu namorado roubou metade.</blockquote>
-          <figcaption><strong>Gabriela Nunes Teles</strong>julho de 2026 · couve-flor na brasa</figcaption>
+          <figcaption><strong>Gabriela Nunes Teles</strong> julho de 2026 · couve-flor na brasa</figcaption>
         </figure>
       </div>
     </div>
   </section>
 
   <!-- ===== Visita ===== -->
-  <section class="secao cartao-secao" id="visita" aria-labelledby="titulo-visita">
-    <div class="caixa">
-      <div class="secao-cab">
-        <p class="num-secao">VII. Como chegar</p>
-        <h2 id="titulo-visita">Portão de madeira, <em>lanterna acesa.</em></h2>
-      </div>
-      <div class="visita-grade">
-        <div>
-          <p class="rotulo">Horário de funcionamento</p>
-          <p class="status status-grande" data-status data-aberto="sim">Consultando horário…</p>
-          <table class="horarios">
-            <caption class="sr">Horários por dia da semana</caption>
-            <tbody id="tabela-horarios"></tbody>
-          </table>
-          <p style="font-size:.9rem;color:var(--tinta-2);margin-top:14px;font-style:italic">Delivery e retirada nos mesmos horários. A cozinha para de aceitar pedidos 30 minutos antes de fechar.</p>
-        </div>
-        <div>
-          <p class="rotulo">Endereço</p>
-          <p class="endereco">Rua Exemplo, 100<br>Setor Marista · Goiânia, GO</p>
-          <ul class="detalhes-visita">
-            <li><b>Referência.</b> Na esquina com a Rua Exemplo 2. Procure o portão de madeira com uma lanterna acesa.</li>
+  <section class="secao visita" id="visita" aria-labelledby="titulo-visita">
+    <div class="caixa visita-grade">
+      <figure class="foto foto--tijolo visita-foto" data-foto="img/visita-fachada-portao.jpg">
+        <svg viewBox="0 0 600 750" role="img" aria-label="Fachada de tijolo com portão de madeira e lanterna acesa"><use href="img/casa.svg#cena-fachada"/></svg>
+      </figure>
+      <div class="visita-texto">
+        <h2 id="titulo-visita">Portão de madeira, lanterna acesa.</h2>
+        <p class="status status-grande" data-status data-aberto="sim">Consultando horário…</p>
+        <table class="horarios">
+          <caption class="sr">Horários por dia da semana</caption>
+          <tbody id="tabela-horarios"></tbody>
+        </table>
+        <p class="nota">Delivery e retirada nos mesmos horários. A cozinha para de aceitar pedidos 30 minutos antes de fechar.</p>
+
+        <div class="visita-info">
+          <div>
+            <h3>Endereço</h3>
+            <p class="endereco">Rua Exemplo, 100</p>
+            <a class="link-forte" href="https://www.google.com/maps/search/?api=1&amp;query=Rua%20Exemplo%2C%20100" target="_blank" rel="noopener">Abrir no mapa <svg aria-hidden="true"><use href="img/casa.svg#ic-seta"/></svg></a>
+          </div>
+          <ul class="detalhes">
             <li><b>Estacionamento.</b> Manobrista no jantar e no fim de semana (R$ 18). No almoço da semana há vagas na rua.</li>
             <li><b>Acessibilidade.</b> Entrada lateral sem degrau e banheiro adaptado.</li>
             <li><b>Crianças.</b> Cadeirão e meia porção de qualquer prato da brasa, por 60% do preço.</li>
           </ul>
-          <a class="btn btn--linha" href="https://www.google.com/maps/search/?api=1&amp;query=Setor%20Marista%2C%20Goi%C3%A2nia%20-%20GO" target="_blank" rel="noopener">Abrir no Google Maps <svg aria-hidden="true"><use href="img/tracos.svg#ic-seta"/></svg></a>
         </div>
-        <figure class="mapa" style="margin:0">
-          <svg viewBox="0 0 400 340" role="img" aria-label="Mapa desenhado das ruas ao redor da Casa Brasa">
-            <g fill="none" stroke="#231a14" stroke-linecap="round">
-              <g stroke-width="1" opacity=".35">
-                <path d="M0 70h400M0 74h400M0 196h400M0 200h400M0 300h400M0 304h400"/>
-                <path d="M90 0v340M94 0v340M240 0v340M244 0v340M350 0v340M354 0v340"/>
-                <path d="M0 330L160 120M5 334L164 124" />
-              </g>
-              <path d="M0 198h400" stroke-width="7" stroke="#e8dbc1"/>
-              <path d="M242 0v340" stroke-width="7" stroke="#e8dbc1"/>
-              <path d="M0 194h400M0 202h400M238 0v340M246 0v340" stroke-width="1.2"/>
-              <rect x="110" y="88" width="112" height="92" stroke-width="1" stroke-dasharray="3 4" opacity=".6"/>
-              <g stroke-width="1" opacity=".6"><circle cx="135" cy="112" r="9"/><circle cx="168" cy="140" r="11"/><circle cx="200" cy="108" r="8"/><circle cx="140" cy="160" r="7"/><circle cx="198" cy="160" r="9"/></g>
-            </g>
-            <g font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="12" font-weight="600" letter-spacing="1.5" fill="#574334">
-              <text x="12" y="188">RUA EXEMPLO</text>
-              <text x="252" y="40" transform="rotate(90 252 40)">RUA EXEMPLO 2</text>
-              <text x="158" y="178" font-style="italic" font-family="Libre Caslon Text, Georgia, serif" letter-spacing="0" font-weight="400">praça</text>
-              <text x="12" y="62">AV. EXEMPLO</text>
-            </g>
-            <g transform="translate(268 160)">
-              <path d="M14 0C6 0 0 6 0 14c0 10 14 24 14 24s14-14 14-24C28 6 22 0 14 0z" fill="#b0381a"/>
-              <circle cx="14" cy="14" r="5" fill="#f2e8d5"/>
-            </g>
-            <text x="300" y="186" font-family="Libre Caslon Text, Georgia, serif" font-size="15" font-style="italic" fill="#231a14">Casa Brasa</text>
-          </svg>
-        </figure>
       </div>
     </div>
   </section>
 
   <!-- ===== Instagram ===== -->
-  <section class="contato-folha" aria-labelledby="titulo-insta">
+  <section class="insta" aria-labelledby="titulo-insta">
     <div class="caixa">
-      <div class="contato-cab">
-        <h2 id="titulo-insta">O que saiu da brasa esta semana</h2>
-        <a class="link-seta" href="https://www.instagram.com/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="img/tracos.svg#ic-insta"/></svg> @casabrasa.gyn</a>
+      <div class="insta-cab">
+        <h2 id="titulo-insta">Saiu da brasa esta semana</h2>
+        <a class="link-forte" href="https://www.instagram.com/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="img/casa.svg#ic-insta"/></svg> @casabrasa</a>
       </div>
-      <div class="negativos">
-        <figure class="foto" data-foto="img/insta-1-picanha-tabua.jpg">
-          <div class="foto-quadro"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="img/tracos.svg#carne"/></svg></div>
-          <figcaption><b>04</b>Picanha fatiada na mesa</figcaption>
+      <div class="insta-grade">
+        <figure class="foto foto--brasa" data-foto="img/insta-1-picanha-tabua.jpg">
+          <svg viewBox="0 0 100 100" role="img" aria-label="Picanha fatiada"><use href="img/casa.svg#carne"/></svg>
         </figure>
-        <figure class="foto" data-foto="img/insta-2-pequi-feira.jpg">
-          <div class="foto-quadro"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="img/tracos.svg#fruta"/></svg></div>
-          <figcaption><b>05</b>Pequi chegando da feira</figcaption>
+        <figure class="foto foto--folha" data-foto="img/insta-2-pequi-cesto.jpg">
+          <svg viewBox="0 0 600 600" role="img" aria-label="Cesto de pequi, alguns abertos"><use href="img/casa.svg#cena-pequi"/></svg>
         </figure>
-        <figure class="foto" data-foto="img/insta-3-pequi-tonic.jpg">
-          <div class="foto-quadro"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="img/tracos.svg#drink"/></svg></div>
-          <figcaption><b>06</b>Pequi tonic no balcão</figcaption>
+        <figure class="foto foto--carvao" data-foto="img/insta-3-pequi-tonic.jpg">
+          <svg viewBox="0 0 600 750" role="img" aria-label="Pequi tonic e caipirinha no balcão"><use href="img/casa.svg#cena-drink"/></svg>
         </figure>
-        <figure class="foto" data-foto="img/insta-4-pamonha-brulee.jpg">
-          <div class="foto-quadro"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="img/tracos.svg#milho"/></svg></div>
-          <figcaption><b>07</b>Pamonha brûlée no maçarico</figcaption>
+        <figure class="foto foto--pequi" data-foto="img/insta-4-pamonha-brulee.jpg">
+          <svg viewBox="0 0 600 600" role="img" aria-label="Pamonha brûlée com a casquinha queimada"><use href="img/casa.svg#cena-brulee"/></svg>
         </figure>
       </div>
     </div>
@@ -589,17 +406,12 @@
 <footer class="rodape">
   <div class="caixa">
     <div class="rodape-grade">
-      <div>
+      <div class="rodape-marca">
         <a class="marca" href="index.html" aria-label="Casa Brasa, página inicial">
-          <svg viewBox="0 0 188 48" aria-hidden="true" style="height:48px">
-            <path d="M16 4c2.4 7 10 11 10 22a10 10 0 0 1-20 0c0-5.5 3-8.5 4.6-11.6.8 3.8 2.3 5.4 3.9 6.2C14.4 14.6 13.6 9.8 16 4z" fill="#d4521f"/>
-            <path d="M16 26c1.6 3 4.4 4.6 4.4 8.2a4.4 4.4 0 0 1-8.8 0c0-2.2 1.2-3.8 2.2-5.2.8 1.5 1.4 2.2 2.2 2.2z" fill="#1c1511"/>
-            <path d="M3 44h26" stroke="currentColor" stroke-width="1.6"/>
-            <text x="38" y="29" font-family="Libre Caslon Display, Georgia, serif" font-size="29" fill="currentColor">Casa Brasa</text>
-            <text x="39.5" y="43" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-size="9.4" font-weight="600" letter-spacing="2.35" fill="currentColor">COZINHA DE FOGO · GOIÂNIA</text>
-          </svg>
+          <svg class="marca-sinal" aria-hidden="true"><use href="img/casa.svg#marca"/></svg>
+          <span class="marca-nome">Casa Brasa<small>cozinha de fogo</small></span>
         </a>
-        <p style="margin-top:16px;max-width:24em">Rua Exemplo, 100 · Setor Marista<br>Goiânia, GO</p>
+        <p>Rua Exemplo, 100</p>
       </div>
       <div>
         <h2>Visite</h2>
@@ -622,8 +434,8 @@
       <div>
         <h2>Fale com a gente</h2>
         <ul>
-          <li><a href="#" data-wa="Olá, Casa Brasa! Tenho uma dúvida.">WhatsApp (62) 9920-8147</a></li>
-          <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram @casabrasa.gyn</a></li>
+          <li><a href="#" data-wa="Olá, Casa Brasa! Tenho uma dúvida.">WhatsApp</a></li>
+          <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram @casabrasa</a></li>
         </ul>
       </div>
     </div>
@@ -633,6 +445,8 @@
     </div>
   </div>
 </footer>
+
+<a class="wa-flutua" href="#" data-wa="Olá, Casa Brasa! Tenho uma dúvida." aria-label="Falar pelo WhatsApp"><svg aria-hidden="true"><use href="img/casa.svg#ic-whats"/></svg></a>
 
 <script src="js/cardapio-dados.js"></script>
 <script src="js/comum.js"></script>

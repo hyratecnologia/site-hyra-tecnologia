@@ -8,24 +8,29 @@
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
 
   /* ---------- Pedidos da casa ---------- */
+  var CORES = { entradas: "pequi", brasa: "tijolo", peixes: "folha", guarnicoes: "pequi", executivo: "brasa", sobremesas: "brasa", "sem-alcool": "folha", drinks: "carvao", cervejas: "tijolo", vinhos: "carvao" };
   function destaques() {
-    var ids = ["picanha-da-casa", "provoleta-baru", "pintado-bananeira", "couve-flor-brasa", "arroz-pequi", "pamonha-brulee"];
-    var ol = document.getElementById("lista-destaques");
-    if (!ol) return;
+    var ids = ["provoleta-baru", "couve-flor-brasa", "arroz-pequi", "barriga-laqueada", "pamonha-brulee", "pequi-tonic"];
+    var ul = document.getElementById("lista-destaques");
+    if (!ul) return;
     ids.forEach(function (id) {
       var it = porId[id]; if (!it) return;
       var li = el("li"), a = el("a");
       a.href = "cardapio.html#" + it.id;
-      var linha = el("div", "linha-preco");
-      linha.appendChild(el("span", "prato-nome", it.nome));
-      var p = el("span", "pontos"); p.setAttribute("aria-hidden", "true"); linha.appendChild(p);
-      linha.appendChild(el("span", "preco", C.reais(it.preco)));
-      a.appendChild(linha);
-      a.appendChild(el("p", "prato-desc", it.desc + (it.serve && it.serve !== "1 pessoa" ? " Serve " + it.serve + "." : "")));
-      li.appendChild(a); ol.appendChild(li);
+      var tile = el("span", "mini foto--" + (CORES[it.cat] || "pequi"));
+      tile.setAttribute("aria-hidden", "true");
+      tile.innerHTML = '<svg viewBox="0 0 100 100"><use href="img/casa.svg#' + (it.ilustra || "prato") + '"/></svg>';
+      var txt = el("span", "mini-texto");
+      txt.appendChild(el("span", "mini-nome", it.nome));
+      txt.appendChild(el("span", "mini-desc", it.desc));
+      a.appendChild(tile); a.appendChild(txt);
+      a.appendChild(el("span", "mini-preco", C.reais(it.preco)));
+      li.appendChild(a); ul.appendChild(li);
     });
-    var pc = document.getElementById("preco-costela");
-    if (pc && porId["costela-de-chao"]) pc.textContent = C.reais(porId["costela-de-chao"].preco);
+    [["preco-costela", "costela-de-chao"], ["preco-picanha", "picanha-da-casa"], ["preco-pintado", "pintado-bananeira"]].forEach(function (p) {
+      var e = document.getElementById(p[0]);
+      if (e && porId[p[1]]) e.textContent = C.reais(porId[p[1]].preco);
+    });
   }
 
   /* ---------- Almoço executivo ---------- */
@@ -37,7 +42,7 @@
     execs.forEach(function (it) {
       var tr = el("tr"); if (it.dia === dia) tr.className = "hoje-linha";
       var th = el("th", null, nomes[it.dia]); th.scope = "row";
-      if (it.dia === dia) { var c = el("span", "carimbo", "hoje"); th.appendChild(document.createElement("br")); th.appendChild(c); }
+      if (it.dia === dia) th.appendChild(el("span", "tag-hoje", "hoje"));
       var td = el("td");
       td.appendChild(el("span", "prato-nome", it.nome));
       td.appendChild(el("p", "prato-desc", it.desc));
@@ -120,11 +125,6 @@
     var avData = document.getElementById("r-aviso-data"), avPes = document.getElementById("r-aviso-pessoas"), avNome = document.getElementById("r-aviso-nome");
     var max = new Date(agora); max.setDate(max.getDate() + 60);
     inData.min = iso(agora); inData.max = iso(max);
-
-    var inicio = (dayOfYear(agora));
-    document.getElementById("folha-num").textContent = inicio;
-
-    function dayOfYear(d) { var i = new Date(d.getFullYear(), 0, 0); return Math.floor((d - i) / 864e5); }
 
     function lerData() {
       if (!inData.value) return null;
