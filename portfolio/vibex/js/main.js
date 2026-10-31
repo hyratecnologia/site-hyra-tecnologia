@@ -260,15 +260,16 @@
     /* etiqueta com linha até a peça (x, y em pixels dentro do palco); usada pelos dois carros */
     window.VibexCallout = function (x, y, w, h) {
       var lw = coTxt.offsetWidth, lh = coTxt.offsetHeight;
-      // etiqueta acima do ponto, sempre dentro do quadro (abaixo dele se faltar espaço)
-      var lx = Math.max(10, Math.min(w - lw - 10, x - lw / 2 + (x < w / 2 ? 40 : -40)));
-      var ly = y - 70 - lh; if (ly < 36) ly = Math.min(h - lh - 10, y + 56);
+      // etiqueta no canto de baixo do lado oposto ao da peça (no de cima se a peça estiver lá embaixo),
+      // para não cobrir nada; só a bolinha fica na peça e a linha leva até a etiqueta
+      var m = 14, lx = x > w / 2 ? m : w - lw - m;
+      var ly = h - lh - m; if (y > ly - 24) ly = 48;
       coDot.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px)';
       coTxt.style.transform = 'translate(' + lx.toFixed(0) + 'px,' + ly.toFixed(0) + 'px)';
-      var tx = Math.max(lx + 6, Math.min(lx + lw - 6, x)), ty = ly < y ? ly + lh : ly;
+      var tx = Math.max(lx + 10, Math.min(lx + lw - 10, x)), ty = ly < y ? ly + lh : ly;
       var dx = tx - x, dy = ty - y, len = Math.sqrt(dx * dx + dy * dy);
-      coLine.style.width = Math.max(0, len - 7).toFixed(0) + 'px';
-      coLine.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px) rotate(' + Math.atan2(dy, dx).toFixed(3) + 'rad) translateX(7px)';
+      coLine.style.width = Math.max(0, len - 5).toFixed(0) + 'px';
+      coLine.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px) rotate(' + Math.atan2(dy, dx).toFixed(3) + 'rad) translateX(5px)';
       co.classList.add('on');
     };
     window.VibexCalloutOff = function () { co.classList.remove('on'); };
