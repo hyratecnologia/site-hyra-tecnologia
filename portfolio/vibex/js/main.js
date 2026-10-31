@@ -87,8 +87,10 @@
   function pad3(n) { return ('00' + n).slice(-3); }
 
   /* ==================== HERO: carro girando ==================== */
-  (function () {
+  /* o topo usa o carro realista (carro3d.js); o traço só entra se ele não puder rodar */
+  function heroTraco() {
     var svg = $('#heroCar'); if (!svg) return;
+    svg.closest('.stage').classList.add('gl-off');
     var angEl = $('#heroAng'), viewEl = $('#heroView'), hand = $('#heroStage .hint'), lastDeg = -1;
     var car = V.create(svg, {
       auto: 7, fps30: coarse,
@@ -101,7 +103,6 @@
       },
       onDrag: function () { if (hand) hand.classList.add('gone'); }
     });
-    window.VibexHero = car; // carro3d.js assume o ângulo daqui quando o modelo realista carrega
     var rest = V.pose({ yaw: 35, pit: 14, rev: .55 });
     function frame() {
       // enquadramento que serve para qualquer ângulo do giro
@@ -124,7 +125,11 @@
     var t; window.addEventListener('resize', function () {
       clearTimeout(t); t = setTimeout(function () { var vb = frame(); car.s.vb = vb; rest.vb = vb; if (car.tw) car.tw.to.vb = vb.slice(); car.dirty = true; car.render(); }, 150);
     });
-  })();
+  }
+  var hasGL = (function () { try { var c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return false; } })();
+  var saveData = navigator.connection && navigator.connection.saveData;
+  if (hasGL && !saveData && 'noModule' in HTMLScriptElement.prototype) window.VibexHeroTraco = heroTraco;
+  else heroTraco();
 
   /* ==================== RAIO-X ==================== */
   var CFG = {

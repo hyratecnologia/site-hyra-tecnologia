@@ -193,21 +193,38 @@ svg.car3d:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
 .hero-ctas .btn { flex: 1 1 220px; }
 @media (min-width: 560px) { .hero-ctas .btn { flex: 0 0 auto; } }
 .hero-stage .stage { aspect-ratio: 4 / 3; }
-/* carro realista (carro3d.js): entra por cima do traço e o traço sai */
-.stage .car-gl { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; opacity: 0; transition: opacity .9s; touch-action: pan-y; cursor: grab; outline: none; }
+/* carro realista (carro3d.js); o traço do topo só aparece se ele não puder rodar (.gl-off) */
+.stage .car-gl { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; opacity: 0; transition: opacity .5s; touch-action: pan-y; cursor: grab; outline: none; }
 .stage .car-gl.is-grabbing { cursor: grabbing; }
 .stage .car-gl:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
-.stage svg.car3d { transition: opacity .9s; }
 .stage.gl-on .car-gl { opacity: 1; }
-.stage.gl-on svg.car3d { opacity: 0; pointer-events: none; }
-.paint { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 10px; animation: paintIn .6s both; }
+#heroStage:not(.gl-on):not(.gl-off) .stage-hud { visibility: hidden; }
+.car-load { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; font-size: 12px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--mut); }
+.car-load i { width: min(220px, 50%); height: 3px; background: var(--rule); overflow: hidden; }
+.car-load b { display: block; width: 4%; height: 100%; background: var(--org); transition: width .2s; }
+/* luz de palco pulsa com o grave */
+#heroStage::before { opacity: calc(1 + var(--pulse, 0) * .9); transform: scaleX(calc(1 + var(--pulse, 0) * .06)); }
+.car-ctl { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 20px; margin-top: 12px; animation: paintIn .6s both; }
+.car-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.ctl { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border: 1px solid var(--rule2); background: transparent; color: var(--white); font: 700 15px/1 var(--display); font-stretch: 85%; letter-spacing: .6px; text-transform: uppercase; cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
+.ctl:hover { border-color: var(--org); }
+.ctl[aria-pressed="true"] { background: var(--org); border-color: var(--org); color: var(--ink); }
+.ctl:focus-visible { outline: 2px solid var(--yel); outline-offset: 2px; }
+.ctl .eq { display: inline-flex; align-items: flex-end; gap: 2px; width: 14px; height: 14px; }
+.ctl .eq span { flex: 1; height: 40%; background: currentColor; }
+.ctl .eq span:nth-child(2) { height: 75%; }
+.ctl[aria-pressed="true"] .eq span { animation: eq .5s ease-in-out infinite alternate; }
+.ctl[aria-pressed="true"] .eq span:nth-child(2) { animation-delay: -.25s; }
+.ctl[aria-pressed="true"] .eq span:nth-child(3) { animation-delay: -.4s; }
+@keyframes eq { from { height: 25%; } to { height: 100%; } }
+.paint { display: flex; align-items: center; gap: 10px; }
 .paint-k { margin-right: 4px; font-size: 12px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--mut); }
 .paint .sw { width: 30px; height: 30px; padding: 0; border-radius: 50%; border: 2px solid var(--rule2); background: var(--c); cursor: pointer; transition: border-color .2s, transform .2s; }
 .paint .sw:hover { transform: scale(1.08); }
 .paint .sw[aria-pressed="true"] { border-color: var(--org); box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px var(--org); }
 .paint .sw:focus-visible { outline: 2px solid var(--yel); outline-offset: 3px; }
 @keyframes paintIn { from { opacity: 0; transform: translateY(6px); } }
-@media (prefers-reduced-motion: reduce) { .paint { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .car-ctl, .ctl[aria-pressed="true"] .eq span { animation: none; } }
 .facts { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; margin: 34px 0 0; border-top: 2px solid transparent; border-image: var(--metal) 1; }
 .facts div { padding: 16px 14px 20px 0; border-bottom: 1px solid var(--rule); }
 .facts div:nth-child(odd) { padding-right: 16px; }
@@ -226,7 +243,10 @@ svg.car3d:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
   .hero-stage { order: 3; margin: 0 calc(var(--gut) * -1) 18px; }
   .hero .lead { order: 4; } .hero-ctas { order: 5; }
   .stage-hud { padding: 0 var(--gut); }
-  .paint { justify-content: flex-start; gap: 8px; padding: 0 var(--gut); }
+  .car-ctl { padding: 0 var(--gut); }
+  .car-acts { gap: 6px; }
+  .ctl { min-height: 38px; padding: 0 10px; font-size: 13.5px; gap: 6px; }
+  .paint { gap: 8px; }
   .paint .sw { width: 28px; height: 28px; }
 }
 @media (min-width: 1100px) {
