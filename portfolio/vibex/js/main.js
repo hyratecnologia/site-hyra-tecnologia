@@ -163,7 +163,7 @@
       btn: 'Orçar caixa de grave', msg: 'Olá, Vibex! Quero orçamento de caixa de grave / subwoofer. Meu carro é: '
     },
     modulos: {
-      no: 'Camada 03 de 05', tag: 'atrás do banco', title: 'Módulos e processador',
+      no: 'Camada 03 de 05', tag: 'porta-malas', title: 'Módulos e processador',
       what: 'O módulo dá a potência. O processador (DSP) separa as frequências e acerta o tempo de cada falante. É aqui que o som para de embolar quando você aumenta.',
       inc: ['Potência escolhida pelo RMS de cada falante', 'Instalação em placa, com ventilação', 'Crossover, ganho e atraso configurados', 'Barramento com fusível por módulo'],
       ideal: 'Obrigatório no trio, na pressão e em qualquer sistema com mais de um par de falantes.',
@@ -192,32 +192,16 @@
       '<a class="btn block" data-wa="' + esc(s.msg).replace(/"/g, '&quot;') + '" href="https://wa.me/' + WA + '"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>' + esc(s.btn) + '</a>';
   }
 
+  /* o texto e os botões ficam aqui; o carro é o realista (carro3d.js, ouve o evento "layer")
+     ou, se ele não puder rodar, o traço abaixo */
   (function () {
     var svg = $('#xrayCar'); if (!svg) return;
+    var stage = $('#xrayStage');
     var body = $('#svcBody'), no = $('#svcNo'), tag = $('#svcTag'), hud = $('#xrayHud'), ang = $('#xrayAng');
     var co = $('#callout'), coTxt = $('#calloutTxt'), coDot = $('#coDot'), coLine = $('#coLine');
-    var cur = 'completo', lastDeg = -1;
-    var car = V.create(svg, {
-      onRender: function (c) {
-        var d = degOf(c.s.yaw);
-        if (d !== lastDeg) { lastDeg = d; ang.textContent = pad3(d) + '°'; }
-        var cf = CFG[cur];
-        if (cf.anchor && !c.tw) {
-          var p = c.toScreen(cf.anchor[0], cf.anchor[1], cf.anchor[2]), r = svg.getBoundingClientRect();
-          var lw = coTxt.offsetWidth, lh = coTxt.offsetHeight;
-          // etiqueta acima do ponto, sempre dentro do quadro (abaixo dele se faltar espaço)
-          var lx = Math.max(10, Math.min(r.width - lw - 10, p[0] - lw / 2 + (p[0] < r.width / 2 ? 40 : -40)));
-          var ly = p[1] - 70 - lh; if (ly < 36) ly = Math.min(r.height - lh - 10, p[1] + 56);
-          coDot.style.transform = 'translate(' + p[0].toFixed(0) + 'px,' + p[1].toFixed(0) + 'px)';
-          coTxt.style.transform = 'translate(' + lx.toFixed(0) + 'px,' + ly.toFixed(0) + 'px)';
-          var tx = Math.max(lx + 6, Math.min(lx + lw - 6, p[0])), ty = ly < p[1] ? ly + lh : ly;
-          var dx = tx - p[0], dy = ty - p[1], len = Math.sqrt(dx * dx + dy * dy);
-          coLine.style.width = Math.max(0, len - 7).toFixed(0) + 'px';
-          coLine.style.transform = 'translate(' + p[0].toFixed(0) + 'px,' + p[1].toFixed(0) + 'px) rotate(' + Math.atan2(dy, dx).toFixed(3) + 'rad) translateX(7px)';
-          co.classList.add('on');
-        } else co.classList.remove('on');
-      }
-    });
+    var cur = 'completo', lastDeg = -1, car = null;
+    window.VibexXray = { CFG: CFG, layer: function () { return cur; } };
+
     function poseFor(k) {
       var cf = CFG[k], rev = {};
       V.LAYERS.forEach(function (l) { rev[l] = k === 'completo' ? 1 : (l === k ? 1 : .07); });
@@ -236,27 +220,61 @@
       co.classList.remove('on');
       var fill = function () { body.innerHTML = svcHTML(k); bindWa(body); no.textContent = s.no; tag.textContent = s.tag; body.classList.remove('swap'); };
       if (animate && !reduced) { body.classList.add('swap'); setTimeout(fill, 220); } else fill();
-      if (animate) car.goTo(poseFor(k), 1500); else car.set(poseFor(k));
+      if (car) { if (animate) car.goTo(poseFor(k), 1500); else car.set(poseFor(k)); }
+      stage.dispatchEvent(new CustomEvent('layer', { detail: { k: k, animate: !!animate } }));
     }
     $$('.layer-btn').forEach(function (b) {
-      b.addEventListener('click', function () { var k = b.getAttribute('data-layer'); if (k !== cur || car.tw === null) show(k, true); });
+      b.addEventListener('click', function () { var k = b.getAttribute('data-layer'); if (k !== cur || (car && car.tw === null)) show(k, true); });
     });
-    // estado inicial: carro fechado; entra girando quando a seção aparece
-    var first = V.pose({ yaw: 20, pit: 10, rev: 0, dim: 0 });
-    first.vb = poseFor('completo').vb;
-    car.set(first);
     show('completo', false);
-    car.set(first);
-    car.s.vb = first.vb;
-    var started = false;
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (e.isIntersecting && !started) { started = true; car.goTo(poseFor(cur), reduced ? 0 : 2200); } });
-      }, { threshold: .3 }).observe(svg);
-    } else car.set(poseFor('completo'));
-    var t; window.addEventListener('resize', function () {
-      clearTimeout(t); t = setTimeout(function () { if (!started) return; var p = poseFor(cur); car.s.vb = p.vb; if (car.tw) car.tw.to.vb = p.vb; car.dirty = true; car.render(); }, 150);
-    });
+
+    function traco() {
+      stage.classList.add('gl-off');
+      car = V.create(svg, {
+        onRender: function (c) {
+          var d = degOf(c.s.yaw);
+          if (d !== lastDeg) { lastDeg = d; ang.textContent = pad3(d) + '°'; }
+          var cf = CFG[cur];
+          if (cf.anchor && !c.tw) {
+            var p = c.toScreen(cf.anchor[0], cf.anchor[1], cf.anchor[2]), r = svg.getBoundingClientRect();
+            window.VibexCallout(p[0], p[1], r.width, r.height);
+          } else co.classList.remove('on');
+        }
+      });
+      // estado inicial: carro fechado; entra girando quando a seção aparece
+      var first = V.pose({ yaw: 20, pit: 10, rev: 0, dim: 0 });
+      first.vb = poseFor(cur).vb;
+      car.set(first);
+      svg.setAttribute('data-focus', cur);
+      var started = false;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting && !started) { started = true; car.goTo(poseFor(cur), reduced ? 0 : 2200); } });
+        }, { threshold: .3 }).observe(svg);
+      } else car.set(poseFor(cur));
+      var t; window.addEventListener('resize', function () {
+        clearTimeout(t); t = setTimeout(function () { if (!started) return; var p = poseFor(cur); car.s.vb = p.vb; if (car.tw) car.tw.to.vb = p.vb; car.dirty = true; car.render(); }, 150);
+      });
+    }
+
+    /* etiqueta com linha até a peça (x, y em pixels dentro do palco); usada pelos dois carros */
+    window.VibexCallout = function (x, y, w, h) {
+      var lw = coTxt.offsetWidth, lh = coTxt.offsetHeight;
+      // etiqueta acima do ponto, sempre dentro do quadro (abaixo dele se faltar espaço)
+      var lx = Math.max(10, Math.min(w - lw - 10, x - lw / 2 + (x < w / 2 ? 40 : -40)));
+      var ly = y - 70 - lh; if (ly < 36) ly = Math.min(h - lh - 10, y + 56);
+      coDot.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px)';
+      coTxt.style.transform = 'translate(' + lx.toFixed(0) + 'px,' + ly.toFixed(0) + 'px)';
+      var tx = Math.max(lx + 6, Math.min(lx + lw - 6, x)), ty = ly < y ? ly + lh : ly;
+      var dx = tx - x, dy = ty - y, len = Math.sqrt(dx * dx + dy * dy);
+      coLine.style.width = Math.max(0, len - 7).toFixed(0) + 'px';
+      coLine.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px) rotate(' + Math.atan2(dy, dx).toFixed(3) + 'rad) translateX(7px)';
+      co.classList.add('on');
+    };
+    window.VibexCalloutOff = function () { co.classList.remove('on'); };
+
+    if (hasGL && !saveData && 'noModule' in HTMLScriptElement.prototype) window.VibexXrayTraco = traco;
+    else traco();
   })();
 
   /* ==================== RTA: antes / depois ==================== */

@@ -1,10 +1,12 @@
 /* ==========================================================================
-   Vibex AudioCar · carro 3D realista no hero (Three.js + GLB)
-   Só o modelo aparece no topo. Sem WebGL, com economia de dados ou se o
-   arquivo falhar, main.js desenha o carro em traço (engine.js) no lugar.
+   Vibex AudioCar · carro 3D realista (Three.js + GLB) no topo e no raio-X
+   Só o modelo aparece. Sem WebGL, com economia de dados ou se o arquivo
+   falhar, main.js desenha o carro em traço (engine.js) no lugar.
    Portas e tampa abrem por dobradiça; o som instalado (caixa com 2 subs,
-   módulo, falantes das portas e tweeters) pulsa com uma batida gerada no
-   próprio navegador (Web Audio, sem arquivo de música).
+   módulos, DSP, falantes das portas, tweeters, bateria e cabo de força) é
+   montado aqui. No topo, "Ligar o som" toca uma batida gerada no navegador
+   (Web Audio, sem arquivo de música); no raio-X, cada camada pulsa no mesmo
+   ritmo, sem som.
    Modelo: "Volkswagen Golf GTI (2025)" por geyges no Sketchfab (licença Standard).
    ========================================================================== */
 import * as THREE from 'three';
@@ -12,8 +14,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const stage = document.getElementById('heroStage');
-const svg = document.getElementById('heroCar');
 const DEG = Math.PI / 180;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
@@ -37,21 +37,28 @@ const HINGES = {
   rr: { nodes: ['EXT_DOOR_RR', 'INT_DOOR_RR'], at: [0.84, 0.8, 0.24], axis: 'y', max: 64 },
   tail: { nodes: ['EXT_TRUNK_LID', 'INT_TRUNK'], at: [0, 1.39, 1.46], axis: 'x', max: -82 }
 };
+const KEYS = Object.keys(HINGES);
 
-/* para onde a câmera vai quando algo abre (yaw/pit em graus, mesma convenção do traço) */
-/* zoom < 1 aproxima; tz leva o centro da câmera para a frente (-) ou para trás (+) */
-const VIEWS = {
+/* câmera (yaw/pit em graus, mesma convenção do traço; zoom < 1 aproxima; tz leva o centro para a frente (-) ou para trás (+)) */
+const HERO_VIEWS = {
   geral: { pit: 14, zoom: 1, tz: -0.05 },
   portas: { yaw: 28, pit: 16, zoom: .9, tz: -0.1 },
   tail: { yaw: 304, pit: 21, zoom: .7, tz: .9 }
 };
 
+/* camadas do raio-X: o que abre, para onde a câmera vai e qual peça ganha a etiqueta */
+const XRAY = {
+  completo: { yaw: 318, pit: 20, zoom: .98, tz: .15, open: KEYS },
+  portas: { yaw: 332, pit: 14, zoom: .66, tz: -0.55, open: ['fl', 'fr'], label: 'Portas · kit 2 vias e tweeter', anchor: 'spkFL' },
+  grave: { yaw: 304, pit: 22, zoom: .6, tz: 1.0, open: ['tail'], label: 'Grave · caixa selada com 2 subs', anchor: 'sub' },
+  modulos: { yaw: 298, pit: 36, zoom: .56, tz: 1.2, open: ['tail'], label: 'Módulos · 2 amplificadores e DSP', anchor: 'amp' },
+  midia: { yaw: 270, pit: 8, zoom: .16, tz: -0.35, ty: .98, open: ['fl'], label: 'Multimídia no painel', anchor: 'screen' },
+  bateria: { yaw: 42, pit: 26, zoom: .96, tz: -0.25, open: [], xray: true, label: 'Bateria, fusível e cabo de força', anchor: 'battery' }
+};
+
 function webgl() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return false; }
 }
-
-const traco = () => { if (window.VibexHeroTraco) window.VibexHeroTraco(); };
-if (stage && svg && webgl() && !saveData) start(); else traco();
 
 function viewName(deg) {
   if (deg < 22 || deg > 338 || (deg > 158 && deg < 202)) return 'Lateral';
@@ -60,63 +67,150 @@ function viewName(deg) {
   return '3/4';
 }
 
-/* ---------------- peças do som ---------------- */
-const MAT = {
-  carpet: new THREE.MeshStandardMaterial({ color: 0x17171a, roughness: 1 }),
-  cone: new THREE.MeshStandardMaterial({ color: 0x1c1c20, roughness: .55, metalness: .2, side: THREE.DoubleSide }),
-  surround: new THREE.MeshStandardMaterial({ color: 0x0c0c0e, roughness: .9 }),
-  steel: new THREE.MeshStandardMaterial({ color: 0x8d939b, roughness: .3, metalness: 1 }),
-  amp: new THREE.MeshStandardMaterial({ color: 0x232327, roughness: .35, metalness: .85 }),
-  glow: new THREE.MeshStandardMaterial({ color: 0xff5a0a, emissive: 0xff5a0a, emissiveIntensity: .6, roughness: .4 })
-};
+/* o mesmo ritmo da batida (96 bpm, bumbo nos tempos 0, 6 e 10 de 16), sem som, para o raio-X */
+function pulse(t) {
+  const step = 60000 / 96 / 4, pos = (t / step) % 16;
+  let since = 99;
+  for (const k of [0, 6, 10]) { const d = (pos - k + 16) % 16; if (d < since) since = d; }
+  return Math.exp(-since * step / 110);
+}
 
-function speaker(r) {
+/* ---------------- arquivo do carro: baixa uma vez, cada palco usa uma cópia ---------------- */
+let basePromise = null;
+const progressFns = [];
+function loadBase(onProgress) {
+  if (onProgress) progressFns.push(onProgress);
+  if (!basePromise) {
+    basePromise = new Promise((ok, fail) => {
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load('modelo/carro.glb', (g) => ok(g.scene),
+        (e) => { if (e.total) progressFns.forEach((f) => f(e.loaded / e.total)); }, fail);
+    });
+  }
+  return basePromise;
+}
+
+/* ---------------- peças do som ---------------- */
+const at = (m, x, y, z) => { m.position.set(x, y, z); return m; };
+function makeMats() {
+  const glow = () => new THREE.MeshStandardMaterial({ color: 0xff5a0a, emissive: 0xff5a0a, emissiveIntensity: .6, roughness: .4 });
+  return {
+    carpet: new THREE.MeshStandardMaterial({ color: 0x17171a, roughness: 1 }),
+    mdf: new THREE.MeshStandardMaterial({ color: 0x2a2622, roughness: .9 }),
+    cone: new THREE.MeshStandardMaterial({ color: 0x1c1c20, roughness: .55, metalness: .2, side: THREE.DoubleSide }),
+    surround: new THREE.MeshStandardMaterial({ color: 0x0c0c0e, roughness: .9 }),
+    steel: new THREE.MeshStandardMaterial({ color: 0x8d939b, roughness: .3, metalness: 1 }),
+    amp: new THREE.MeshStandardMaterial({ color: 0x232327, roughness: .35, metalness: .85 }),
+    dsp: new THREE.MeshStandardMaterial({ color: 0x101012, roughness: .5, metalness: .4 }),
+    batt: new THREE.MeshStandardMaterial({ color: 0x3a3b40, roughness: .45, metalness: .2 }),
+    plus: new THREE.MeshStandardMaterial({ color: 0xe5260e, roughness: .4 }),
+    glowDoor: glow(), glowSub: glow(), glowMod: glow(), glowPow: glow(),
+    led: new THREE.MeshStandardMaterial({ color: 0xff5a0a, emissive: 0xff5a0a, emissiveIntensity: .4 })
+  };
+}
+
+function speaker(r, M, glowMat) {
   const g = new THREE.Group();
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(r, r * .07, 10, 48), MAT.steel);
-  const glow = new THREE.Mesh(new THREE.TorusGeometry(r * 1.06, r * .025, 8, 48), MAT.glow);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r, r * .07, 10, 48), M.steel);
+  const glow = new THREE.Mesh(new THREE.TorusGeometry(r * 1.06, r * .025, 8, 48), glowMat);
   glow.position.z = .004;
-  const surround = new THREE.Mesh(new THREE.TorusGeometry(r * .86, r * .1, 10, 48), MAT.surround);
+  const surround = new THREE.Mesh(new THREE.TorusGeometry(r * .86, r * .1, 10, 48), M.surround);
   const move = new THREE.Group();
-  const cone = new THREE.Mesh(new THREE.ConeGeometry(r * .8, r * .38, 48, 1, true), MAT.cone);
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(r * .8, r * .38, 48, 1, true), M.cone);
   cone.rotation.x = Math.PI / 2; cone.position.z = -r * .15;
-  const cap = new THREE.Mesh(new THREE.SphereGeometry(r * .24, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), MAT.surround);
+  const cap = new THREE.Mesh(new THREE.SphereGeometry(r * .24, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), M.surround);
   cap.rotation.x = Math.PI / 2; cap.position.z = -r * .3;
   move.add(cone, cap, surround);
   g.add(ring, glow, move);
-  g.userData.move = move; g.userData.r = r;
+  g.userData.move = move;
   return g;
 }
 
-function label() {
+function textPlate(txt, w, h) {
   const c = document.createElement('canvas'); c.width = 256; c.height = 64;
   const x = c.getContext('2d');
   x.fillStyle = '#0d0d10'; x.fillRect(0, 0, 256, 64);
   x.fillStyle = '#ff5a0a'; x.fillRect(0, 58, 256, 6);
   x.font = 'italic 900 40px Saira, Impact, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
-  x.fillStyle = '#f4f5f7'; x.fillText('VIBEX', 128, 30);
+  x.fillStyle = '#f4f5f7'; x.fillText(txt, 128, 30);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
-  return new THREE.Mesh(new THREE.PlaneGeometry(.16, .04), new THREE.MeshStandardMaterial({ map: t, roughness: .6 }));
+  return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map: t, roughness: .6 }));
 }
 
-/* caixa selada com 2 subs de 10" virados para a tampa, módulo em cima */
-function trunkRig() {
+/* caixa selada com 2 subs de 10" virados para a tampa; na frente dela, placa com 2 módulos e o DSP */
+function trunkRig(M) {
   const g = new THREE.Group();
   const W = .9, H = .36, D = .3;
-  const box = new THREE.Mesh(new THREE.BoxGeometry(W, H, D), MAT.carpet);
-  g.add(box);
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), M.carpet));
   const subs = [-.215, .215].map((x) => {
-    const s = speaker(.118); s.position.set(x, 0, D / 2 + .002); g.add(s); return s;
+    const s = speaker(.118, M, M.glowSub); s.position.set(x, 0, D / 2 + .002); g.add(s); return s;
   });
-  const tag = label(); tag.position.set(0, -H / 2 + .045, D / 2 + .003); g.add(tag);
-  const amp = new THREE.Mesh(new THREE.BoxGeometry(.42, .05, .24), MAT.amp);
-  amp.position.set(0, H / 2 + .025, 0); g.add(amp);
-  for (let i = 0; i < 9; i++) {
-    const fin = new THREE.Mesh(new THREE.BoxGeometry(.006, .012, .22), MAT.amp);
-    fin.position.set(-.16 + i * .04, H / 2 + .056, 0); g.add(fin);
-  }
-  const led = new THREE.Mesh(new THREE.BoxGeometry(.05, .008, .006), MAT.glow.clone());
-  led.position.set(.15, H / 2 + .03, .121); g.add(led);
-  g.userData = { subs, led };
+  const tag = textPlate('VIBEX', .16, .04); tag.position.set(0, -H / 2 + .045, D / 2 + .003); g.add(tag);
+
+  const board = new THREE.Group(); board.position.set(0, -H / 2, D / 2 + .13); g.add(board);
+  board.add(at(new THREE.Mesh(new THREE.BoxGeometry(.86, .012, .2), M.mdf), 0, .006, 0));
+  const amps = [-.23, .12].map((x) => {
+    const a = new THREE.Group(); a.position.set(x, .012, 0); board.add(a);
+    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.3, .045, .16), M.amp), 0, .0225, 0));
+    for (let i = 0; i < 7; i++) a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.006, .01, .15), M.amp), -.12 + i * .04, .05, 0));
+    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.3, .004, .162), M.glowMod), 0, .004, 0));
+    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.04, .008, .004), M.led), .11, .025, .081));
+    return a;
+  });
+  const dsp = new THREE.Group(); dsp.position.set(.35, .012, 0); board.add(dsp);
+  dsp.add(at(new THREE.Mesh(new THREE.BoxGeometry(.12, .03, .1), M.dsp), 0, .015, 0));
+  dsp.add(at(new THREE.Mesh(new THREE.BoxGeometry(.03, .006, .004), M.led), .03, .016, .051));
+  g.userData = { subs, amps };
+  return g;
+}
+
+/* equalizador na tela da central (fica por cima da tela do modelo, inclinada como ela) */
+function eqScreen() {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 128;
+  const x = c.getContext('2d'), tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(.305, .158), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, toneMapped: false }));
+  m.position.set(.008, .982, -.524); m.rotation.x = -.3; m.translateZ(.012);
+  let lastT = -1;
+  m.userData.draw = (t, on) => {
+    m.material.opacity = on; m.visible = on > .01;
+    if (!m.visible || t - lastT < 66) return; lastT = t;
+    x.fillStyle = '#0b0b0e'; x.fillRect(0, 0, 256, 128);
+    x.fillStyle = '#f4f5f7'; x.font = '700 14px Manrope, sans-serif'; x.fillText('VIBEX · AO VIVO', 14, 24);
+    const lv = reduced ? .5 : pulse(t);
+    for (let i = 0; i < 16; i++) {
+      const hgt = 10 + (i < 5 ? lv * 70 : 0) + (Math.sin(t / 140 + i * 1.7) * .5 + .5) * (i < 5 ? 15 : 45) * (reduced ? .5 : 1);
+      x.fillStyle = i < 5 ? '#ff5a0a' : '#ffb21a';
+      x.fillRect(14 + i * 14.5, 114 - hgt, 10, hgt);
+    }
+    tex.needsUpdate = true;
+  };
+  return m;
+}
+
+/* bateria no cofre, fusível perto dela e o cabo de força correndo pelo assoalho até os módulos */
+function powerRig(M) {
+  const g = new THREE.Group();
+  const batt = new THREE.Group(); batt.position.set(-.45, .72, -1.45); g.add(batt);
+  batt.add(new THREE.Mesh(new THREE.BoxGeometry(.24, .18, .17), M.batt));
+  batt.add(at(new THREE.Mesh(new THREE.BoxGeometry(.244, .012, .174), M.glowPow), 0, .07, 0));
+  batt.add(at(new THREE.Mesh(new THREE.CylinderGeometry(.014, .014, .025, 16), M.plus), .07, .1, .04));
+  batt.add(at(new THREE.Mesh(new THREE.CylinderGeometry(.014, .014, .025, 16), M.surround), -.07, .1, .04));
+  const plate = textPlate('12V', .12, .03); plate.position.set(0, .02, .0855); batt.add(plate);
+  const fuse = new THREE.Group(); fuse.position.set(-.27, .84, -1.42); g.add(fuse);
+  fuse.add(new THREE.Mesh(new THREE.BoxGeometry(.05, .035, .1), M.dsp));
+  fuse.add(at(new THREE.Mesh(new THREE.BoxGeometry(.03, .01, .06), M.glowPow), 0, .02, 0));
+
+  /* textura listrada que corre pelo cabo: a energia andando */
+  const c = document.createElement('canvas'); c.width = 64; c.height = 8;
+  const x = c.getContext('2d'); x.fillStyle = '#7a0f05'; x.fillRect(0, 0, 64, 8); x.fillStyle = '#ffb21a'; x.fillRect(0, 0, 18, 8);
+  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(26, 1); tex.colorSpace = THREE.SRGBColorSpace;
+  const cableMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: false });
+  const path = new THREE.CatmullRomCurve3([
+    [-.38, .83, -1.41], [-.27, .86, -1.42], [-.2, .8, -1.22], [-.55, .5, -1.0], [-.63, .25, -.7],
+    [-.63, .25, .55], [-.55, .4, 1.25], [-.32, .6, 1.72]
+  ].map((p) => new THREE.Vector3(...p)));
+  const cable = new THREE.Mesh(new THREE.TubeGeometry(path, 120, .011, 8), cableMat);
+  cable.renderOrder = 10; g.add(cable);
+  g.userData = { batt, tex, cableMat };
   return g;
 }
 
@@ -189,12 +283,12 @@ function makeBeat() {
   };
 }
 
-/* ---------------- palco ---------------- */
-function start() {
+/* ---------------- palco: carro, câmera, portas e arrastar ---------------- */
+function viewer(stage, o) {
   const canvas = document.createElement('canvas');
   canvas.className = 'car-gl';
   canvas.setAttribute('role', 'img');
-  canvas.setAttribute('aria-label', 'Carro hatch em 3D com o som instalado. Arraste ou use as setas do teclado para girar.');
+  canvas.setAttribute('aria-label', o.aria);
   stage.appendChild(canvas);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -225,14 +319,15 @@ function start() {
   const target = new THREE.Vector3(0, 0.62, -0.05);
   const R = 1.95; // raio que cabe o carro em qualquer ângulo
 
-  const s = { yaw: 35 * DEG, pit: 14 * DEG, zoom: 1, tz: -0.05 };
-  const open = { fl: 0, fr: 0, rl: 0, rr: 0, tail: 0 }, want = { fl: 0, fr: 0, rl: 0, rr: 0, tail: 0 };
-  const pivots = {};
-  let car = null, rig = null, paint = null, beat = null, glowL = 0;
-  let dirty = true, visible = true, dragging = false, lastTouch = 0, last = 0, raf = 0, tw = null;
-  const angEl = document.getElementById('heroAng'), viewEl = document.getElementById('heroView');
+  const v = {
+    stage, canvas, scene, camera, renderer, trunkLight,
+    s: { yaw: o.yaw * DEG, pit: o.pit * DEG, zoom: 1, tz: -0.05, ty: .62 },
+    open: { fl: 0, fr: 0, rl: 0, rr: 0, tail: 0 }, want: { fl: 0, fr: 0, rl: 0, rr: 0, tail: 0 },
+    pivots: {}, M: makeMats(), doorSpk: [], car: null, rig: null, tw: null,
+    dirty: true, visible: true, dragging: false, lastTouch: 0
+  };
+  let last = 0, raf = 0;
   const hand = stage.querySelector('.hint');
-  const doorSpk = [];
 
   function resize() {
     const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
@@ -240,113 +335,99 @@ function start() {
     camera.aspect = w / h;
     const vf = camera.fov * DEG / 2, hf = Math.atan(Math.tan(vf) * camera.aspect);
     camera.userData.dist = R / Math.sin(Math.min(vf, hf));
-    camera.updateProjectionMatrix(); dirty = true;
+    camera.updateProjectionMatrix(); v.dirty = true;
   }
 
   /* yaw 0 = lateral com a frente à esquerda, 90 = frente, 270 = traseira (igual ao traço) */
   function place() {
-    const d = (camera.userData.dist || 10) * s.zoom, cp = Math.cos(s.pit);
-    target.z = s.tz;
+    const s = v.s, d = (camera.userData.dist || 10) * s.zoom, cp = Math.cos(s.pit);
+    target.z = s.tz; target.y = s.ty;
     camera.position.set(target.x - d * cp * Math.cos(s.yaw), target.y + d * Math.sin(s.pit), target.z - d * cp * Math.sin(s.yaw));
     camera.lookAt(target);
-    const deg = Math.round(((s.yaw / DEG) % 360 + 360) % 360);
-    if (angEl) angEl.textContent = ('00' + deg).slice(-3) + '°';
-    if (viewEl) { const n = viewName(deg); if (viewEl.textContent !== n) viewEl.textContent = n; }
+    if (o.onAngle) o.onAngle(Math.round(((s.yaw / DEG) % 360 + 360) % 360));
   }
 
   /* gira a câmera até um ângulo pelo caminho mais curto */
-  function lookAt(v) {
-    if (dragging) return;
-    const cur = s.yaw;
-    let to = v.yaw === undefined ? cur : v.yaw * DEG;
-    to = cur + ((((to - cur) % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI) - Math.PI);
-    if (reduced) { s.yaw = to; s.pit = v.pit * DEG; s.zoom = v.zoom; s.tz = v.tz; dirty = true; return; }
-    tw = { t0: performance.now(), dur: 1100, y0: cur, y1: to, p0: s.pit, p1: v.pit * DEG, z0: s.zoom, z1: v.zoom, t0z: s.tz, t1z: v.tz };
-  }
-  /* depois de fechar algo, a câmera volta para o que ainda está aberto */
-  function settle() {
-    if (want.tail) lookAt(VIEWS.tail);
-    else if (want.fl) lookAt(VIEWS.portas);
-    else lookAt(VIEWS.geral);
-  }
-
-  const anyOpen = () => Object.keys(want).some((k) => want[k]);
+  v.lookAt = function (to, dur) {
+    if (v.dragging) return;
+    const s = v.s, cur = s.yaw;
+    let y = to.yaw === undefined ? cur : to.yaw * DEG;
+    y = cur + ((((y - cur) % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI) - Math.PI);
+    if (reduced) { s.yaw = y; s.pit = to.pit * DEG; s.zoom = to.zoom; s.tz = to.tz; s.ty = to.ty || .62; v.dirty = true; v.kick(); return; }
+    v.tw = { t0: performance.now(), dur: dur || 1100, y0: cur, y1: y, p0: s.pit, p1: to.pit * DEG, z0: s.zoom, z1: to.zoom, a0: s.tz, a1: to.tz, b0: s.ty, b1: to.ty || .62 };
+    v.kick();
+  };
+  v.anyOpen = () => KEYS.some((k) => v.want[k]);
 
   function tick(t) {
     raf = 0;
     const dt = last ? Math.min(t - last, 64) : 16; last = t;
+    const s = v.s;
     let more = false;
 
-    if (tw) {
-      const k = Math.min(1, (t - tw.t0) / tw.dur), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    if (v.tw) {
+      const tw = v.tw, k = Math.min(1, (t - tw.t0) / tw.dur), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
       s.yaw = tw.y0 + (tw.y1 - tw.y0) * e; s.pit = tw.p0 + (tw.p1 - tw.p0) * e;
-      s.zoom = tw.z0 + (tw.z1 - tw.z0) * e; s.tz = tw.t0z + (tw.t1z - tw.t0z) * e;
-      if (k >= 1) { tw = null; lastTouch = t; }
-      dirty = true; more = true;
-    } else if (!reduced && !dragging && visible && !document.hidden && !anyOpen() && !(beat && beat.on) && t - lastTouch > 2600) {
-      s.yaw += 7 * DEG * dt / 1000; dirty = true; more = true;
+      s.zoom = tw.z0 + (tw.z1 - tw.z0) * e; s.tz = tw.a0 + (tw.a1 - tw.a0) * e; s.ty = tw.b0 + (tw.b1 - tw.b0) * e;
+      if (k >= 1) { v.tw = null; v.lastTouch = t; }
+      v.dirty = true; more = true;
+    } else if (o.spin && o.spin(t)) {
+      s.yaw += 7 * DEG * dt / 1000; v.dirty = true; more = true;
     }
 
     /* portas e tampa: aproximação suave */
     const a = reduced ? 1 : 1 - Math.exp(-dt / 160);
-    for (const k in open) {
-      const d = want[k] - open[k];
-      if (Math.abs(d) > .001) { open[k] += d * a; more = true; dirty = true; } else if (open[k] !== want[k]) { open[k] = want[k]; dirty = true; }
-      const p = pivots[k]; if (!p) continue;
-      const e = open[k] * open[k] * (3 - 2 * open[k]), ang = HINGES[k].max * DEG * e;
+    for (const k of KEYS) {
+      const d = v.want[k] - v.open[k];
+      if (Math.abs(d) > .001) { v.open[k] += d * a; more = true; v.dirty = true; } else if (v.open[k] !== v.want[k]) { v.open[k] = v.want[k]; v.dirty = true; }
+      const p = v.pivots[k]; if (!p) continue;
+      const x = v.open[k], ang = HINGES[k].max * DEG * x * x * (3 - 2 * x);
       if (HINGES[k].axis === 'y') p.rotation.y = ang; else p.rotation.x = ang;
     }
 
-    /* som: cones, brilho, luz do porta-malas e o carro tremendo de leve */
-    const lv = beat && beat.on ? beat.level() : 0;
-    glowL += (lv - glowL) * .5;
-    if (beat && beat.on) { more = true; dirty = true; }
-    if (rig) {
-      rig.userData.subs.forEach((sp) => { sp.userData.move.position.z = lv * .028; });
-      rig.userData.led.material.emissiveIntensity = beat && beat.on ? 1.5 + lv * 3 : .4;
-    }
-    doorSpk.forEach((sp) => { sp.userData.move.position.z = lv * .008; });
-    MAT.glow.emissiveIntensity = .6 + glowL * 4;
-    trunkLight.intensity = open.tail * (1.2 + glowL * 5);
-    if (car) { car.position.y = reduced ? 0 : lv * .006; car.rotation.z = reduced ? 0 : Math.sin(t / 37) * lv * .0025; }
-    stage.style.setProperty('--pulse', glowL.toFixed(3));
+    if (v.car && o.onTick && o.onTick(t, dt)) { more = true; v.dirty = true; }
 
-    if (dirty) { place(); renderer.render(scene, camera); dirty = false; }
-    if (more || dragging) kick(); else last = 0;
+    if (v.dirty) { place(); renderer.render(scene, camera); v.dirty = false; if (o.onRender) o.onRender(); }
+    if (more || v.dragging) v.kick(); else last = 0;
   }
-  function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+  v.kick = function () { if (!raf) raf = requestAnimationFrame(tick); };
+
+  /* tela em pixels de um ponto do carro */
+  const tmp = new THREE.Vector3();
+  v.toScreen = function (obj) {
+    obj.getWorldPosition(tmp); tmp.project(camera);
+    return [(tmp.x + 1) / 2 * stage.clientWidth, (1 - tmp.y) / 2 * stage.clientHeight, tmp.z < 1];
+  };
 
   /* arrastar e teclado, com os mesmos limites do traço */
   let px = 0, py = 0;
   canvas.addEventListener('pointerdown', (e) => {
-    dragging = true; tw = null; px = e.clientX; py = e.clientY; lastTouch = performance.now();
+    v.dragging = true; v.tw = null; px = e.clientX; py = e.clientY; v.lastTouch = performance.now();
     canvas.setPointerCapture(e.pointerId); canvas.classList.add('is-grabbing');
-    if (hand) hand.classList.add('gone'); kick();
+    if (hand) hand.classList.add('gone'); v.kick();
   });
   canvas.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    s.yaw += (e.clientX - px) * 0.45 * DEG;
-    s.pit = Math.min(42 * DEG, Math.max(-4 * DEG, s.pit + (e.clientY - py) * 0.3 * DEG));
-    px = e.clientX; py = e.clientY; lastTouch = performance.now(); dirty = true; kick();
+    if (!v.dragging) return;
+    v.s.yaw += (e.clientX - px) * 0.45 * DEG;
+    v.s.pit = Math.min(42 * DEG, Math.max(-4 * DEG, v.s.pit + (e.clientY - py) * 0.3 * DEG));
+    px = e.clientX; py = e.clientY; v.lastTouch = performance.now(); v.dirty = true; v.kick();
   });
-  const up = () => { if (!dragging) return; dragging = false; lastTouch = performance.now(); canvas.classList.remove('is-grabbing'); kick(); };
+  const up = () => { if (!v.dragging) return; v.dragging = false; v.lastTouch = performance.now(); canvas.classList.remove('is-grabbing'); v.kick(); };
   canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
   canvas.tabIndex = 0;
   canvas.addEventListener('keydown', (e) => {
+    const s = v.s;
     if (e.key === 'ArrowLeft') s.yaw -= 10 * DEG;
     else if (e.key === 'ArrowRight') s.yaw += 10 * DEG;
     else if (e.key === 'ArrowUp') s.pit = Math.min(42 * DEG, s.pit + 5 * DEG);
     else if (e.key === 'ArrowDown') s.pit = Math.max(-4 * DEG, s.pit - 5 * DEG);
     else return;
-    e.preventDefault(); tw = null; lastTouch = performance.now(); dirty = true; kick();
+    e.preventDefault(); v.tw = null; v.lastTouch = performance.now(); v.dirty = true; v.kick();
   });
 
-  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { visible = es[0].isIntersecting; if (visible) kick(); }).observe(stage);
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && beat && beat.on) setSound(false);
-    if (!document.hidden) kick();
-  });
-  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); kick(); }, 120); });
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { v.visible = es[0].isIntersecting; if (v.visible) v.kick(); }).observe(stage);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) v.kick(); });
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); v.kick(); }, 120); });
 
   /* aviso de carregamento no lugar do carro */
   const load = document.createElement('div');
@@ -355,68 +436,117 @@ function start() {
   stage.appendChild(load);
   const prog = load.querySelector('b');
 
-  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  loader.load('modelo/carro.glb', (gltf) => {
-    car = gltf.scene;
-    car.traverse((o) => {
-      if (o.isMesh && o.material && /^Rojo Kings/.test(o.material.name)) paint = o.material;
+  loadBase((f) => { prog.style.width = Math.round(f * 100) + '%'; }).then((base) => {
+    const car = base.clone(true), M = v.M;
+    v.car = car;
+    /* materiais que mudam por palco (cor, telas, transparência) ganham cópia própria */
+    const own = new Map(), mine = (m) => { if (!own.has(m)) own.set(m, m.clone()); return own.get(m); };
+    car.traverse((x) => {
+      if (!x.isMesh || !x.material) return;
+      const n = x.material.name;
+      if (/^Rojo Kings/.test(n)) { x.material = mine(x.material); v.paint = x.material; }
+      else if (/^Golf GTI MY25 Screen/.test(n)) { x.material = mine(x.material); (v.screens = v.screens || new Set()).add(x.material); }
+      else if (o.xray && /^Ext_/.test(x.name)) x.material = mine(x.material);
+      if (o.xray && /^Ext_/.test(x.name)) (v.shell = v.shell || new Set()).add(x.material);
     });
     scene.add(car);
     car.updateMatrixWorld(true);
 
     /* cada porta e a tampa ganham um eixo na dobradiça */
-    for (const k in HINGES) {
+    for (const k of KEYS) {
       const h = HINGES[k], p = new THREE.Group();
       p.position.set(h.at[0], h.at[1], h.at[2]); car.add(p); p.updateMatrixWorld(true);
-      h.nodes.forEach((n) => { const o = car.getObjectByName(n); if (o) p.attach(o); });
-      pivots[k] = p;
+      h.nodes.forEach((n) => { const x = car.getObjectByName(n); if (x) p.attach(x); });
+      v.pivots[k] = p;
     }
 
-    /* som instalado: aro aceso nos falantes das portas, tweeters no painel e a caixa no porta-malas */
+    /* som instalado: aro aceso nos falantes das portas, tweeters no painel, caixa e módulos no porta-malas */
     [['fl', -.672, .495, -.55, .07], ['fr', .672, .495, -.55, .07], ['rl', -.66, .6, .52, .065], ['rr', .66, .6, .52, .065]].forEach(([k, x, y, z, r]) => {
-      const sp = speaker(r); sp.position.set(x, y, z); sp.rotation.y = x < 0 ? Math.PI / 2 : -Math.PI / 2;
-      car.add(sp); pivots[k].attach(sp); doorSpk.push(sp);
+      const sp = speaker(r, M, M.glowDoor); sp.position.set(x, y, z); sp.rotation.y = x < 0 ? Math.PI / 2 : -Math.PI / 2;
+      car.add(sp); v.pivots[k].attach(sp); v.doorSpk.push(sp);
+      if (k === 'fl') v.spkFL = sp;
     });
     [-.6, .6].forEach((x) => {
-      const tw2 = speaker(.022); tw2.position.set(x, 1.085, -.7); tw2.rotation.x = -Math.PI / 2 + .35; car.add(tw2); doorSpk.push(tw2);
+      const t = speaker(.022, M, M.glowDoor); t.position.set(x, 1.085, -.7); t.rotation.x = -Math.PI / 2 + .35; car.add(t); v.doorSpk.push(t);
     });
-    rig = trunkRig(); rig.position.set(0, .76, 1.52); car.add(rig);
+    v.rig = trunkRig(M); v.rig.position.set(0, .76, 1.52); car.add(v.rig);
 
+    if (o.ready) o.ready(v);
     resize(); place();
     renderer.compile(scene, camera);
-    dirty = true; kick();
+    v.dirty = true; v.kick();
     requestAnimationFrame(() => {
       stage.classList.add('gl-on'); load.remove();
-      svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('tabindex', '-1');
-      controls();
+      if (o.fallbackSvg) { o.fallbackSvg.setAttribute('aria-hidden', 'true'); o.fallbackSvg.setAttribute('tabindex', '-1'); }
     });
-  }, (e) => {
-    if (e.total) prog.style.width = Math.round(e.loaded / e.total * 100) + '%';
-  }, () => { canvas.remove(); load.remove(); renderer.dispose(); traco(); });
+  }, () => { canvas.remove(); load.remove(); renderer.dispose(); if (o.fail) o.fail(); });
 
-  /* ---------------- botões ---------------- */
+  return v;
+}
+
+/* ==================== TOPO ==================== */
+function hero() {
+  const stage = document.getElementById('heroStage'), svg = document.getElementById('heroCar');
+  if (!stage || !svg) return;
+  const angEl = document.getElementById('heroAng'), viewEl = document.getElementById('heroView');
+  let beat = null, glowL = 0, v = null;
+
+  v = viewer(stage, {
+    aria: 'Carro hatch em 3D com o som instalado. Arraste ou use as setas do teclado para girar.',
+    yaw: 35, pit: 14, fallbackSvg: svg,
+    fail: () => { if (window.VibexHeroTraco) window.VibexHeroTraco(); },
+    onAngle: (deg) => {
+      if (angEl) angEl.textContent = ('00' + deg).slice(-3) + '°';
+      if (viewEl) { const n = viewName(deg); if (viewEl.textContent !== n) viewEl.textContent = n; }
+    },
+    spin: (t) => !reduced && !v.dragging && v.visible && !document.hidden && !v.anyOpen() && !(beat && beat.on) && t - v.lastTouch > 2600,
+    onTick: (t) => {
+      /* som: cones, brilho, luz do porta-malas e o carro tremendo de leve */
+      const M = v.M, on = !!(beat && beat.on), lv = on ? beat.level() : 0;
+      glowL += (lv - glowL) * .5;
+      v.rig.userData.subs.forEach((sp) => { sp.userData.move.position.z = lv * .028; });
+      v.doorSpk.forEach((sp) => { sp.userData.move.position.z = lv * .008; });
+      M.glowDoor.emissiveIntensity = M.glowSub.emissiveIntensity = .6 + glowL * 4;
+      M.led.emissiveIntensity = on ? 1.5 + lv * 3 : .4;
+      v.trunkLight.intensity = v.open.tail * (1.2 + glowL * 5);
+      v.car.position.y = reduced ? 0 : lv * .006; v.car.rotation.z = reduced ? 0 : Math.sin(t / 37) * lv * .0025;
+      stage.style.setProperty('--pulse', glowL.toFixed(3));
+      return on || glowL > .002;
+    },
+    ready: () => requestAnimationFrame(controls)
+  });
+
+  document.addEventListener('visibilitychange', () => { if (document.hidden && beat && beat.on) setSound(false); });
+
+  /* depois de fechar algo, a câmera volta para o que ainda está aberto */
+  function settle() {
+    if (v.want.tail) v.lookAt(HERO_VIEWS.tail);
+    else if (v.want.fl) v.lookAt(HERO_VIEWS.portas);
+    else v.lookAt(HERO_VIEWS.geral);
+  }
+
   let btnDoors, btnTail, btnSound;
   function setDoors(on) {
-    ['fl', 'fr', 'rl', 'rr'].forEach((k) => { want[k] = on ? 1 : 0; });
+    ['fl', 'fr', 'rl', 'rr'].forEach((k) => { v.want[k] = on ? 1 : 0; });
     btnDoors.setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on) lookAt(VIEWS.portas); else settle();
-    kick();
+    if (on) v.lookAt(HERO_VIEWS.portas); else settle();
+    v.kick();
   }
   function setTail(on) {
-    want.tail = on ? 1 : 0;
+    v.want.tail = on ? 1 : 0;
     btnTail.setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on) lookAt(VIEWS.tail); else settle();
-    kick();
+    if (on) v.lookAt(HERO_VIEWS.tail); else settle();
+    v.kick();
   }
   function setSound(on) {
     if (!beat) beat = makeBeat();
     if (!beat) return;
-    if (on) { beat.start(); if (!want.tail) setTail(true); else lookAt(VIEWS.tail); }
+    if (on) { beat.start(); if (!v.want.tail) setTail(true); else v.lookAt(HERO_VIEWS.tail); }
     else beat.stop();
     btnSound.setAttribute('aria-pressed', on ? 'true' : 'false');
     btnSound.querySelector('b').textContent = on ? 'Desligar o som' : 'Ligar o som';
     stage.classList.toggle('is-playing', on);
-    kick();
+    v.kick();
   }
 
   function controls() {
@@ -437,7 +567,7 @@ function start() {
     btnTail = mk('Porta-malas', setTail);
     bar.appendChild(acts);
 
-    if (paint) {
+    if (v.paint) {
       const box = document.createElement('div');
       box.className = 'paint'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', 'Cor da lataria');
       box.innerHTML = '<span class="paint-k">Cor</span>';
@@ -447,7 +577,7 @@ function start() {
         b.setAttribute('aria-label', p.nome); b.title = p.nome;
         b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
         b.addEventListener('click', () => {
-          paint.color.set(p.hex); dirty = true; kick();
+          v.paint.color.set(p.hex); v.dirty = true; v.kick();
           box.querySelectorAll('.sw').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
         });
         box.appendChild(b);
@@ -456,4 +586,94 @@ function start() {
     }
     stage.parentNode.appendChild(bar);
   }
+}
+
+/* ==================== RAIO-X ==================== */
+function xray() {
+  const stage = document.getElementById('xrayStage'), svg = document.getElementById('xrayCar');
+  if (!stage || !svg || !window.VibexXray) return;
+  const angEl = document.getElementById('xrayAng'), coTxt = document.getElementById('calloutTxt');
+  let cur = window.VibexXray.layer(), started = false, fade = 0, power = null, v = null;
+  const focus = { portas: 0, grave: 0, modulos: 0, midia: 0, bateria: 0 };
+  const anchors = {};
+
+  function apply(k, animate) {
+    cur = k;
+    const L = XRAY[k];
+    if (coTxt) coTxt.textContent = L.label || '';
+    if (!v || !v.car || !started) return;
+    KEYS.forEach((d) => { v.want[d] = L.open.includes(d) ? 1 : 0; });
+    v.lookAt(L, animate ? 1500 : 1);
+    v.kick();
+  }
+  stage.addEventListener('layer', (e) => apply(e.detail.k, e.detail.animate));
+
+  v = viewer(stage, {
+    aria: 'Carro em 3D mostrando a camada selecionada do sistema de som. Arraste ou use as setas para girar.',
+    yaw: 20, pit: 10, xray: true, fallbackSvg: svg,
+    fail: () => { if (window.VibexXrayTraco) window.VibexXrayTraco(); },
+    onAngle: (deg) => { if (angEl) angEl.textContent = ('00' + deg).slice(-3) + '°'; },
+    ready: (vv) => {
+      power = powerRig(vv.M); power.visible = false; vv.car.add(power);
+      anchors.spkFL = vv.spkFL;
+      anchors.sub = vv.rig.userData.subs[0];
+      anchors.amp = vv.rig.userData.amps[0];
+      anchors.battery = power.userData.batt;
+      anchors.screen = eqScreen(); vv.car.add(anchors.screen);
+      apply(cur, false);
+      /* entra fechado e abre quando a seção aparece */
+      const go = () => { if (started) return; started = true; apply(cur, true); };
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) go(); }, { threshold: .3 }).observe(stage);
+      } else go();
+    },
+    onTick: (t, dt) => {
+      const M = v.M, L = XRAY[cur];
+      const lv = reduced ? .4 : pulse(t);
+      let busy = !reduced;
+      /* a camada escolhida acende e pulsa; as outras ficam apagadas */
+      for (const k in focus) {
+        const want = cur === k || (cur === 'completo' && k !== 'bateria' && k !== 'midia') ? 1 : 0;
+        focus[k] += (want - focus[k]) * Math.min(1, dt / 180);
+      }
+      M.glowDoor.emissiveIntensity = .15 + focus.portas * (.6 + lv * 3.5);
+      v.doorSpk.forEach((sp) => { sp.userData.move.position.z = focus.portas * lv * .008; });
+      M.glowSub.emissiveIntensity = .15 + focus.grave * (.6 + lv * 4);
+      v.rig.userData.subs.forEach((sp) => { sp.userData.move.position.z = focus.grave * lv * .028; });
+      M.glowMod.emissiveIntensity = .1 + focus.modulos * (.5 + lv * 2.5);
+      M.led.emissiveIntensity = .3 + focus.modulos * (Math.floor(t / 260) % 2 ? 3.5 : .8);
+      if (v.screens) v.screens.forEach((m) => { m.emissiveIntensity = 1 + focus.midia * lv * 2.2; });
+      anchors.screen.userData.draw(t, focus.midia);
+      v.trunkLight.intensity = v.open.tail * (1 + (focus.grave + focus.modulos) * lv * 3);
+
+      /* elétrica: lataria some como num raio-X e a energia corre pelo cabo */
+      const fw = L.xray ? 1 : 0;
+      if (Math.abs(fw - fade) > .002) { fade += (fw - fade) * Math.min(1, dt / 220); busy = true; } else fade = fw;
+      if (v.shell) v.shell.forEach((m) => {
+        if (m.userData.op === undefined) m.userData.op = m.opacity;
+        const on = fade > .001;
+        if (m.transparent !== (on || m.userData.op < 1)) { m.transparent = on || m.userData.op < 1; m.needsUpdate = true; }
+        m.opacity = m.userData.op * (1 - fade * .86);
+        m.depthWrite = fade < .5;
+      });
+      power.visible = fade > .01;
+      power.userData.cableMat.opacity = fade;
+      M.glowPow.emissiveIntensity = .5 + fade * lv * 3;
+      power.userData.tex.offset.x -= dt * .0016 * (reduced ? 0 : 1);
+
+      /* etiqueta presa na peça */
+      const a = anchors[L.anchor];
+      if (a && !v.tw && started && window.VibexCallout) {
+        const [x, y, front] = v.toScreen(a);
+        if (front) window.VibexCallout(x, y, stage.clientWidth, stage.clientHeight); else window.VibexCalloutOff();
+      } else if (window.VibexCalloutOff) window.VibexCalloutOff();
+      return busy && v.visible && !document.hidden;
+    }
+  });
+}
+
+if (webgl() && !saveData) { hero(); xray(); }
+else {
+  if (window.VibexHeroTraco) window.VibexHeroTraco();
+  if (window.VibexXrayTraco) window.VibexXrayTraco();
 }
