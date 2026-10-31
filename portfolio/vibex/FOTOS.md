@@ -22,3 +22,10 @@ Dica de direção de foto: carro em ambiente escuro, luz quente (laranja/âmbar)
 - **Cards de trabalhos**: modelo/ano do carro e equipamento real de cada trabalho.
 - **Avaliações**: três espaços com `data-avaliacao="1..3"` aguardando avaliações reais do Google (texto, nome, data, nota). Não use depoimentos inventados.
 - **Garantia**: o site diz "garantia por escrito" sem prazo. Se houver prazo fixo (ex.: 90 dias para a instalação), vale incluir em "Como a bancada trabalha" e no FAQ.
+
+## Carro 3D do topo
+
+`modelo/carro.glb` é o "Volkswagen Golf GTI (2025)" de geyges no Sketchfab (licença Standard gratuita: uso comercial
+permitido, sem crédito visível obrigatório; não oferecer o arquivo para download). O original fica em
+`C:\dev\volkswagen-golf-gti-2025`. O código está em `js/carro3d.js`; as cores da lataria ficam na lista `PAINTS` no topo
+do arquivo. Sem WebGL ou se o arquivo falhar, o site mostra o carro em traço (`js/engine.js`), que continua no raio-X.

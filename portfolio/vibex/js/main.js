@@ -101,6 +101,7 @@
       },
       onDrag: function () { if (hand) hand.classList.add('gone'); }
     });
+    window.VibexHero = car; // carro3d.js assume o ângulo daqui quando o modelo realista carrega
     var rest = V.pose({ yaw: 35, pit: 14, rev: .55 });
     function frame() {
       // enquadramento que serve para qualquer ângulo do giro

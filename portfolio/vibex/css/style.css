@@ -193,6 +193,21 @@ svg.car3d:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
 .hero-ctas .btn { flex: 1 1 220px; }
 @media (min-width: 560px) { .hero-ctas .btn { flex: 0 0 auto; } }
 .hero-stage .stage { aspect-ratio: 4 / 3; }
+/* carro realista (carro3d.js): entra por cima do traço e o traço sai */
+.stage .car-gl { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; opacity: 0; transition: opacity .9s; touch-action: pan-y; cursor: grab; outline: none; }
+.stage .car-gl.is-grabbing { cursor: grabbing; }
+.stage .car-gl:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
+.stage svg.car3d { transition: opacity .9s; }
+.stage.gl-on .car-gl { opacity: 1; }
+.stage.gl-on svg.car3d { opacity: 0; pointer-events: none; }
+.paint { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 10px; animation: paintIn .6s both; }
+.paint-k { margin-right: 4px; font-size: 12px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--mut); }
+.paint .sw { width: 30px; height: 30px; padding: 0; border-radius: 50%; border: 2px solid var(--rule2); background: var(--c); cursor: pointer; transition: border-color .2s, transform .2s; }
+.paint .sw:hover { transform: scale(1.08); }
+.paint .sw[aria-pressed="true"] { border-color: var(--org); box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px var(--org); }
+.paint .sw:focus-visible { outline: 2px solid var(--yel); outline-offset: 3px; }
+@keyframes paintIn { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .paint { animation: none; } }
 .facts { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; margin: 34px 0 0; border-top: 2px solid transparent; border-image: var(--metal) 1; }
 .facts div { padding: 16px 14px 20px 0; border-bottom: 1px solid var(--rule); }
 .facts div:nth-child(odd) { padding-right: 16px; }
@@ -211,6 +226,8 @@ svg.car3d:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
   .hero-stage { order: 3; margin: 0 calc(var(--gut) * -1) 18px; }
   .hero .lead { order: 4; } .hero-ctas { order: 5; }
   .stage-hud { padding: 0 var(--gut); }
+  .paint { justify-content: flex-start; gap: 8px; padding: 0 var(--gut); }
+  .paint .sw { width: 28px; height: 28px; }
 }
 @media (min-width: 1100px) {
   .hero { padding-top: calc(var(--hdr) + 30px); }
