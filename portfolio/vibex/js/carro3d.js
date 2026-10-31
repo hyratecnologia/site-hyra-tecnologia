@@ -42,15 +42,15 @@ const KEYS = Object.keys(HINGES);
 /* câmera (yaw/pit em graus, mesma convenção do traço; zoom < 1 aproxima; tz leva o centro para a frente (-) ou para trás (+)) */
 const HERO_VIEWS = {
   geral: { pit: 14, zoom: 1, tz: -0.05 },
-  portas: { yaw: 28, pit: 16, zoom: .9, tz: -0.1 },
-  tail: { yaw: 304, pit: 21, zoom: .7, tz: .9 }
+  portas: { yaw: 332, pit: 16, zoom: .8, tz: -0.4 },
+  tail: { yaw: 300, pit: 30, zoom: .7, tz: .95 }
 };
 
 /* camadas do raio-X: o que abre, para onde a câmera vai e qual peça ganha a etiqueta */
 const XRAY = {
   completo: { yaw: 318, pit: 20, zoom: .98, tz: .15, open: KEYS },
-  portas: { yaw: 332, pit: 14, zoom: .66, tz: -0.55, open: ['fl', 'fr'], label: 'Portas · kit 2 vias e tweeter', anchor: 'spkFL' },
-  grave: { yaw: 304, pit: 22, zoom: .6, tz: 1.0, open: ['tail'], label: 'Grave · caixa selada com 2 subs', anchor: 'sub' },
+  portas: { yaw: 289, pit: 8, zoom: .19, tz: -0.4, tx: -1.24, ty: .55, open: ['fl', 'fr'], label: 'Portas · kit 2 vias e tweeter', anchor: 'spkFL' },
+  grave: { yaw: 302, pit: 30, zoom: .6, tz: 1.05, open: ['tail'], label: 'Grave · caixa selada com 2 subs', anchor: 'sub' },
   modulos: { yaw: 298, pit: 36, zoom: .56, tz: 1.2, open: ['tail'], label: 'Módulos · 2 amplificadores e DSP', anchor: 'amp' },
   midia: { yaw: 270, pit: 8, zoom: .16, tz: -0.35, ty: .98, open: ['fl'], label: 'Multimídia no painel', anchor: 'screen' },
   bateria: { yaw: 42, pit: 26, zoom: .96, tz: -0.25, open: [], xray: true, label: 'Bateria, fusível e cabo de força', anchor: 'battery' }
@@ -84,7 +84,7 @@ function loadBase(onProgress) {
     basePromise = new Promise((ok, fail) => {
       new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load('modelo/carro.glb', (g) => ok(g.scene),
         (e) => { if (e.total) progressFns.forEach((f) => f(e.loaded / e.total)); }, fail);
-    });
+    }).then((s) => (document.fonts ? document.fonts.ready.then(() => s) : s)); // o tampão escreve com a fonte do site
   }
   return basePromise;
 }
@@ -103,6 +103,9 @@ function makeMats() {
     dsp: new THREE.MeshStandardMaterial({ color: 0x101012, roughness: .5, metalness: .4 }),
     batt: new THREE.MeshStandardMaterial({ color: 0x3a3b40, roughness: .45, metalness: .2 }),
     plus: new THREE.MeshStandardMaterial({ color: 0xe5260e, roughness: .4 }),
+    board: new THREE.MeshStandardMaterial({ color: 0xe9eaec, roughness: .35 }),
+    alu: new THREE.MeshStandardMaterial({ color: 0xb4b9c0, roughness: .32, metalness: .9 }),
+    gloss: new THREE.MeshPhysicalMaterial({ color: 0x0e0e11, roughness: .3, clearcoat: 1, clearcoatRoughness: .06 }),
     glowDoor: glow(), glowSub: glow(), glowMod: glow(), glowPow: glow(),
     led: new THREE.MeshStandardMaterial({ color: 0xff5a0a, emissive: 0xff5a0a, emissiveIntensity: .4 })
   };
@@ -125,11 +128,11 @@ function speaker(r, M, glowMat) {
   return g;
 }
 
-function textPlate(txt, w, h) {
+function textPlate(txt, w, h, bg, bar) {
   const c = document.createElement('canvas'); c.width = 256; c.height = 64;
   const x = c.getContext('2d');
-  x.fillStyle = '#0d0d10'; x.fillRect(0, 0, 256, 64);
-  x.fillStyle = '#ff5a0a'; x.fillRect(0, 58, 256, 6);
+  x.fillStyle = bg || '#0d0d10'; x.fillRect(0, 0, 256, 64);
+  x.fillStyle = bar || '#ff5a0a'; x.fillRect(0, 58, 256, 6);
   x.font = 'italic 900 40px Saira, Impact, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
   x.fillStyle = '#f4f5f7'; x.fillText(txt, 128, 30);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
@@ -146,20 +149,107 @@ function trunkRig(M) {
   });
   const tag = textPlate('VIBEX', .16, .04); tag.position.set(0, -H / 2 + .045, D / 2 + .003); g.add(tag);
 
-  const board = new THREE.Group(); board.position.set(0, -H / 2, D / 2 + .13); g.add(board);
-  board.add(at(new THREE.Mesh(new THREE.BoxGeometry(.86, .012, .2), M.mdf), 0, .006, 0));
-  const amps = [-.23, .12].map((x) => {
-    const a = new THREE.Group(); a.position.set(x, .012, 0); board.add(a);
-    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.3, .045, .16), M.amp), 0, .0225, 0));
-    for (let i = 0; i < 7; i++) a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.006, .01, .15), M.amp), -.12 + i * .04, .05, 0));
-    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.3, .004, .162), M.glowMod), 0, .004, 0));
-    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.04, .008, .004), M.led), .11, .025, .081));
+  /* painel de módulos: placa clara com um módulo grande, um pequeno e o processador, ligados por cabo */
+  const board = new THREE.Group(); board.position.set(0, -H / 2, D / 2 + .125); g.add(board);
+  board.add(at(new THREE.Mesh(new THREE.BoxGeometry(.86, .014, .21), M.board), 0, .007, 0));
+  const amp = (x, z, w, h, d, txt) => {
+    const a = new THREE.Group(); a.position.set(x, .014, z); board.add(a);
+    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), M.alu), 0, h / 2, 0));
+    const fins = Math.round(w / .022);
+    for (let i = 0; i < fins; i++) a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.004, .008, d * .55), M.alu), -w / 2 + .014 + i * (w - .028) / (fins - 1), h + .004, -d * .2));
+    const p = textPlate(txt, w * .78, w * .78 / 4, '#2a2a30', '#e5260e'); p.rotation.x = -Math.PI / 2; p.position.set(0, h + .001, d * .3); a.add(p);
+    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(w + .004, .004, d + .004), M.glowMod), 0, .002, 0));
+    a.add(at(new THREE.Mesh(new THREE.BoxGeometry(.03, .006, .004), M.led), w / 2 - .03, h * .6, d / 2 + .002));
     return a;
+  };
+  const amps = [amp(-.2, .005, .34, .055, .19, '3000W'), amp(.11, .03, .18, .045, .13, '400W')];
+  const dsp = new THREE.Group(); dsp.position.set(.32, .014, -.04); board.add(dsp);
+  dsp.add(at(new THREE.Mesh(new THREE.BoxGeometry(.16, .03, .1), M.dsp), 0, .015, 0));
+  for (let i = 0; i < 6; i++) {
+    const k = at(new THREE.Mesh(new THREE.CylinderGeometry(.006, .006, .012, 12), M.steel), -.06 + i * .024, .036, .025);
+    dsp.add(k);
+  }
+  dsp.add(at(new THREE.Mesh(new THREE.BoxGeometry(.03, .006, .004), M.led), .055, .02, .051));
+  /* cabos RCA e de força deitados na placa */
+  [[[.25, .02, -.03], [.2, .02, .06], [.2, .02, .09]], [[.27, .02, -.02], [.24, .02, .07], [.2, .02, .1]], [[.4, .02, -.08], [.38, .02, .07], [-.03, .02, .09]]].forEach((pts, i) => {
+    const c = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p)));
+    board.add(new THREE.Mesh(new THREE.TubeGeometry(c, 24, i === 2 ? .006 : .003, 6), i === 2 ? M.plus : M.surround));
   });
-  const dsp = new THREE.Group(); dsp.position.set(.35, .012, 0); board.add(dsp);
-  dsp.add(at(new THREE.Mesh(new THREE.BoxGeometry(.12, .03, .1), M.dsp), 0, .015, 0));
-  dsp.add(at(new THREE.Mesh(new THREE.BoxGeometry(.03, .006, .004), M.led), .03, .016, .051));
   g.userData = { subs, amps };
+  return g;
+}
+
+/* meio forro da porta: painel brilhante moldado com 3 woofers, 2 médios, tweeter, placa VIBEX e LED na borda.
+   Desenhado na superfície interna da porta (u = comprimento do carro, v = altura); side -1 = motorista */
+function doorPanel(M, side) {
+  const g = new THREE.Group();
+  g.position.x = side * .655;
+  g.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2;
+  const U = (z) => (side < 0 ? -z : z); // z do carro para o x local do painel
+  const outline = [[-.69, .4], [-.42, .375], [-.12, .385], [-.06, .44], [-.055, .58], [-.1, .675], [-.3, .7], [-.52, .72], [-.66, .69], [-.705, .6]];
+  const shape = new THREE.Shape();
+  outline.forEach(([z, y], i) => (i ? shape.lineTo(U(z), y) : shape.moveTo(U(z), y)));
+  shape.closePath();
+  const T = .03;
+  const body = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: T, bevelEnabled: true, bevelThickness: .008, bevelSize: .01, bevelSegments: 3 }), M.gloss);
+  g.add(body);
+  const led = new THREE.CatmullRomCurve3(outline.map(([z, y]) => new THREE.Vector3(U(z), y, T + .009)), true, 'catmullrom', .3);
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(led, 140, .0045, 6, true), M.glowDoor));
+  const spk = [];
+  const put = (z, y, r) => { const s = speaker(r, M, M.glowDoor); s.position.set(U(z), y, T + .008); g.add(s); spk.push(s); return s; };
+  const big = put(-.565, .5, .085);
+  put(-.36, .475, .068); put(-.19, .47, .062);
+  put(-.33, .625, .04); put(-.22, .625, .04); put(-.12, .6, .024);
+  const tag = textPlate('VIBEX', .13, .0325); tag.position.set(U(-.565), .625, T + .01); g.add(tag);
+  g.userData = { spk, big };
+  return g;
+}
+
+/* tampão do porta-malas no lugar do original: arte da Vibex, logo no meio, telas de alumínio e LED na borda */
+function shelfRig(M) {
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 512;
+  const x = c.getContext('2d');
+  x.fillStyle = '#0b0b0d'; x.fillRect(0, 0, 1024, 512);
+  // telas furadas nas pontas
+  [[40, 120], [770, 120]].forEach(([px, py]) => {
+    x.fillStyle = '#1b1b20'; x.fillRect(px, py, 214, 270);
+    x.fillStyle = '#3a3c42';
+    for (let i = 0; i < 20; i++) for (let j = 0; j < 26; j++) x.fillRect(px + 6 + i * 10.4 + (j % 2) * 5, py + 6 + j * 10.2, 4, 4);
+  });
+  // faixas de pintura (laranja, âmbar e vermelho) contornando o meio
+  const band = (off, color, w) => {
+    x.strokeStyle = color; x.lineWidth = w; x.lineJoin = 'round'; x.beginPath();
+    x.moveTo(30, 60 + off); x.bezierCurveTo(300, 20 + off, 420, 110 + off, 512, 70 + off); x.bezierCurveTo(610, 30 + off, 760, 100 + off, 994, 60 + off);
+    x.moveTo(30, 452 - off); x.bezierCurveTo(300, 492 - off, 420, 402 - off, 512, 442 - off); x.bezierCurveTo(610, 482 - off, 760, 412 - off, 994, 452 - off);
+    x.stroke();
+  };
+  band(0, '#e5260e', 22); band(18, '#ff5a0a', 16); band(32, '#ffb21a', 9);
+  // logo: o V com o raio e a marca
+  x.save(); x.translate(300, 160); x.scale(1.55, 1.55);
+  x.fillStyle = (() => { const gr = x.createLinearGradient(0, 0, 0, 100); gr.addColorStop(0, '#FFC21A'); gr.addColorStop(.55, '#FF7A00'); gr.addColorStop(1, '#E23A00'); return gr; })();
+  x.strokeStyle = '#1a0f08'; x.lineWidth = 5; x.lineJoin = 'round';
+  const v = new Path2D('M4 6 H40 L62 62 L84 6 H116 L74 92 H44 Z'); x.fill(v); x.stroke(v);
+  const bolt = new Path2D('M40 6 L30 40 L52 34 L38 74 L70 28 L48 34 L58 6 Z'); x.fillStyle = '#FFD24A'; x.lineWidth = 4; x.fill(bolt); x.stroke(bolt);
+  x.restore();
+  x.font = 'italic 900 118px Saira, Impact, sans-serif'; x.textBaseline = 'alphabetic';
+  x.fillStyle = '#f4f5f7'; x.fillText('VIBEX', 498, 278);
+  x.fillStyle = '#ff5a0a'; x.beginPath(); x.moveTo(512, 296); x.lineTo(752, 296); x.lineTo(740, 338); x.lineTo(500, 338); x.closePath(); x.fill();
+  x.font = '800 30px Manrope, sans-serif'; x.fillStyle = '#0b0b0d'; x.fillText('A U D I O C A R', 532, 328);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+
+  const g = new THREE.Group();
+  const top = new THREE.MeshPhysicalMaterial({ map: tex, roughness: .25, clearcoat: 1, clearcoatRoughness: .08 });
+  const W = 1.04, D = .5, H = .022;
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), [M.gloss, M.gloss, top, M.gloss, M.gloss, M.gloss]));
+  const r = .035, hw = W / 2 - .02, hd = D / 2 - .02, y = H / 2 + .005;
+  const led = new THREE.CurvePath();
+  const L = (a, b) => led.add(new THREE.LineCurve3(new THREE.Vector3(...a), new THREE.Vector3(...b)));
+  const Q = (a, b, c2) => led.add(new THREE.QuadraticBezierCurve3(new THREE.Vector3(...a), new THREE.Vector3(...b), new THREE.Vector3(...c2)));
+  L([-hw + r, y, -hd], [hw - r, y, -hd]); Q([hw - r, y, -hd], [hw, y, -hd], [hw, y, -hd + r]);
+  L([hw, y, -hd + r], [hw, y, hd - r]); Q([hw, y, hd - r], [hw, y, hd], [hw - r, y, hd]);
+  L([hw - r, y, hd], [-hw + r, y, hd]); Q([-hw + r, y, hd], [-hw, y, hd], [-hw, y, hd - r]);
+  L([-hw, y, hd - r], [-hw, y, -hd + r]); Q([-hw, y, -hd + r], [-hw, y, -hd], [-hw + r, y, -hd]);
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(led, 200, .005, 6, true), M.glowSub));
   return g;
 }
 
@@ -321,7 +411,7 @@ function viewer(stage, o) {
 
   const v = {
     stage, canvas, scene, camera, renderer, trunkLight,
-    s: { yaw: o.yaw * DEG, pit: o.pit * DEG, zoom: 1, tz: -0.05, ty: .62 },
+    s: { yaw: o.yaw * DEG, pit: o.pit * DEG, zoom: 1, tz: -0.05, ty: .62, tx: 0 },
     open: { fl: 0, fr: 0, rl: 0, rr: 0, tail: 0 }, want: { fl: 0, fr: 0, rl: 0, rr: 0, tail: 0 },
     pivots: {}, M: makeMats(), doorSpk: [], car: null, rig: null, tw: null,
     dirty: true, visible: true, dragging: false, lastTouch: 0
@@ -341,7 +431,7 @@ function viewer(stage, o) {
   /* yaw 0 = lateral com a frente à esquerda, 90 = frente, 270 = traseira (igual ao traço) */
   function place() {
     const s = v.s, d = (camera.userData.dist || 10) * s.zoom, cp = Math.cos(s.pit);
-    target.z = s.tz; target.y = s.ty;
+    target.z = s.tz; target.y = s.ty; target.x = s.tx;
     camera.position.set(target.x - d * cp * Math.cos(s.yaw), target.y + d * Math.sin(s.pit), target.z - d * cp * Math.sin(s.yaw));
     camera.lookAt(target);
     if (o.onAngle) o.onAngle(Math.round(((s.yaw / DEG) % 360 + 360) % 360));
@@ -353,8 +443,8 @@ function viewer(stage, o) {
     const s = v.s, cur = s.yaw;
     let y = to.yaw === undefined ? cur : to.yaw * DEG;
     y = cur + ((((y - cur) % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI) - Math.PI);
-    if (reduced) { s.yaw = y; s.pit = to.pit * DEG; s.zoom = to.zoom; s.tz = to.tz; s.ty = to.ty || .62; v.dirty = true; v.kick(); return; }
-    v.tw = { t0: performance.now(), dur: dur || 1100, y0: cur, y1: y, p0: s.pit, p1: to.pit * DEG, z0: s.zoom, z1: to.zoom, a0: s.tz, a1: to.tz, b0: s.ty, b1: to.ty || .62 };
+    if (reduced) { s.yaw = y; s.pit = to.pit * DEG; s.zoom = to.zoom; s.tz = to.tz; s.ty = to.ty || .62; s.tx = to.tx || 0; v.dirty = true; v.kick(); return; }
+    v.tw = { t0: performance.now(), dur: dur || 1100, y0: cur, y1: y, p0: s.pit, p1: to.pit * DEG, z0: s.zoom, z1: to.zoom, a0: s.tz, a1: to.tz, b0: s.ty, b1: to.ty || .62, c0: s.tx, c1: to.tx || 0 };
     v.kick();
   };
   v.anyOpen = () => KEYS.some((k) => v.want[k]);
@@ -368,7 +458,7 @@ function viewer(stage, o) {
     if (v.tw) {
       const tw = v.tw, k = Math.min(1, (t - tw.t0) / tw.dur), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
       s.yaw = tw.y0 + (tw.y1 - tw.y0) * e; s.pit = tw.p0 + (tw.p1 - tw.p0) * e;
-      s.zoom = tw.z0 + (tw.z1 - tw.z0) * e; s.tz = tw.a0 + (tw.a1 - tw.a0) * e; s.ty = tw.b0 + (tw.b1 - tw.b0) * e;
+      s.zoom = tw.z0 + (tw.z1 - tw.z0) * e; s.tz = tw.a0 + (tw.a1 - tw.a0) * e; s.ty = tw.b0 + (tw.b1 - tw.b0) * e; s.tx = tw.c0 + (tw.c1 - tw.c0) * e;
       if (k >= 1) { v.tw = null; v.lastTouch = t; }
       v.dirty = true; more = true;
     } else if (o.spin && o.spin(t)) {
@@ -460,16 +550,23 @@ function viewer(stage, o) {
       v.pivots[k] = p;
     }
 
-    /* som instalado: aro aceso nos falantes das portas, tweeters no painel, caixa e módulos no porta-malas */
-    [['fl', -.672, .495, -.55, .07], ['fr', .672, .495, -.55, .07], ['rl', -.66, .6, .52, .065], ['rr', .66, .6, .52, .065]].forEach(([k, x, y, z, r]) => {
+    /* som instalado: meio forro nas portas da frente, aro aceso nos falantes de trás, tweeters no painel,
+       caixa e módulos no porta-malas e o tampão da Vibex no lugar do original */
+    [['fl', -1], ['fr', 1]].forEach(([k, side]) => {
+      const pn = doorPanel(M, side); car.add(pn); v.pivots[k].attach(pn);
+      v.doorSpk.push(...pn.userData.spk);
+      if (k === 'fl') v.spkFL = pn.userData.big;
+    });
+    [['rl', -.66, .6, .52, .065], ['rr', .66, .6, .52, .065]].forEach(([k, x, y, z, r]) => {
       const sp = speaker(r, M, M.glowDoor); sp.position.set(x, y, z); sp.rotation.y = x < 0 ? Math.PI / 2 : -Math.PI / 2;
       car.add(sp); v.pivots[k].attach(sp); v.doorSpk.push(sp);
-      if (k === 'fl') v.spkFL = sp;
     });
     [-.6, .6].forEach((x) => {
       const t = speaker(.022, M, M.glowDoor); t.position.set(x, 1.085, -.7); t.rotation.x = -Math.PI / 2 + .35; car.add(t); v.doorSpk.push(t);
     });
     v.rig = trunkRig(M); v.rig.position.set(0, .76, 1.52); car.add(v.rig);
+    car.traverse((x) => { if (/^Int_Back_Shelf/.test(x.name)) x.visible = false; });
+    const shelf = shelfRig(M); shelf.position.set(0, 1.05, 1.57); car.add(shelf);
 
     if (o.ready) o.ready(v);
     resize(); place();
