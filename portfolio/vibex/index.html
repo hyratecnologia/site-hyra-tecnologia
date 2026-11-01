@@ -10,7 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:title" content="Vibex AudioCar · Som automotivo">
-<meta property="og:description" content="Grave no peito, voz na cara. Veja o raio-X do projeto em 3D e peça seu orçamento pelo WhatsApp.">
+<meta property="og:description" content="Grave no peito, voz na cara. Veja o projeto por dentro, em 3D, e peça seu orçamento pelo WhatsApp.">
 <meta property="og:url" content="https://hyratecnologia.com/portfolio/vibex/">
 <meta property="og:image" content="https://hyratecnologia.com/portfolio/vibex/capa-pc.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,7 +18,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wdth,wght@0,50..125,400..900;1,50..125,400..900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20261031e">
+<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="modelo/carro.glb" as="fetch" crossorigin>
 <script>document.documentElement.classList.add('js');</script>
 <script type="application/ld+json">
 {
@@ -99,7 +101,7 @@
   <nav class="nav" aria-label="Principal">
    <ul>
     <li><a href="#perfis">Projetos de som</a></li>
-    <li><a href="#raio-x">Raio-X</a></li>
+    <li><a href="#por-dentro">Por dentro</a></li>
     <li><a href="#processo">Como trabalhamos</a></li>
     <li><a href="#regulagem">Regulagem</a></li>
     <li><a href="#trabalhos">Trabalhos</a></li>
@@ -113,7 +115,7 @@
 </header>
 <nav class="drawer" id="drawer" aria-label="Menu do celular">
  <a class="dl" href="#perfis">Projetos de som</a>
- <a class="dl" href="#raio-x">Raio-X do carro</a>
+ <a class="dl" href="#por-dentro">Por dentro do som</a>
  <a class="dl" href="#processo">Como trabalhamos</a>
  <a class="dl" href="#regulagem">Regulagem RTA</a>
  <a class="dl" href="#trabalhos">Trabalhos</a>
@@ -124,37 +126,154 @@
 
 <main id="conteudo">
 
-<!-- HERO -->
-<section class="hero" aria-labelledby="h-hero">
- <div class="wrap hero-grid">
-  <div class="hero-copy">
-   <p class="over">Vibex AudioCar · som automotivo</p>
-   <h1 id="h-hero"><span class="l1">Grave no peito,</span> <span class="l2">voz na cara.</span></h1>
-   <p class="lead">A gente desenha o som do seu carro antes de abrir o painel, instala sem cortar a fiação original e regula com microfone. Você sai daqui com a garantia por escrito.</p>
-   <div class="hero-ctas">
-    <a class="btn" href="#orcamento">Fazer orçamento <svg class="ic arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    <a class="btn ghost" href="#raio-x">Ver o raio-X do carro</a>
-   </div>
-  </div>
-  <div class="hero-stage">
-   <div class="stage" id="heroStage">
-    <svg class="car3d neon" id="heroCar" role="img" tabindex="0" aria-label="Desenho 3D em traço de um carro hatch com o sistema de som instalado. Arraste ou use as setas do teclado para girar."></svg>
-    <div class="stage-hud" aria-hidden="true">
-     <span class="hint"><svg class="ic"><use href="#i-rotate"/></svg>Arraste para girar</span>
-     <span class="deg"><b id="heroAng">035°</b><i id="heroView">3/4</i></span>
-    </div>
-   </div>
+<!-- TOPO + POR DENTRO DO SOM: o carro fica fixo e cada etapa do texto mostra uma parte do som -->
+<section class="show" id="show" aria-labelledby="h-hero">
+ <div class="show-stage" aria-hidden="false">
+  <div class="stage" id="carStage">
+   <svg class="car3d neon" id="carSvg" role="img" tabindex="0" aria-label="Carro hatch em 3D com o som instalado. Arraste para girar."></svg>
+   <div class="callout" id="callout" aria-hidden="true"><i class="co-dot" id="coDot"></i><b class="co-line" id="coLine"></b><span class="co-label" id="calloutTxt"></span></div>
+   <ol class="steps-nav" id="stepsNav" aria-label="Etapas do projeto">
+    <li><a href="#show" data-go="inicio"><span>Início</span></a></li>
+    <li><a href="#por-dentro" data-go="completo"><span>Visão geral</span></a></li>
+    <li><a href="#passo-portas" data-go="portas"><span>01 Portas</span></a></li>
+    <li><a href="#passo-grave" data-go="grave"><span>02 Grave</span></a></li>
+    <li><a href="#passo-modulos" data-go="modulos"><span>03 Módulos</span></a></li>
+    <li><a href="#passo-midia" data-go="midia"><span>04 Multimídia</span></a></li>
+    <li><a href="#passo-eletrica" data-go="bateria"><span>05 Elétrica</span></a></li>
+   </ol>
+   <p class="step-now" id="stepNow" aria-hidden="true"></p>
+   <button type="button" class="snd" id="soundBtn" aria-pressed="false"><i class="eq" aria-hidden="true"><span></span><span></span><span></span></i><b>Ligar o som</b></button>
   </div>
  </div>
- <div class="wrap">
-  <dl class="facts">
-   <div><dt>Horário</dt><dd>Seg. a sáb., 8h às 19h</dd></div>
-   <div><dt>Pagamento</dt><dd>Pix, cartão ou 6x sem juros</dd></div>
-   <div><dt>Seu equipamento</dt><dd>Instalamos o que você já comprou</dd></div>
-   <div><dt>Endereço</dt><dd>Av. Diamante, 13</dd></div>
-  </dl>
+
+ <div class="show-steps">
+  <article class="chap chap-hero" data-step="inicio">
+   <div class="chap-card">
+    <p class="over">Vibex AudioCar · som automotivo</p>
+    <h1 id="h-hero"><span class="l1">Grave no peito,</span> <span class="l2">voz na cara.</span></h1>
+    <p class="lead">A gente desenha o som do seu carro antes de abrir o painel, instala sem cortar a fiação original e regula com microfone. Você sai daqui com a garantia por escrito.</p>
+    <div class="hero-ctas">
+     <a class="btn" href="#orcamento">Fazer orçamento <svg class="ic arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+     <a class="btn ghost" href="#por-dentro">Ver por dentro</a>
+    </div>
+    <div class="paint" id="paint" role="group" aria-label="Cor da lataria">
+     <span class="paint-k">Cor do carro</span>
+     <button type="button" class="sw" style="--c:#D01616" data-c="#D01616" aria-label="Vermelho" aria-pressed="true"></button>
+     <button type="button" class="sw" style="--c:#0B0B0D" data-c="#0B0B0D" aria-label="Preto" aria-pressed="false"></button>
+     <button type="button" class="sw" style="--c:#3A3D42" data-c="#3A3D42" aria-label="Grafite" aria-pressed="false"></button>
+     <button type="button" class="sw" style="--c:#B9BEC4" data-c="#B9BEC4" aria-label="Prata" aria-pressed="false"></button>
+     <button type="button" class="sw" style="--c:#E9EAEC" data-c="#E9EAEC" aria-label="Branco" aria-pressed="false"></button>
+     <button type="button" class="sw" style="--c:#FF5A0A" data-c="#FF5A0A" aria-label="Laranja" aria-pressed="false"></button>
+    </div>
+    <p class="scroll-cue" aria-hidden="true"><span></span>Role para ver o som por dentro</p>
+   </div>
+  </article>
+
+  <article class="chap chap-intro" data-step="completo" id="por-dentro" aria-labelledby="h-dentro">
+   <div class="chap-card">
+    <p class="chap-k">Por dentro do som</p>
+    <h2 id="h-dentro">O projeto,<br><span class="o">peça por peça</span></h2>
+    <p class="what">Som de carro é um conjunto: falantes nas portas, grave no porta-malas, módulos dando potência, a central mandando o sinal e a elétrica segurando tudo. Continue descendo: o carro abre e mostra onde cada parte fica.</p>
+    <ul class="checks">
+     <li>Projeto desenhado antes da instalação</li>
+     <li>Orçamento fechado, item por item</li>
+     <li>Regulagem com RTA na entrega</li>
+     <li>Garantia da instalação por escrito</li>
+    </ul>
+    <a class="btn small" data-wa="Olá, Vibex! Vi o projeto por dentro no site e quero orçamento de um som completo. Meu carro é: " href="https://wa.me/556296166397"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>Orçar projeto completo</a>
+   </div>
+  </article>
+
+  <article class="chap" data-step="portas" id="passo-portas" aria-labelledby="s-portas">
+   <div class="chap-card">
+    <p class="chap-k"><b>01</b>/05 · Portas</p>
+    <h3 id="s-portas">Portas e falantes</h3>
+    <p class="what">Falante de fábrica costuma ter cone de papel fino e ímã pequeno. Trocar por um kit 2 vias, com tweeter separado, é a mudança que mais aparece pelo valor investido.</p>
+    <ul class="checks">
+     <li>Kit 2 vias ou coaxial, conforme o projeto</li>
+     <li>Anel em MDF pra o falante não vibrar no forro</li>
+     <li>Vedação da porta pra segurar o médio-grave</li>
+     <li>Tweeter apontado pro motorista</li>
+    </ul>
+    <p class="ideal"><b>Pra quem é:</b> primeiro passo de quem quer sair do som de fábrica sem mudar o visual.</p>
+    <a class="btn small" data-wa="Olá, Vibex! Quero orçamento para trocar os falantes das portas. Meu carro é: " href="https://wa.me/556296166397"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>Orçar falantes</a>
+   </div>
+  </article>
+
+  <article class="chap" data-step="grave" id="passo-grave" aria-labelledby="s-grave">
+   <div class="chap-card">
+    <p class="chap-k"><b>02</b>/05 · Grave</p>
+    <h3 id="s-grave">Grave no porta-malas</h3>
+    <p class="what">A caixa é metade do grave. Volume e sintonia são calculados pro falante que vai nela e pro espaço que você tem, seja um sub, um trio ou um projeto de pressão.</p>
+    <ul class="checks">
+     <li>Cálculo de volume e sintonia, selada ou dutada</li>
+     <li>Caixa em MDF com acabamento em carpete</li>
+     <li>Tampão personalizado, com LED se você quiser</li>
+     <li>Ligação ao módulo com cabo na bitola certa</li>
+    </ul>
+    <p class="ideal"><b>Pra quem é:</b> pra quem quer sentir o grave no peito sem a lataria vibrar junto.</p>
+    <a class="btn small" data-wa="Olá, Vibex! Quero orçamento de caixa de grave / subwoofer. Meu carro é: " href="https://wa.me/556296166397"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>Orçar caixa de grave</a>
+   </div>
+  </article>
+
+  <article class="chap" data-step="modulos" id="passo-modulos" aria-labelledby="s-modulos">
+   <div class="chap-card">
+    <p class="chap-k"><b>03</b>/05 · Módulos</p>
+    <h3 id="s-modulos">Módulos e processador</h3>
+    <p class="what">O módulo dá a potência. O processador (DSP) separa as frequências e acerta o tempo de cada falante. É aqui que o som para de embolar quando você aumenta.</p>
+    <ul class="checks">
+     <li>Potência escolhida pelo RMS de cada falante</li>
+     <li>Instalação em placa, com ventilação</li>
+     <li>Crossover, ganho e atraso configurados</li>
+     <li>Barramento com fusível por módulo</li>
+    </ul>
+    <p class="ideal"><b>Pra quem é:</b> obrigatório no trio, na pressão e em qualquer sistema com mais de um par de falantes.</p>
+    <a class="btn small" data-wa="Olá, Vibex! Quero orçamento de módulo amplificador e processador (DSP). Meu carro é: " href="https://wa.me/556296166397"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>Orçar módulo e DSP</a>
+   </div>
+  </article>
+
+  <article class="chap" data-step="midia" id="passo-midia" aria-labelledby="s-midia">
+   <div class="chap-card">
+    <p class="chap-k"><b>04</b>/05 · Multimídia</p>
+    <h3 id="s-midia">Multimídia no painel</h3>
+    <p class="what">A central é de onde sai o sinal. Uma multimídia com saída RCA limpa faz diferença no som e ainda traz CarPlay, Android Auto e câmera de ré.</p>
+    <ul class="checks">
+     <li>Central com CarPlay e Android Auto</li>
+     <li>Moldura específica pro painel do seu carro</li>
+     <li>Chicote e adaptador de antena, sem corte</li>
+     <li>Comandos de volante, quando o carro permite</li>
+    </ul>
+    <p class="ideal"><b>Pra quem é:</b> pra quem quer aposentar o rádio de fábrica e já deixar a saída pronta pros módulos.</p>
+    <a class="btn small" data-wa="Olá, Vibex! Quero orçamento de multimídia (CarPlay/Android Auto). Meu carro é: " href="https://wa.me/556296166397"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>Orçar multimídia</a>
+   </div>
+  </article>
+
+  <article class="chap" data-step="bateria" id="passo-eletrica" aria-labelledby="s-eletrica">
+   <div class="chap-card">
+    <p class="chap-k"><b>05</b>/05 · Elétrica</p>
+    <h3 id="s-eletrica">Elétrica e alimentação</h3>
+    <p class="what">Grave pede corrente. Sem elétrica dimensionada a tensão cai, o farol pisca e o módulo desarma. É a camada que ninguém vê e a que mais segura o projeto.</p>
+    <ul class="checks">
+     <li>Cálculo de consumo do sistema</li>
+     <li>Cabo na bitola certa, correndo pelo assoalho</li>
+     <li>Fusível principal perto da bateria</li>
+     <li>Aterramento em ponto limpo da carroceria</li>
+    </ul>
+    <p class="ideal"><b>Pra quem é:</b> indispensável a partir do trio. Em projeto de pressão, é por onde a gente começa.</p>
+    <a class="btn small" data-wa="Olá, Vibex! Quero orçamento da parte elétrica do som (cabos, fusível, bateria). Meu carro é: " href="https://wa.me/556296166397"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>Orçar parte elétrica</a>
+   </div>
+  </article>
  </div>
 </section>
+
+<div class="wrap facts-wrap">
+ <dl class="facts">
+  <div><dt>Horário</dt><dd>Seg. a sáb., 8h às 19h</dd></div>
+  <div><dt>Pagamento</dt><dd>Pix, cartão ou 6x sem juros</dd></div>
+  <div><dt>Seu equipamento</dt><dd>Instalamos o que você já comprou</dd></div>
+  <div><dt>Endereço</dt><dd>Av. Diamante, 13</dd></div>
+ </dl>
+</div>
 
 <!-- REGRA Nº 1 -->
 <section class="band" aria-label="Regra da casa">
@@ -240,39 +359,6 @@
   </div>
 
   <p class="law-note"><svg class="ic" aria-hidden="true"><use href="#i-warn"/></svg><span><b>Potência com responsabilidade.</b> A lei estadual de som automotivo restringe som alto e paredão fora de eventos autorizados. A Vibex monta som pra você curtir dentro do carro e nos eventos liberados, não pra tirar o sossego da rua.</span></p>
- </div>
-</section>
-
-<!-- RAIO-X -->
-<section class="sec xsec" id="raio-x" aria-labelledby="h-xray">
- <div class="wrap">
-  <div class="head">
-   <h2 id="h-xray">Raio-X<br><span class="o">do carro</span></h2>
-   <p class="lead">Toque numa camada. O carro gira, abre a porta ou a tampa e mostra onde cada peça fica, do jeito que a gente desenha antes de instalar.</p>
-  </div>
-
-  <div class="xray">
-   <div class="xray-stage">
-    <div class="layers" role="group" aria-label="Camadas do sistema de som">
-     <button type="button" class="layer-btn" data-layer="completo" aria-pressed="true"><small>00</small><strong>Completo</strong></button>
-     <button type="button" class="layer-btn" data-layer="portas" aria-pressed="false"><small>01</small><strong>Portas</strong></button>
-     <button type="button" class="layer-btn" data-layer="grave" aria-pressed="false"><small>02</small><strong>Grave</strong></button>
-     <button type="button" class="layer-btn" data-layer="modulos" aria-pressed="false"><small>03</small><strong>Módulos</strong></button>
-     <button type="button" class="layer-btn" data-layer="midia" aria-pressed="false"><small>04</small><strong>Multimídia</strong></button>
-     <button type="button" class="layer-btn" data-layer="bateria" aria-pressed="false"><small>05</small><strong>Elétrica</strong></button>
-    </div>
-    <div class="stage" id="xrayStage">
-     <div class="stage-hud top" aria-hidden="true"><span id="xrayHud">Camada 00</span><span class="deg"><b id="xrayAng">308°</b></span></div>
-     <svg class="car3d neon" id="xrayCar" role="img" tabindex="0" aria-label="Carro em 3D mostrando a camada selecionada do sistema de som. Arraste ou use as setas para girar."></svg>
-     <div class="callout" id="callout" aria-hidden="true"><i class="co-dot" id="coDot"></i><b class="co-line" id="coLine"></b><span class="co-label" id="calloutTxt"></span></div>
-    </div>
-   </div>
-
-   <article class="svc" id="svc" aria-live="polite">
-    <div class="svc-meta"><span id="svcNo">Camada 00 de 05</span><span class="tag" id="svcTag">visão geral</span></div>
-    <div class="svc-body" id="svcBody"></div>
-   </article>
-  </div>
  </div>
 </section>
 
@@ -703,8 +789,8 @@
 </nav>
 
 <script src="js/engine.js?v=20261031"></script>
-<script src="js/main.js?v=20261031f"></script>
+<script src="js/main.js?v=2"></script>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
-<script type="module" src="js/carro3d.js?v=20261031f" onerror="window.VibexHeroTraco && VibexHeroTraco(); window.VibexXrayTraco && VibexXrayTraco()"></script>
+<script type="module" src="js/carro3d.js?v=2" onerror="window.VibexTraco && VibexTraco()"></script>
 </body>
 </html>

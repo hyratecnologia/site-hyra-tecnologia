@@ -1,12 +1,13 @@
 /* ==========================================================================
-   Vibex AudioCar · carro 3D realista (Three.js + GLB) no topo e no raio-X
-   Só o modelo aparece. Sem WebGL, com economia de dados ou se o arquivo
-   falhar, main.js desenha o carro em traço (engine.js) no lugar.
-   Portas e tampa abrem por dobradiça; o som instalado (caixa com 2 subs,
-   módulos, DSP, falantes das portas, tweeters, bateria e cabo de força) é
-   montado aqui. No topo, "Ligar o som" toca uma batida gerada no navegador
-   (Web Audio, sem arquivo de música); no raio-X, cada camada pulsa no mesmo
-   ritmo, sem som.
+   Vibex AudioCar · carro 3D realista (Three.js + GLB) do topo e do "Por dentro do som"
+   Um palco só, preso na tela: no início o carro gira; conforme a página rola,
+   main.js manda a etapa (evento "step") e o carro abre a porta, a tampa ou
+   entra no painel para mostrar cada parte do som. Sem WebGL, com economia de
+   dados ou se o arquivo falhar, main.js desenha o carro em traço no lugar.
+   O som instalado (meio forro nas portas, caixa com 2 subs, painel de módulos,
+   tampão, tweeters, bateria e cabo de força) é montado aqui. "Ligar o som"
+   toca uma batida gerada no navegador (Web Audio, sem arquivo de música);
+   desligado, tudo pulsa no mesmo ritmo, em silêncio.
    Modelo: "Volkswagen Golf GTI (2025)" por geyges no Sketchfab (licença Standard).
    ========================================================================== */
 import * as THREE from 'three';
@@ -19,16 +20,6 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
 const saveData = navigator.connection && navigator.connection.saveData;
 
-/* cores da lataria: a primeira é a original do modelo */
-const PAINTS = [
-  { nome: 'Vermelho', hex: '#D01616' },
-  { nome: 'Preto', hex: '#0B0B0D' },
-  { nome: 'Grafite', hex: '#3A3D42' },
-  { nome: 'Prata', hex: '#B9BEC4' },
-  { nome: 'Branco', hex: '#E9EAEC' },
-  { nome: 'Laranja', hex: '#FF5A0A' }
-];
-
 /* dobradiças medidas no modelo (metros; frente do carro em -Z, motorista em -X) */
 const HINGES = {
   fl: { nodes: ['EXT_DOOR_FL', 'INT_DOOR_FL'], at: [-0.93, 0.8, -0.84], axis: 'y', max: -68 },
@@ -39,35 +30,24 @@ const HINGES = {
 };
 const KEYS = Object.keys(HINGES);
 
-/* câmera (yaw/pit em graus, mesma convenção do traço; zoom < 1 aproxima; tz leva o centro para a frente (-) ou para trás (+)) */
-const HERO_VIEWS = {
-  geral: { pit: 14, zoom: 1, tz: -0.05 },
-  portas: { yaw: 332, pit: 16, zoom: .8, tz: -0.4 },
-  tail: { yaw: 300, pit: 30, zoom: .7, tz: .95 }
-};
-
-/* camadas do raio-X: o que abre, para onde a câmera vai e qual peça ganha a etiqueta */
-const XRAY = {
+/* cada etapa: o que abre, para onde a câmera vai e qual peça ganha a etiqueta.
+   Câmera em graus (yaw 0 = lateral com a frente à esquerda, 90 = frente, 270 = traseira);
+   zoom < 1 aproxima; tx/ty/tz movem o ponto que a câmera olha */
+const STEPS = {
+  inicio: { pit: 14, zoom: 1, tz: -0.05, open: [] },
   completo: { yaw: 318, pit: 20, zoom: .98, tz: .15, open: KEYS },
-  portas: { yaw: 289, pit: 8, zoom: .19, tz: -0.4, tx: -1.24, ty: .55, open: ['fl', 'fr'], label: 'Portas · kit 2 vias e tweeter', anchor: 'spkFL' },
-  grave: { yaw: 302, pit: 30, zoom: .6, tz: 1.05, open: ['tail'], label: 'Grave · caixa selada com 2 subs', anchor: 'sub' },
-  modulos: { yaw: 298, pit: 36, zoom: .56, tz: 1.2, open: ['tail'], label: 'Módulos · 2 amplificadores e DSP', anchor: 'amp' },
-  midia: { yaw: 270, pit: 8, zoom: .16, tz: -0.35, ty: .98, open: ['fl'], label: 'Multimídia no painel', anchor: 'screen' },
-  bateria: { yaw: 42, pit: 26, zoom: .96, tz: -0.25, open: [], xray: true, label: 'Bateria, fusível e cabo de força', anchor: 'battery' }
+  portas: { yaw: 289, pit: 8, zoom: .19, tz: -0.4, tx: -1.24, ty: .55, open: ['fl', 'fr'], label: 'Meio forro · kit 2 vias e tweeter', anchor: 'door' },
+  grave: { yaw: 302, pit: 30, zoom: .6, tz: 1.05, open: ['tail'], label: 'Caixa selada com 2 subs', anchor: 'sub' },
+  modulos: { yaw: 298, pit: 36, zoom: .56, tz: 1.2, open: ['tail'], label: '2 módulos e processador', anchor: 'amp' },
+  midia: { yaw: 270, pit: 8, zoom: .16, tz: -0.35, ty: .98, open: ['fl'], label: 'Central multimídia', anchor: 'screen' },
+  bateria: { yaw: 42, pit: 26, zoom: .96, tz: -0.25, open: [], xray: true, label: 'Bateria, fusível e cabo', anchor: 'battery' }
 };
 
 function webgl() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return false; }
 }
 
-function viewName(deg) {
-  if (deg < 22 || deg > 338 || (deg > 158 && deg < 202)) return 'Lateral';
-  if (deg > 68 && deg < 112) return 'Frontal';
-  if (deg > 248 && deg < 292) return 'Traseira';
-  return '3/4';
-}
-
-/* o mesmo ritmo da batida (96 bpm, bumbo nos tempos 0, 6 e 10 de 16), sem som, para o raio-X */
+/* o mesmo ritmo da batida (96 bpm, bumbo nos tempos 0, 6 e 10 de 16), para pulsar em silêncio */
 function pulse(t) {
   const step = 60000 / 96 / 4, pos = (t / step) % 16;
   let since = 99;
@@ -417,7 +397,6 @@ function viewer(stage, o) {
     dirty: true, visible: true, dragging: false, lastTouch: 0
   };
   let last = 0, raf = 0;
-  const hand = stage.querySelector('.hint');
 
   function resize() {
     const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
@@ -434,7 +413,6 @@ function viewer(stage, o) {
     target.z = s.tz; target.y = s.ty; target.x = s.tx;
     camera.position.set(target.x - d * cp * Math.cos(s.yaw), target.y + d * Math.sin(s.pit), target.z - d * cp * Math.sin(s.yaw));
     camera.lookAt(target);
-    if (o.onAngle) o.onAngle(Math.round(((s.yaw / DEG) % 360 + 360) % 360));
   }
 
   /* gira a câmera até um ângulo pelo caminho mais curto */
@@ -511,7 +489,7 @@ function viewer(stage, o) {
   canvas.addEventListener('pointerdown', (e) => {
     v.dragging = true; v.tw = null; px = e.clientX; py = e.clientY; v.lastTouch = performance.now();
     canvas.setPointerCapture(e.pointerId); canvas.classList.add('is-grabbing');
-    if (hand) hand.classList.add('gone'); v.kick();
+    v.kick();
   });
   canvas.addEventListener('pointermove', (e) => {
     if (!v.dragging) return;
@@ -598,156 +576,69 @@ function viewer(stage, o) {
   return v;
 }
 
-/* ==================== TOPO ==================== */
-function hero() {
-  const stage = document.getElementById('heroStage'), svg = document.getElementById('heroCar');
-  if (!stage || !svg) return;
-  const angEl = document.getElementById('heroAng'), viewEl = document.getElementById('heroView');
-  let beat = null, glowL = 0, v = null;
-
-  v = viewer(stage, {
-    aria: 'Carro hatch em 3D com o som instalado. Arraste ou use as setas do teclado para girar.',
-    yaw: 35, pit: 14, fallbackSvg: svg,
-    fail: () => { if (window.VibexHeroTraco) window.VibexHeroTraco(); },
-    onAngle: (deg) => {
-      if (angEl) angEl.textContent = ('00' + deg).slice(-3) + '°';
-      if (viewEl) { const n = viewName(deg); if (viewEl.textContent !== n) viewEl.textContent = n; }
-    },
-    spin: (t) => !reduced && !v.dragging && v.visible && !document.hidden && !v.anyOpen() && !(beat && beat.on) && t - v.lastTouch > 2600,
-    onTick: (t) => {
-      /* som: cones, brilho, luz do porta-malas e o carro tremendo de leve */
-      const M = v.M, on = !!(beat && beat.on), lv = on ? beat.level() : 0;
-      glowL += (lv - glowL) * .5;
-      v.rig.userData.subs.forEach((sp) => { sp.userData.move.position.z = lv * .028; });
-      v.doorSpk.forEach((sp) => { sp.userData.move.position.z = lv * .008; });
-      M.glowDoor.emissiveIntensity = M.glowSub.emissiveIntensity = .6 + glowL * 4;
-      M.led.emissiveIntensity = on ? 1.5 + lv * 3 : .4;
-      v.trunkLight.intensity = v.open.tail * (1.2 + glowL * 5);
-      v.car.position.y = reduced ? 0 : lv * .006; v.car.rotation.z = reduced ? 0 : Math.sin(t / 37) * lv * .0025;
-      stage.style.setProperty('--pulse', glowL.toFixed(3));
-      return on || glowL > .002;
-    },
-    ready: () => requestAnimationFrame(controls)
-  });
-
-  document.addEventListener('visibilitychange', () => { if (document.hidden && beat && beat.on) setSound(false); });
-
-  /* depois de fechar algo, a câmera volta para o que ainda está aberto */
-  function settle() {
-    if (v.want.tail) v.lookAt(HERO_VIEWS.tail);
-    else if (v.want.fl) v.lookAt(HERO_VIEWS.portas);
-    else v.lookAt(HERO_VIEWS.geral);
-  }
-
-  let btnDoors, btnTail, btnSound;
-  function setDoors(on) {
-    ['fl', 'fr', 'rl', 'rr'].forEach((k) => { v.want[k] = on ? 1 : 0; });
-    btnDoors.setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on) v.lookAt(HERO_VIEWS.portas); else settle();
-    v.kick();
-  }
-  function setTail(on) {
-    v.want.tail = on ? 1 : 0;
-    btnTail.setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on) v.lookAt(HERO_VIEWS.tail); else settle();
-    v.kick();
-  }
-  function setSound(on) {
-    if (!beat) beat = makeBeat();
-    if (!beat) return;
-    if (on) { beat.start(); if (!v.want.tail) setTail(true); else v.lookAt(HERO_VIEWS.tail); }
-    else beat.stop();
-    btnSound.setAttribute('aria-pressed', on ? 'true' : 'false');
-    btnSound.querySelector('b').textContent = on ? 'Desligar o som' : 'Ligar o som';
-    stage.classList.toggle('is-playing', on);
-    v.kick();
-  }
-
-  function controls() {
-    const bar = document.createElement('div');
-    bar.className = 'car-ctl';
-
-    const acts = document.createElement('div');
-    acts.className = 'car-acts'; acts.setAttribute('role', 'group'); acts.setAttribute('aria-label', 'Animações do carro');
-    const mk = (txt, fn, cls) => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'ctl' + (cls ? ' ' + cls : ''); b.setAttribute('aria-pressed', 'false');
-      b.innerHTML = (cls === 'snd' ? '<i class="eq" aria-hidden="true"><span></span><span></span><span></span></i>' : '') + '<b>' + txt + '</b>';
-      b.addEventListener('click', () => fn(b.getAttribute('aria-pressed') !== 'true'));
-      acts.appendChild(b); return b;
-    };
-    btnSound = mk('Ligar o som', setSound, 'snd');
-    btnDoors = mk('Portas', setDoors);
-    btnTail = mk('Porta-malas', setTail);
-    bar.appendChild(acts);
-
-    if (v.paint) {
-      const box = document.createElement('div');
-      box.className = 'paint'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', 'Cor da lataria');
-      box.innerHTML = '<span class="paint-k">Cor</span>';
-      PAINTS.forEach((p, i) => {
-        const b = document.createElement('button');
-        b.type = 'button'; b.className = 'sw'; b.style.setProperty('--c', p.hex);
-        b.setAttribute('aria-label', p.nome); b.title = p.nome;
-        b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
-        b.addEventListener('click', () => {
-          v.paint.color.set(p.hex); v.dirty = true; v.kick();
-          box.querySelectorAll('.sw').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
-        });
-        box.appendChild(b);
-      });
-      bar.appendChild(box);
-    }
-    stage.parentNode.appendChild(bar);
-  }
-}
-
-/* ==================== RAIO-X ==================== */
-function xray() {
-  const stage = document.getElementById('xrayStage'), svg = document.getElementById('xrayCar');
-  if (!stage || !svg || !window.VibexXray) return;
-  const angEl = document.getElementById('xrayAng'), coTxt = document.getElementById('calloutTxt');
-  let cur = window.VibexXray.layer(), started = false, fade = 0, power = null, v = null;
+/* ==================== PALCO DO TOPO + POR DENTRO DO SOM ==================== */
+function story() {
+  const show = document.getElementById('show'), stage = document.getElementById('carStage'), svg = document.getElementById('carSvg');
+  if (!show || !stage || !svg || !window.VibexStory) return;
+  const btn = document.getElementById('soundBtn');
+  let cur = window.VibexStory.step() || 'inicio', beat = null, glowL = 0, fade = 0, power = null, v = null;
   const focus = { portas: 0, grave: 0, modulos: 0, midia: 0, bateria: 0 };
   const anchors = {};
 
   function apply(k, animate) {
     cur = k;
-    const L = XRAY[k];
-    if (coTxt) coTxt.textContent = L.label || '';
-    if (!v || !v.car || !started) return;
+    const L = STEPS[k];
+    if (window.VibexCalloutText) window.VibexCalloutText(L.label || '');
+    if (!v || !v.car) return;
     KEYS.forEach((d) => { v.want[d] = L.open.includes(d) ? 1 : 0; });
-    v.lookAt(L, animate ? 1500 : 1);
+    v.lookAt(L, animate ? 1300 : 1);
     v.kick();
   }
-  stage.addEventListener('layer', (e) => apply(e.detail.k, e.detail.animate));
+  stage.addEventListener('step', (e) => apply(e.detail.k, true));
+
+  function setSound(on) {
+    if (!beat) beat = makeBeat();
+    if (!beat) return;
+    if (on) beat.start(); else beat.stop();
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.querySelector('b').textContent = on ? 'Desligar o som' : 'Ligar o som';
+    v.kick();
+  }
+  btn.addEventListener('click', () => setSound(!(beat && beat.on)));
+  /* o som para quando a pessoa sai do topo ou troca de aba */
+  document.addEventListener('visibilitychange', () => { if (document.hidden && beat && beat.on) setSound(false); });
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { if (!es[0].isIntersecting && beat && beat.on) setSound(false); }).observe(show);
+
+  document.querySelectorAll('#paint .sw').forEach((b, i, all) => {
+    b.addEventListener('click', () => {
+      if (!v || !v.paint) return;
+      v.paint.color.set(b.getAttribute('data-c')); v.dirty = true; v.kick();
+      all.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    });
+  });
 
   v = viewer(stage, {
-    aria: 'Carro em 3D mostrando a camada selecionada do sistema de som. Arraste ou use as setas para girar.',
-    yaw: 20, pit: 10, xray: true, fallbackSvg: svg,
-    fail: () => { if (window.VibexXrayTraco) window.VibexXrayTraco(); },
-    onAngle: (deg) => { if (angEl) angEl.textContent = ('00' + deg).slice(-3) + '°'; },
+    aria: 'Carro hatch em 3D com o som instalado. Arraste para girar.',
+    yaw: 35, pit: 14, xray: true, fallbackSvg: svg,
+    fail: () => { if (window.VibexTraco) window.VibexTraco(); },
+    spin: (t) => cur === 'inicio' && !reduced && !v.dragging && v.visible && !document.hidden && t - v.lastTouch > 1800,
     ready: (vv) => {
       power = powerRig(vv.M); power.visible = false; vv.car.add(power);
-      anchors.spkFL = vv.panelFL;
+      anchors.door = vv.panelFL;
       anchors.sub = vv.rig.userData.box;
       anchors.amp = vv.rig.userData.board;
       anchors.battery = power.userData.batt;
       anchors.screen = eqScreen(); vv.car.add(anchors.screen);
       apply(cur, false);
-      /* entra fechado e abre quando a seção aparece */
-      const go = () => { if (started) return; started = true; apply(cur, true); };
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) go(); }, { threshold: .3 }).observe(stage);
-      } else go();
+      show.classList.add('gl-on');
     },
     onTick: (t, dt) => {
-      const M = v.M, L = XRAY[cur];
-      const lv = reduced ? .4 : pulse(t);
-      let busy = !reduced;
-      /* a camada escolhida acende e pulsa; as outras ficam apagadas */
+      const M = v.M, L = STEPS[cur], on = !!(beat && beat.on);
+      /* com som: o grave de verdade; sem som: o mesmo ritmo, mais fraco */
+      const lv = on ? beat.level() : (reduced ? .3 : pulse(t) * .7);
+      glowL += ((on ? lv : 0) - glowL) * .5;
       for (const k in focus) {
-        const want = cur === k || (cur === 'completo' && k !== 'bateria' && k !== 'midia') ? 1 : 0;
+        const want = cur === k || (cur === 'completo' && k !== 'bateria' && k !== 'midia') || (on && k !== 'bateria' && k !== 'midia') ? 1 : 0;
         focus[k] += (want - focus[k]) * Math.min(1, dt / 180);
       }
       M.glowDoor.emissiveIntensity = .15 + focus.portas * (.6 + lv * 3.5);
@@ -759,14 +650,18 @@ function xray() {
       if (v.screens) v.screens.forEach((m) => { m.emissiveIntensity = 1 + focus.midia * lv * 2.2; });
       anchors.screen.userData.draw(t, focus.midia);
       v.trunkLight.intensity = v.open.tail * (1 + (focus.grave + focus.modulos) * lv * 3);
+      /* com o som ligado o carro treme de leve e a luz do chão acompanha */
+      v.car.position.y = reduced ? 0 : glowL * .006; v.car.rotation.z = reduced ? 0 : Math.sin(t / 37) * glowL * .0025;
+      stage.style.setProperty('--pulse', glowL.toFixed(3));
 
       /* elétrica: lataria some como num raio-X e a energia corre pelo cabo */
+      let busy = !reduced || on;
       const fw = L.xray ? 1 : 0;
       if (Math.abs(fw - fade) > .002) { fade += (fw - fade) * Math.min(1, dt / 220); busy = true; } else fade = fw;
       if (v.shell) v.shell.forEach((m) => {
         if (m.userData.op === undefined) m.userData.op = m.opacity;
-        const on = fade > .001;
-        if (m.transparent !== (on || m.userData.op < 1)) { m.transparent = on || m.userData.op < 1; m.needsUpdate = true; }
+        const vis = fade > .001;
+        if (m.transparent !== (vis || m.userData.op < 1)) { m.transparent = vis || m.userData.op < 1; m.needsUpdate = true; }
         m.opacity = m.userData.op * (1 - fade * .86);
         m.depthWrite = fade < .5;
       });
@@ -777,7 +672,7 @@ function xray() {
 
       /* etiqueta: a bolinha fica na borda da peça, do lado da etiqueta (que vai para o lado oposto do quadro) */
       const a = anchors[L.anchor];
-      if (a && !v.tw && started && window.VibexCallout) {
+      if (a && !v.tw && window.VibexCallout) {
         const w = stage.clientWidth, h = stage.clientHeight, r = v.toRect(a);
         const left = (r.x0 + r.x1) / 2 > w / 2;
         const ins = (r.x1 - r.x0) * .14, x = Math.max(8, Math.min(w - 8, left ? r.x0 + ins : r.x1 - ins)), y = Math.max(8, Math.min(h - 8, r.y0 + (r.y1 - r.y0) * .7));
@@ -788,8 +683,5 @@ function xray() {
   });
 }
 
-if (webgl() && !saveData) { hero(); xray(); }
-else {
-  if (window.VibexHeroTraco) window.VibexHeroTraco();
-  if (window.VibexXrayTraco) window.VibexXrayTraco();
-}
+if (webgl() && !saveData) story();
+else if (window.VibexTraco) window.VibexTraco();

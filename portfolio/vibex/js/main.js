@@ -75,195 +75,82 @@
   })();
 
   if (!window.VibexCar) return;
-  var V = window.VibexCar, DEG = V.DEG;
+  var V = window.VibexCar;
 
-  function viewName(deg) {
-    if (deg < 22 || deg > 338 || (deg > 158 && deg < 202)) return 'Lateral';
-    if (deg > 68 && deg < 112) return 'Frontal';
-    if (deg > 248 && deg < 292) return 'Traseira';
-    return "3/4";
-  }
-  function degOf(yaw) { return Math.round(((yaw / DEG) % 360 + 360) % 360); }
-  function pad3(n) { return ('00' + n).slice(-3); }
-
-  /* ==================== HERO: carro girando ==================== */
-  /* o topo usa o carro realista (carro3d.js); o traço só entra se ele não puder rodar */
-  function heroTraco() {
-    var svg = $('#heroCar'); if (!svg) return;
-    svg.closest('.stage').classList.add('gl-off');
-    var angEl = $('#heroAng'), viewEl = $('#heroView'), hand = $('#heroStage .hint'), lastDeg = -1;
-    var car = V.create(svg, {
-      auto: 7, fps30: coarse,
-      onRender: function (c) {
-        var d = degOf(c.s.yaw);
-        if (d !== lastDeg) {
-          lastDeg = d; angEl.textContent = pad3(d) + '°';
-          var n = viewName(d); if (viewEl.textContent !== n) viewEl.textContent = n;
-        }
-      },
-      onDrag: function () { if (hand) hand.classList.add('gone'); }
-    });
-    var rest = V.pose({ yaw: 35, pit: 14, rev: .55 });
-    function frame() {
-      // enquadramento que serve para qualquer ângulo do giro
-      var b = null, ar = car.aspect();
-      [0, 30].forEach(function (p) {
-        for (var a = 0; a < 360; a += 20) {
-          var q = V.pose({ yaw: a, pit: p, rev: .55 });
-          b = car.bounds(q, null, b || undefined);
-        }
-      });
-      return car.fit(b, 10, ar);
-    }
-    rest.vb = frame();
-    if (reduced) { car.set(rest); }
-    else {
-      var start = V.pose({ yaw: -70, pit: 26, rev: 0 }); start.vb = rest.vb.slice();
-      car.set(start);
-      setTimeout(function () { car.goTo(rest, 2600); }, 250);
-    }
-    var t; window.addEventListener('resize', function () {
-      clearTimeout(t); t = setTimeout(function () { var vb = frame(); car.s.vb = vb; rest.vb = vb; if (car.tw) car.tw.to.vb = vb.slice(); car.dirty = true; car.render(); }, 150);
-    });
-  }
-  var hasGL = (function () { try { var c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return false; } })();
-  var saveData = navigator.connection && navigator.connection.saveData;
-  if (hasGL && !saveData && 'noModule' in HTMLScriptElement.prototype) window.VibexHeroTraco = heroTraco;
-  else heroTraco();
-
-  /* ==================== RAIO-X ==================== */
+  /* ==================== TOPO + POR DENTRO DO SOM ==================== */
+  /* o palco fica preso na tela; a etapa que passa da "linha de leitura" manda no carro.
+     O carro realista (carro3d.js) ouve o evento "step" do palco; sem 3D, o traço abaixo faz o mesmo */
+  var STEPS = ['inicio', 'completo', 'portas', 'grave', 'modulos', 'midia', 'bateria'];
+  var NOW = {
+    inicio: 'Vibex AudioCar', completo: 'Por dentro do som',
+    portas: '<b>01</b> · Portas', grave: '<b>02</b> · Grave', modulos: '<b>03</b> · Módulos', midia: '<b>04</b> · Multimídia', bateria: '<b>05</b> · Elétrica'
+  };
+  /* poses do traço (convenção do engine.js) */
   var CFG = {
+    inicio: { yaw: 35, pit: 14, open: [], pad: 10 },
     completo: { yaw: -52, pit: 16, open: ['fl', 'fr', 'rl', 'rr', 'tail'], pad: 18 },
-    portas: { yaw: 64, pit: 9, open: ['fl', 'fr'], pad: 90, anchor: [470, 268, 150], label: 'Portas · tweeters e falantes' },
-    grave: { yaw: -46, pit: 30, open: ['tail'], pad: 120, anchor: [750, 226, 0], label: 'Grave · caixa com 6 subs' },
-    modulos: { yaw: -28, pit: 30, open: ['tail'], pad: 110, anchor: [610, 250, -75], label: 'Módulos · 2 amps, fonte, DSP' },
-    midia: { yaw: 72, pit: 6, open: ['fl'], pad: 190, anchor: [352, 236, 0], label: 'Multimídia no painel' },
+    portas: { yaw: 64, pit: 9, open: ['fl', 'fr'], pad: 90, anchor: [470, 268, 150], label: 'Falantes e tweeter' },
+    grave: { yaw: -46, pit: 30, open: ['tail'], pad: 120, anchor: [750, 226, 0], label: 'Caixa de grave' },
+    modulos: { yaw: -28, pit: 30, open: ['tail'], pad: 110, anchor: [610, 250, -75], label: 'Módulos e DSP' },
+    midia: { yaw: 72, pit: 6, open: ['fl'], pad: 190, anchor: [352, 236, 0], label: 'Multimídia' },
     bateria: { yaw: 44, pit: 22, open: [], pad: 60, anchor: [197, 246, 85], label: 'Bateria e fusível' }
   };
-  var SVC = {
-    completo: {
-      no: 'Camada 00 de 05', tag: 'visão geral', title: 'Sistema completo',
-      what: 'Som de carro é um conjunto: falantes nas portas, grave no porta-malas, módulos dando potência, a central mandando o sinal e a elétrica segurando tudo. Toque em cada camada pra ver onde fica e o que entra.',
-      inc: ['Projeto desenhado antes da instalação', 'Orçamento fechado, item por item', 'Regulagem com RTA na entrega', 'Garantia da instalação por escrito'],
-      ideal: 'Dá pra montar por etapas: começa pelas portas e cresce depois, sem refazer o que já foi feito.',
-      btn: 'Orçar projeto completo', msg: 'Olá, Vibex! Vi o raio-X no site e quero orçamento de um projeto de som completo. Meu carro é: '
-    },
-    portas: {
-      no: 'Camada 01 de 05', tag: 'portas abertas', title: 'Portas e falantes',
-      what: 'Falante de fábrica costuma ter cone de papel fino e ímã pequeno. Trocar por um kit 2 vias, com tweeter separado, é a mudança que mais aparece pelo valor investido.',
-      inc: ['Kit 2 vias ou coaxial, conforme o projeto', 'Anel em MDF pra o falante não vibrar no forro', 'Vedação da porta pra segurar o médio-grave', 'Tweeter apontado pro motorista'],
-      ideal: 'Primeiro passo de quem quer sair do som de fábrica sem mudar o visual.',
-      btn: 'Orçar falantes das portas', msg: 'Olá, Vibex! Quero orçamento para trocar os falantes das portas. Meu carro é: '
-    },
-    grave: {
-      no: 'Camada 02 de 05', tag: 'tampa aberta', title: 'Grave no porta-malas',
-      what: 'A caixa é metade do grave. Volume e sintonia são calculados pro falante que vai nela e pro espaço que você tem, seja um sub, um trio ou um projeto de pressão.',
-      inc: ['Cálculo de volume e sintonia, selada ou dutada', 'Caixa em MDF com acabamento em carpete', 'Fixação firme, nada de caixa solta', 'Ligação ao módulo com cabo na bitola certa'],
-      ideal: 'Pra quem quer sentir o grave no peito sem a lataria vibrar junto.',
-      btn: 'Orçar caixa de grave', msg: 'Olá, Vibex! Quero orçamento de caixa de grave / subwoofer. Meu carro é: '
-    },
-    modulos: {
-      no: 'Camada 03 de 05', tag: 'porta-malas', title: 'Módulos e processador',
-      what: 'O módulo dá a potência. O processador (DSP) separa as frequências e acerta o tempo de cada falante. É aqui que o som para de embolar quando você aumenta.',
-      inc: ['Potência escolhida pelo RMS de cada falante', 'Instalação em placa, com ventilação', 'Crossover, ganho e atraso configurados', 'Barramento com fusível por módulo'],
-      ideal: 'Obrigatório no trio, na pressão e em qualquer sistema com mais de um par de falantes.',
-      btn: 'Orçar módulo e DSP', msg: 'Olá, Vibex! Quero orçamento de módulo amplificador e processador (DSP). Meu carro é: '
-    },
-    midia: {
-      no: 'Camada 04 de 05', tag: 'painel', title: 'Multimídia no painel',
-      what: 'A central é de onde sai o sinal. Uma multimídia com saída RCA limpa faz diferença no som e ainda traz CarPlay, Android Auto e câmera de ré.',
-      inc: ['Central com CarPlay e Android Auto', 'Moldura específica pro painel do seu carro', 'Chicote e adaptador de antena, sem corte', 'Comandos de volante, quando o carro permite'],
-      ideal: 'Pra quem quer aposentar o rádio de fábrica e já deixar a saída pronta pros módulos.',
-      btn: 'Orçar multimídia', msg: 'Olá, Vibex! Quero orçamento de multimídia (CarPlay/Android Auto). Meu carro é: '
-    },
-    bateria: {
-      no: 'Camada 05 de 05', tag: 'cofre e assoalho', title: 'Elétrica e alimentação',
-      what: 'Grave pede corrente. Sem elétrica dimensionada a tensão cai, o farol pisca e o módulo desarma. É a camada que ninguém vê e a que mais segura o projeto.',
-      inc: ['Cálculo de consumo do sistema', 'Cabo na bitola certa, correndo pelo assoalho', 'Fusível principal perto da bateria', 'Aterramento em ponto limpo da carroceria', 'Bateria auxiliar quando o projeto pede'],
-      ideal: 'Indispensável a partir do trio. Em projeto de pressão, é por onde a gente começa.',
-      btn: 'Orçar parte elétrica', msg: 'Olá, Vibex! Quero orçamento da parte elétrica do som (cabos, fusível, bateria). Meu carro é: '
-    }
-  };
-  function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
-  function svcHTML(k) {
-    var s = SVC[k];
-    return '<h3>' + esc(s.title) + '</h3><p class="what">' + esc(s.what) + '</p><h4>O que entra</h4><ul class="checks">' +
-      s.inc.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul><p class="ideal"><b>Pra quem é:</b> ' + esc(s.ideal) + '</p>' +
-      '<a class="btn block" data-wa="' + esc(s.msg).replace(/"/g, '&quot;') + '" href="https://wa.me/' + WA + '"><svg class="ic fill" aria-hidden="true"><use href="#i-zap"/></svg>' + esc(s.btn) + '</a>';
-  }
 
-  /* o texto e os botões ficam aqui; o carro é o realista (carro3d.js, ouve o evento "layer")
-     ou, se ele não puder rodar, o traço abaixo */
   (function () {
-    var svg = $('#xrayCar'); if (!svg) return;
-    var stage = $('#xrayStage');
-    var body = $('#svcBody'), no = $('#svcNo'), tag = $('#svcTag'), hud = $('#xrayHud'), ang = $('#xrayAng');
+    var show = $('#show'), stage = $('#carStage'); if (!show || !stage) return;
+    var steps = $$('.chap', show), nav = $$('#stepsNav a'), now = $('#stepNow');
     var co = $('#callout'), coTxt = $('#calloutTxt'), coDot = $('#coDot'), coLine = $('#coLine');
-    var cur = 'completo', lastDeg = -1, car = null;
-    window.VibexXray = { CFG: CFG, layer: function () { return cur; } };
+    var cur = null, wide = function () { return window.innerWidth >= 1024; };
 
-    function poseFor(k) {
-      var cf = CFG[k], rev = {};
-      V.LAYERS.forEach(function (l) { rev[l] = k === 'completo' ? 1 : (l === k ? 1 : .07); });
-      var p = V.pose({ yaw: cf.yaw, pit: cf.pit, open: cf.open, rev: rev, dim: k === 'completo' ? .3 : 1 });
-      var b = k === 'completo' ? car.bounds(p) : car.bounds(p, function (m) { return m.layer === k; });
-      p.vb = car.fit(b, cf.pad);
-      return p;
-    }
-    function show(k, animate) {
+    function set(k) {
+      if (k === cur) return;
       cur = k;
-      svg.setAttribute('data-focus', k);
-      $$('.layer-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-layer') === k)); });
-      var s = SVC[k];
-      hud.textContent = s.no.replace(' de 05', '');
-      coTxt.textContent = CFG[k].label || '';
-      co.classList.remove('on');
-      var fill = function () { body.innerHTML = svcHTML(k); bindWa(body); no.textContent = s.no; tag.textContent = s.tag; body.classList.remove('swap'); };
-      if (animate && !reduced) { body.classList.add('swap'); setTimeout(fill, 220); } else fill();
-      if (car) { if (animate) car.goTo(poseFor(k), 1500); else car.set(poseFor(k)); }
-      stage.dispatchEvent(new CustomEvent('layer', { detail: { k: k, animate: !!animate } }));
+      nav.forEach(function (a) { if (a.getAttribute('data-go') === k) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
+      now.innerHTML = NOW[k];
+      stage.setAttribute('data-step', k);
+      stage.dispatchEvent(new CustomEvent('step', { detail: { k: k } }));
     }
-    $$('.layer-btn').forEach(function (b) {
-      b.addEventListener('click', function () { var k = b.getAttribute('data-layer'); if (k !== cur || (car && car.tw === null)) show(k, true); });
+    window.VibexStory = { step: function () { return cur; } };
+
+    /* linha de leitura: no celular, um pouco abaixo do carro; no desktop, no meio da tela */
+    function readLine() {
+      var vh = window.innerHeight;
+      if (wide()) return vh * .55;
+      var b = stage.getBoundingClientRect().bottom;
+      return b + (vh - b) * .3;
+    }
+    function pick() {
+      var L = readLine(), k = STEPS[0];
+      steps.forEach(function (s) { if (s.getBoundingClientRect().top < L) k = s.getAttribute('data-step'); });
+      set(k);
+    }
+    var ticking = false;
+    function onScrollStory() { if (ticking) return; ticking = true; requestAnimationFrame(function () { ticking = false; pick(); }); }
+    window.addEventListener('scroll', onScrollStory, { passive: true });
+    window.addEventListener('resize', onScrollStory);
+    pick();
+
+    /* links para uma etapa: no celular a etapa tem de parar logo abaixo do carro, não atrás dele */
+    function goTo(el) {
+      var hdrH = $('#hdr').offsetHeight, top = el.getBoundingClientRect().top + window.scrollY;
+      var y = wide() ? top - hdrH : top - hdrH - stage.offsetHeight + 1;
+      if (el.getAttribute('data-step') === 'inicio') y = 0;
+      window.scrollTo({ top: Math.max(0, y), behavior: reduced ? 'auto' : 'smooth' });
+    }
+    $$('a[href^="#"]').forEach(function (a) {
+      var id = a.getAttribute('href').slice(1); if (!id) return;
+      var el = document.getElementById(id);
+      var step = el && (el.classList.contains('chap') ? el : (el === show ? steps[0] : null));
+      if (!step) return;
+      a.addEventListener('click', function (e) { e.preventDefault(); goTo(step); history.replaceState(null, '', '#' + id); });
     });
-    show('completo', false);
 
-    function traco() {
-      stage.classList.add('gl-off');
-      car = V.create(svg, {
-        onRender: function (c) {
-          var d = degOf(c.s.yaw);
-          if (d !== lastDeg) { lastDeg = d; ang.textContent = pad3(d) + '°'; }
-          var cf = CFG[cur];
-          if (cf.anchor && !c.tw) {
-            var p = c.toScreen(cf.anchor[0], cf.anchor[1], cf.anchor[2]), r = svg.getBoundingClientRect();
-            window.VibexCallout(p[0], p[1], r.width, r.height);
-          } else co.classList.remove('on');
-        }
-      });
-      // estado inicial: carro fechado; entra girando quando a seção aparece
-      var first = V.pose({ yaw: 20, pit: 10, rev: 0, dim: 0 });
-      first.vb = poseFor(cur).vb;
-      car.set(first);
-      svg.setAttribute('data-focus', cur);
-      var started = false;
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (es) {
-          es.forEach(function (e) { if (e.isIntersecting && !started) { started = true; car.goTo(poseFor(cur), reduced ? 0 : 2200); } });
-        }, { threshold: .3 }).observe(svg);
-      } else car.set(poseFor(cur));
-      var t; window.addEventListener('resize', function () {
-        clearTimeout(t); t = setTimeout(function () { if (!started) return; var p = poseFor(cur); car.s.vb = p.vb; if (car.tw) car.tw.to.vb = p.vb; car.dirty = true; car.render(); }, 150);
-      });
-    }
-
-    /* etiqueta com linha até a peça (x, y em pixels dentro do palco); usada pelos dois carros */
+    /* etiqueta: bolinha na peça, linha fina e o texto num canto que não cobre nada */
     window.VibexCallout = function (x, y, w, h, left) {
       var lw = coTxt.offsetWidth, lh = coTxt.offsetHeight;
-      // etiqueta no canto de baixo do lado oposto ao da peça (no de cima se a peça estiver lá embaixo),
-      // para não cobrir nada; só a bolinha fica na peça e a linha leva até a etiqueta
-      var m = 14, lx = (left === undefined ? x > w / 2 : left) ? m : w - lw - m;
-      var ly = h - lh - m; if (y > ly - 24) ly = 48;
+      var m = 14, bottom = wide() ? 18 : 40, topY = wide() ? 64 : 56;
+      var lx = (left === undefined ? x > w / 2 : left) ? m : w - lw - m;
+      var ly = h - lh - bottom; if (y > ly - 24) ly = topY;
       coDot.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px)';
       coTxt.style.transform = 'translate(' + lx.toFixed(0) + 'px,' + ly.toFixed(0) + 'px)';
       var tx = Math.max(lx + 10, Math.min(lx + lw - 10, x)), ty = ly < y ? ly + lh : ly;
@@ -273,8 +160,48 @@
       co.classList.add('on');
     };
     window.VibexCalloutOff = function () { co.classList.remove('on'); };
+    window.VibexCalloutText = function (t) { if (coTxt.textContent !== t) coTxt.textContent = t; };
 
-    if (hasGL && !saveData && 'noModule' in HTMLScriptElement.prototype) window.VibexXrayTraco = traco;
+    /* reserva sem 3D: o carro em traço segue as mesmas etapas */
+    function traco() {
+      show.classList.add('gl-off'); stage.classList.add('gl-off');
+      var svg = $('#carSvg'), car = V.create(svg, {
+        auto: 7, fps30: coarse,
+        onRender: function (c) {
+          var cf = CFG[cur || 'inicio'];
+          if (cf.anchor && !c.tw) {
+            var p = c.toScreen(cf.anchor[0], cf.anchor[1], cf.anchor[2]), r = svg.getBoundingClientRect();
+            window.VibexCallout(p[0], p[1], r.width, r.height);
+          } else window.VibexCalloutOff();
+        }
+      });
+      function poseFor(k) {
+        var cf = CFG[k], rev = {};
+        V.LAYERS.forEach(function (l) { rev[l] = k === 'inicio' ? .55 : (k === 'completo' ? 1 : (l === k ? 1 : .07)); });
+        var p = V.pose({ yaw: cf.yaw, pit: cf.pit, open: cf.open, rev: rev, dim: k === 'inicio' ? 0 : (k === 'completo' ? .3 : 1) });
+        var b;
+        if (k === 'inicio') {
+          // enquadramento que serve para qualquer ângulo do giro
+          [0, 30].forEach(function (pp) { for (var a = 0; a < 360; a += 20) b = car.bounds(V.pose({ yaw: a, pit: pp, rev: .55 }), null, b || undefined); });
+        } else b = k === 'completo' ? car.bounds(p) : car.bounds(p, function (m) { return m.layer === k; });
+        p.vb = car.fit(b, cf.pad, car.aspect());
+        return p;
+      }
+      function apply(animate) {
+        var k = cur || 'inicio';
+        car.o.auto = k === 'inicio' ? 7 : 0;
+        svg.setAttribute('data-focus', k);
+        coTxt.textContent = CFG[k].label || '';
+        if (animate && !reduced) car.goTo(poseFor(k), 1400); else car.set(poseFor(k));
+      }
+      apply(false);
+      stage.addEventListener('step', function () { apply(true); });
+      var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { apply(false); }, 150); });
+    }
+
+    var hasGL = (function () { try { var c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return false; } })();
+    var saveData = navigator.connection && navigator.connection.saveData;
+    if (hasGL && !saveData && 'noModule' in HTMLScriptElement.prototype) window.VibexTraco = traco;
     else traco();
   })();
 
