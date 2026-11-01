@@ -284,7 +284,7 @@ svg.car3d:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
   .chap { min-height: 92vh; justify-content: center; padding: 60px 24px 60px max(var(--gut), calc((100vw - var(--wrap)) / 2 + var(--gut))); }
   .chap + .chap { border-top: 0; }
   .chap-hero { min-height: calc(100vh - var(--hdr)); padding-top: 30px; }
-  .chap-hero h1 { font-size: clamp(76px, 7.4vw, 128px); }
+  .chap-hero h1 { font-size: clamp(64px, 5.8vw, 104px); }
   .chap-hero .lead { font-size: 18px; }
   .chap h2 { font-size: clamp(56px, 5.4vw, 88px); }
   .chap h3 { font-size: clamp(44px, 4vw, 60px); }
