@@ -175,7 +175,7 @@ function trunkRig(M) {
     const c = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p)));
     board.add(new THREE.Mesh(new THREE.TubeGeometry(c, 24, i === 2 ? .006 : .003, 6), i === 2 ? M.plus : M.surround));
   });
-  g.userData = { subs, amps };
+  g.userData = { subs, amps, box: g.children[0], board };
   return g;
 }
 
@@ -482,11 +482,28 @@ function viewer(stage, o) {
   }
   v.kick = function () { if (!raf) raf = requestAnimationFrame(tick); };
 
-  /* tela em pixels de um ponto do carro */
-  const tmp = new THREE.Vector3();
-  v.toScreen = function (obj) {
-    obj.getWorldPosition(tmp); tmp.project(camera);
-    return [(tmp.x + 1) / 2 * stage.clientWidth, (1 - tmp.y) / 2 * stage.clientHeight, tmp.z < 1];
+  /* retângulo em pixels que a peça ocupa na tela. A caixa é medida uma vez no espaço da própria peça,
+     para acompanhar a porta girando sem inchar como uma caixa alinhada ao mundo */
+  const tmp = new THREE.Vector3(), inv = new THREE.Matrix4(), rel = new THREE.Matrix4();
+  v.toRect = function (obj) {
+    let box = obj.userData.localBox;
+    if (!box) {
+      box = new THREE.Box3(); obj.updateMatrixWorld(true); inv.copy(obj.matrixWorld).invert();
+      obj.traverse((m) => {
+        if (!m.isMesh) return;
+        if (!m.geometry.boundingBox) m.geometry.computeBoundingBox();
+        box.union(m.geometry.boundingBox.clone().applyMatrix4(rel.multiplyMatrices(inv, m.matrixWorld)));
+      });
+      obj.userData.localBox = box;
+    }
+    const w = stage.clientWidth, h = stage.clientHeight, r = { x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9, front: true };
+    for (let i = 0; i < 8; i++) {
+      tmp.set(i & 1 ? box.max.x : box.min.x, i & 2 ? box.max.y : box.min.y, i & 4 ? box.max.z : box.min.z).applyMatrix4(obj.matrixWorld).project(camera);
+      if (tmp.z > 1) r.front = false;
+      const x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h;
+      r.x0 = Math.min(r.x0, x); r.x1 = Math.max(r.x1, x); r.y0 = Math.min(r.y0, y); r.y1 = Math.max(r.y1, y);
+    }
+    return r;
   };
 
   /* arrastar e teclado, com os mesmos limites do traço */
@@ -555,7 +572,7 @@ function viewer(stage, o) {
     [['fl', -1], ['fr', 1]].forEach(([k, side]) => {
       const pn = doorPanel(M, side); car.add(pn); v.pivots[k].attach(pn);
       v.doorSpk.push(...pn.userData.spk);
-      if (k === 'fl') v.spkFL = pn.userData.big;
+      if (k === 'fl') v.panelFL = pn;
     });
     [['rl', -.66, .6, .52, .065], ['rr', .66, .6, .52, .065]].forEach(([k, x, y, z, r]) => {
       const sp = speaker(r, M, M.glowDoor); sp.position.set(x, y, z); sp.rotation.y = x < 0 ? Math.PI / 2 : -Math.PI / 2;
@@ -712,9 +729,9 @@ function xray() {
     onAngle: (deg) => { if (angEl) angEl.textContent = ('00' + deg).slice(-3) + '°'; },
     ready: (vv) => {
       power = powerRig(vv.M); power.visible = false; vv.car.add(power);
-      anchors.spkFL = vv.spkFL;
-      anchors.sub = vv.rig.userData.subs[0];
-      anchors.amp = vv.rig.userData.amps[0];
+      anchors.spkFL = vv.panelFL;
+      anchors.sub = vv.rig.userData.box;
+      anchors.amp = vv.rig.userData.board;
       anchors.battery = power.userData.batt;
       anchors.screen = eqScreen(); vv.car.add(anchors.screen);
       apply(cur, false);
@@ -758,11 +775,13 @@ function xray() {
       M.glowPow.emissiveIntensity = .5 + fade * lv * 3;
       power.userData.tex.offset.x -= dt * .0016 * (reduced ? 0 : 1);
 
-      /* etiqueta presa na peça */
+      /* etiqueta: a bolinha fica na borda da peça, do lado da etiqueta (que vai para o lado oposto do quadro) */
       const a = anchors[L.anchor];
       if (a && !v.tw && started && window.VibexCallout) {
-        const [x, y, front] = v.toScreen(a);
-        if (front) window.VibexCallout(x, y, stage.clientWidth, stage.clientHeight); else window.VibexCalloutOff();
+        const w = stage.clientWidth, h = stage.clientHeight, r = v.toRect(a);
+        const left = (r.x0 + r.x1) / 2 > w / 2;
+        const ins = (r.x1 - r.x0) * .14, x = Math.max(8, Math.min(w - 8, left ? r.x0 + ins : r.x1 - ins)), y = Math.max(8, Math.min(h - 8, r.y0 + (r.y1 - r.y0) * .7));
+        if (r.front) window.VibexCallout(x, y, w, h, left); else window.VibexCalloutOff();
       } else if (window.VibexCalloutOff) window.VibexCalloutOff();
       return busy && v.visible && !document.hidden;
     }

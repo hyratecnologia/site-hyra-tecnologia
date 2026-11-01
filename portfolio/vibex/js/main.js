@@ -258,11 +258,11 @@
     }
 
     /* etiqueta com linha até a peça (x, y em pixels dentro do palco); usada pelos dois carros */
-    window.VibexCallout = function (x, y, w, h) {
+    window.VibexCallout = function (x, y, w, h, left) {
       var lw = coTxt.offsetWidth, lh = coTxt.offsetHeight;
       // etiqueta no canto de baixo do lado oposto ao da peça (no de cima se a peça estiver lá embaixo),
       // para não cobrir nada; só a bolinha fica na peça e a linha leva até a etiqueta
-      var m = 14, lx = x > w / 2 ? m : w - lw - m;
+      var m = 14, lx = (left === undefined ? x > w / 2 : left) ? m : w - lw - m;
       var ly = h - lh - m; if (y > ly - 24) ly = 48;
       coDot.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px)';
       coTxt.style.transform = 'translate(' + lx.toFixed(0) + 'px,' + ly.toFixed(0) + 'px)';
