@@ -170,7 +170,7 @@ svg.car3d:focus-visible { outline: 2px solid var(--yel); outline-offset: -6px; }
    Celular: carro em cima (--stage-h), texto embaixo, uma etapa por tela.
    Desktop: texto à esquerda, carro à direita ocupando a altura da tela.
    ========================================================================== */
-.show { --stage-h: min(50svh, 118vw); position: relative; padding-top: var(--hdr); background: var(--ink); }
+.show { --stage-h: min(50svh, 118vw); position: relative; padding-top: var(--hdr); background: var(--ink); overflow-x: clip; } /* clip (e não hidden) mantém o carro preso na tela */
 .show::before { content: ""; position: absolute; right: -10%; top: 0; width: 80%; height: 70vh; background: radial-gradient(ellipse at 60% 55%, rgba(255, 90, 10, .14), transparent 62%); pointer-events: none; }
 .show-stage { position: sticky; top: var(--hdr); z-index: 3; height: var(--stage-h); background: radial-gradient(ellipse 80% 70% at 55% 55%, #1a0e08 0%, var(--ink) 70%); }
 .show-stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: -18px; height: 18px; background: linear-gradient(var(--ink), transparent); pointer-events: none; }

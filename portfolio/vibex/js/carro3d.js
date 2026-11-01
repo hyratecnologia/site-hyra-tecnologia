@@ -34,7 +34,7 @@ const KEYS = Object.keys(HINGES);
    Câmera em graus (yaw 0 = lateral com a frente à esquerda, 90 = frente, 270 = traseira);
    zoom < 1 aproxima; tx/ty/tz movem o ponto que a câmera olha */
 const STEPS = {
-  inicio: { pit: 14, zoom: 1, tz: -0.05, open: [] },
+  inicio: { yaw: 322, pit: 17, zoom: 1.15, tz: .1, open: ['tail', 'fl', 'fr'] }, // depois da abertura: tampa e portas da frente abertas, tocando
   completo: { yaw: 318, pit: 20, zoom: .98, tz: .15, open: KEYS },
   portas: { yaw: 289, pit: 8, zoom: .19, tz: -0.4, tx: -1.24, ty: .55, open: ['fl', 'fr'], label: 'Meio forro · kit 2 vias e tweeter', anchor: 'door' },
   grave: { yaw: 302, pit: 30, zoom: .6, tz: 1.05, open: ['tail'], label: 'Caixa selada com 2 subs', anchor: 'sub' },
@@ -582,6 +582,8 @@ function story() {
   if (!show || !stage || !svg || !window.VibexStory) return;
   const btn = document.getElementById('soundBtn');
   let cur = window.VibexStory.step() || 'inicio', beat = null, glowL = 0, fade = 0, power = null, v = null;
+  /* abertura: parado, depois gira, depois abre tampa e portas e começa a tocar (o som só sai pelo botão) */
+  let intro = reduced ? 'done' : 'still', t0 = 0, playing = reduced;
   const focus = { portas: 0, grave: 0, modulos: 0, midia: 0, bateria: 0 };
   const anchors = {};
 
@@ -590,6 +592,8 @@ function story() {
     const L = STEPS[k];
     if (window.VibexCalloutText) window.VibexCalloutText(L.label || '');
     if (!v || !v.car) return;
+    if (k === 'inicio' && intro !== 'done') return; // a abertura cuida do carro
+    if (k !== 'inicio' && intro !== 'done') { intro = 'done'; playing = true; }
     KEYS.forEach((d) => { v.want[d] = L.open.includes(d) ? 1 : 0; });
     v.lookAt(L, animate ? 1300 : 1);
     v.kick();
@@ -621,7 +625,7 @@ function story() {
     aria: 'Carro hatch em 3D com o som instalado. Arraste para girar.',
     yaw: 35, pit: 14, xray: true, fallbackSvg: svg,
     fail: () => { if (window.VibexTraco) window.VibexTraco(); },
-    spin: (t) => cur === 'inicio' && !reduced && !v.dragging && v.visible && !document.hidden && t - v.lastTouch > 1800,
+    spin: (t) => cur === 'inicio' && intro === 'done' && !reduced && !v.dragging && v.visible && !document.hidden && t - v.lastTouch > 1800,
     ready: (vv) => {
       power = powerRig(vv.M); power.visible = false; vv.car.add(power);
       anchors.door = vv.panelFL;
@@ -629,16 +633,19 @@ function story() {
       anchors.amp = vv.rig.userData.board;
       anchors.battery = power.userData.batt;
       anchors.screen = eqScreen(); vv.car.add(anchors.screen);
+      t0 = performance.now();
       apply(cur, false);
       show.classList.add('gl-on');
     },
     onTick: (t, dt) => {
-      const M = v.M, L = STEPS[cur], on = !!(beat && beat.on);
-      /* com som: o grave de verdade; sem som: o mesmo ritmo, mais fraco */
-      const lv = on ? beat.level() : (reduced ? .3 : pulse(t) * .7);
-      glowL += ((on ? lv : 0) - glowL) * .5;
+      if (intro === 'still' && t - t0 > 1200) { intro = 'spin'; v.lookAt({ yaw: v.s.yaw / DEG + 175, pit: 16, zoom: 1, tz: -0.05 }, 2600); }
+      else if (intro === 'spin' && !v.tw) { intro = 'done'; playing = true; if (cur === 'inicio') apply('inicio', true); }
+      const M = v.M, L = STEPS[cur], on = !!(beat && beat.on), live = on || playing;
+      /* com som: o grave de verdade; tocando sem som: o mesmo ritmo; antes da abertura: fraco */
+      const lv = on ? beat.level() : (reduced ? .3 : pulse(t) * (playing ? 1 : .5));
+      glowL += ((live && !reduced ? lv : 0) - glowL) * .5;
       for (const k in focus) {
-        const want = cur === k || (cur === 'completo' && k !== 'bateria' && k !== 'midia') || (on && k !== 'bateria' && k !== 'midia') ? 1 : 0;
+        const want = cur === k || (cur === 'completo' && k !== 'bateria' && k !== 'midia') || (live && k !== 'bateria' && k !== 'midia') ? 1 : 0;
         focus[k] += (want - focus[k]) * Math.min(1, dt / 180);
       }
       M.glowDoor.emissiveIntensity = .15 + focus.portas * (.6 + lv * 3.5);
