@@ -596,6 +596,31 @@ h1 em { font-style: normal; color: var(--good); }
     { skin: "#e0a878", hair: "#b8562e", hairStyle: "long", shirt: "#ff9ac0", pants: "#2a2f45", mask: true }
   ];
   const LUX = [["#14121e", "#e8c04a"], ["#f4f1e8", "#c9a24a"], ["#b0182a", "#f4f1e8"], ["#1d3b6e", "#e8c04a"]];
+  // shuffled "bags": every option comes out once before any repeats, and never twice in a row across refills
+  const bags = {};
+  function fromBag(name, items) {
+    let b = bags[name];
+    if (!b || !b.left.length) {
+      const left = [...items];
+      for (let i = left.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [left[i], left[j]] = [left[j], left[i]]; }
+      if (b && left.length > 1 && left[left.length - 1] === b.last) left.unshift(left.pop());
+      b = bags[name] = { left, last: b ? b.last : null };
+    }
+    return (b.last = b.left.pop());
+  }
+  // the masked ones are generated on the spot: in every 6, two white, two brown and two Black people; in every 2, a woman and a man
+  const MASK_SKIN = { branca: ["#f2c7a5", "#f1c29c", "#e8b48a"], parda: ["#a8704a", "#9a6240", "#b07850"], negra: ["#8d5a3b", "#7b4a2d", "#6b3f26", "#5a3a26"] };
+  const MASK_HAIR = { branca: ["#3a2418", "#6b4423", "#7a4a22", "#e8c04a", "#b8562e", "#1c1410"], parda: ["#1c1410", "#3a2418", "#2a1a10", "#6b4423"], negra: ["#1c1410", "#111111", "#2a1a10"] };
+  const MASK_SHIRT = ["#ffffff", "#ff4f7b", "#5fd1e0", "#f2c94c", "#e8b84a", "#7a5cd6", "#4caf6a", "#ff9ac0", "#e2574c", "#3c6fd1", "#2a2838", "#ff8a3d"];
+  const MASK_PANTS = ["#1b1b2a", "#f4f1e8", "#2a2f45", "#2d3a5a", "#3b3b4f", "#4a3b2a", "#5a5a6a"];
+  function maskedLook() {
+    const grp = fromBag("cor", ["branca", "branca", "parda", "parda", "negra", "negra"]), fem = fromBag("gen", ["f", "m"]) === "f";
+    const hairStyle = fem ? pick(grp === "branca" ? ["long", "long", "short"] : ["afro", "afro", "long", "short"]) : pick(grp === "branca" ? ["short", "short", "short", "grey"] : ["short", "short", "afro", "grey"]);
+    const hair = hairStyle === "grey" ? "#d8d8d8" : rand() < 0.12 ? pick(["#6a3b86", "#2f6fa8", "#ff7aa8", "#5fd1e0"]) : pick(MASK_HAIR[grp]);
+    const shirt = fromBag("shirt", MASK_SHIRT);
+    let pants = pick(MASK_PANTS); if (pants === shirt) pants = "#2a2f45";
+    return { skin: pick(MASK_SKIN[grp]), hair, hairStyle, shirt, pants, mask: true, blazer: rand() < 0.22, pin: rand() < 0.15 };
+  }
   const KID = { skin: "#f2c7a5", hair: "#5a3a26", hairStyle: "short", shirt: "#ff9ac0", pants: "#3d5a8a" };
   const CROWD = { skin: "#6a6680", hair: "#45425a", hairStyle: "short", shirt: "#55526c", pants: "#403e55", line: "#0c0b14" };
 
@@ -1006,6 +1031,7 @@ h1 em { font-style: normal; color: var(--good); }
   function reset() {
     look = heroLook(sel); D = diffOf(); PSI = randomPsi();
     P = { x: 70, y: 150, z: 0, vz: 0, vx: 0, vy: 0, walk: 0, stack: [], shake: 0, hearts: 5, inv: 0, dust: 0 };
+    for (const k in bags) delete bags[k];
     blocks = []; debris = []; bubbles = []; crowd = []; helpers = []; transfers = []; spill = []; fell = false; traffic = []; obstacles = []; parts = [];
     boss = { on: false, t: 0, sx: LW + 80, sy: 150, metaT: 3, culpaT: 4, spotT: 6, spot: null, spotIn: 0, spotCd: 0, mouth: 0, said: 0, lineT: 4 };
     psi = { on: false, x: 0, y: 150, walk: 0, arrived: false, t: 0, mv: false };
@@ -1190,10 +1216,10 @@ h1 em { font-style: normal; color: var(--good); }
       // masked people heading to the well-being gate
       trafT -= dt;
       if (time > 3 && trafT <= 0 && !boss.on) {
-        // each one is a coin toss: running, a selfie stop, rollerblades, motorbike, luxury car or a private jet
-        const r = rand(), kind = r < 0.2 ? "run" : r < 0.38 ? "selfie" : r < 0.54 ? "patins" : r < 0.7 ? "moto" : r < 0.9 ? "luxo" : "jato";
+        // how they pass comes out of a bag too: running, a selfie stop, rollerblades, motorbike, luxury car (2 of each in 11) or a private jet (1 in 11)
+        const kind = fromBag("kind", ["run", "run", "selfie", "selfie", "patins", "patins", "moto", "moto", "luxo", "luxo", "jato"]);
         const onFoot = kind === "run" || kind === "selfie" || kind === "patins";
-        traffic.push({ kind, x: camX - (kind === "jato" ? 90 : 40), y: kind === "jato" ? 52 : onFoot ? pick([YMIN + 2, YMAX - 2, ...LANES]) : pick(LANES), speed: { run: 150, selfie: 140, patins: 175, moto: 210, luxo: 190, jato: 330 }[kind], look: pick(MASKED), lux: pick(LUX), walk: 0, state: "go", pt: 0, stopX: camX + 170 + rand() * 120 });
+        traffic.push({ kind, x: camX - (kind === "jato" ? 90 : 40), y: kind === "jato" ? 52 : onFoot ? fromBag("laneFoot", [YMIN + 2, YMAX - 2, ...LANES]) : fromBag("laneCar", LANES), speed: { run: 150, selfie: 140, patins: 175, moto: 210, luxo: 190, jato: 330 }[kind], look: maskedLook(), lux: fromBag("lux", LUX), walk: 0, state: "go", pt: 0, stopX: camX + 170 + rand() * 120 });
         trafT = 4.5 + rand() * 2.5;
       }
 
