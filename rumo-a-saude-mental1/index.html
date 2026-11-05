@@ -676,7 +676,7 @@ h1 em { font-style: normal; color: var(--good); }
   function warnMsg(t) { if ((!warn || warn.text !== t) && !warnQ.includes(t)) { warnQ.push(t); } }
   // speech bubbles stick to whoever is talking (owner) and walk with them; each speaker shows at most 2, newest at the bottom
   function anchorOf(o) {
-    if (o === P) return [P.x + 8, P.y - stackTopZ() - 24];
+    if (o === P) return [P.x + 9, P.y - 34, true];
     if (o === psi) return [psi.x - 34, psi.y - (PSI.wheel ? 54 : 52)];
     if (o === boss) return [camX + boss.sx - 10, boss.sy - 110];
     if (o === kid) return [o.x, o.y - 26];
@@ -1136,15 +1136,16 @@ h1 em { font-style: normal; color: var(--good); }
     const a = clamp(b.t < 0.15 ? b.t / 0.15 : b.t > b.life - 0.35 ? (b.life - b.t) / 0.35 : 1, 0, 1);
     const fs = st.size || 7, w = measure(b.text, fs, MONO, 0.4, st.it ? "italic 600" : "600") + 12, h = fs + 6;
     let bx = b.x, by = b.y;
-    if (b.owner) { const [ax, ay] = anchorOf(b.owner); bx = ax; by = ay - b.k * (h + 3); }
-    const x = clamp(bx - camX, w / 2 + 4, LW - w / 2 - 4), y = Math.max(56, by);
+    let floor = 56, side = false;
+    if (b.owner) { const an = anchorOf(b.owner); side = !!an[2]; bx = side ? an[0] + w / 2 : an[0]; by = an[1] - b.k * (h + 3); floor = 56 + b.k * (h + 3); }
+    const x = clamp(bx - camX, w / 2 + 4, LW - w / 2 - 4), y = Math.max(floor, by), tx = side ? x - w / 2 + 7 : x;
     g.save(); g.globalAlpha = a;
     g.fillStyle = st.bg; rrect(x - w / 2, y - h / 2, w, h, 3); g.fill();
-    g.beginPath(); g.moveTo(x - 3, y + h / 2 - 0.5); g.lineTo(x + 3, y + h / 2 - 0.5); g.lineTo(x, y + h / 2 + 4); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(tx - 3, y + h / 2 - 0.5); g.lineTo(tx + 3, y + h / 2 - 0.5); g.lineTo(tx, y + h / 2 + 4); g.closePath(); g.fill();
     g.strokeStyle = st.bd; g.lineWidth = 0.7; rrect(x - w / 2, y - h / 2, w, h, 3); g.stroke();
     g.restore();
     txt(b.text, x, y + 0.3, { size: fs, color: st.fg, ls: 0.4, shadow: false, weight: st.it ? "italic 600" : "600", alpha: a });
-    if (st.it) { g.globalAlpha = a; g.fillStyle = st.bg; [[x - 4, y + h / 2 + 3, 1.8], [x - 7, y + h / 2 + 7, 1.2]].forEach(([cx, cy, r]) => { g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fill(); }); g.globalAlpha = 1; }
+    if (st.it) { g.globalAlpha = a; g.fillStyle = st.bg; [[tx - 4, y + h / 2 + 3, 1.8], [tx - 7, y + h / 2 + 7, 1.2]].forEach(([cx, cy, r]) => { g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fill(); }); g.globalAlpha = 1; }
   }
 
   const roadTex = (() => {

@@ -1067,7 +1067,7 @@ h1 em { font-style: normal; color: var(--good); }
   function warnMsg(t) { if ((!warn || warn.text !== t) && !warnQ.includes(t)) { warnQ.push(t); } }
   // speech bubbles stick to whoever is talking (owner) and walk with them; each speaker shows at most 2, newest at the bottom
   function anchorOf(o) {
-    if (o === P) return [P.x + 8, P.y - stackTopZ() - 24];
+    if (o === P) return [P.x + 9, P.y - 34, true];
     if (o === psi) return [psi.x - 34, psi.y - (PSI.wheel ? 54 : 52)];
     if (o === boss) return [camX + boss.sx - 10, boss.sy - 110];
     if (o === kid) return [o.x, o.y - 26];
@@ -1528,14 +1528,17 @@ h1 em { font-style: normal; color: var(--good); }
     const a = clamp(b.t < 0.15 ? b.t / 0.15 : b.t > b.life - 0.35 ? (b.life - b.t) / 0.35 : 1, 0, 1);
     const fs = st.size || 7, w = Math.round(measure(b.text, fs, MONO, 0.4, st.it ? "italic 600" : "600") + 12), h = fs + 6;
     let bx = b.x, by = b.y;
-    if (b.owner) { const [ax, ay] = anchorOf(b.owner); bx = ax; by = ay - b.k * (h + 3); }
-    const x = Math.round(clamp(bx - camX, w / 2 + 4, LW - w / 2 - 4) * 2) / 2, y = Math.round(Math.max(56, by) * 2) / 2;
+    let floor = 56, side = false;
+    if (b.owner) { const an = anchorOf(b.owner); side = !!an[2]; bx = side ? an[0] + w / 2 : an[0]; by = an[1] - b.k * (h + 3); floor = 56 + b.k * (h + 3); }
+    const x = Math.round(clamp(bx - camX, w / 2 + 4, LW - w / 2 - 4) * 2) / 2, y = Math.round(Math.max(floor, by) * 2) / 2, tx = side ? x - w / 2 + 7 : x;
     g.save(); g.globalAlpha = a;
     panel(x - w / 2, y - h / 2, w, h, st.bg, st.bd, st.it ? null : "rgba(255,255,255,0.12)");
     g.fillStyle = st.bd;
+    { const x = tx;
     if (st.it) [[x - 4, y + h / 2 + 2, 2], [x - 7, y + h / 2 + 5.5, 1.5]].forEach(([cx, cy, r]) => { g.fillStyle = st.bd; g.fillRect(cx - r / 2 - 0.5, cy - r / 2 - 0.5, r + 1, r + 1); g.fillStyle = st.bg; g.fillRect(cx - r / 2, cy - r / 2, r, r); });
     else { g.fillStyle = st.bg; g.fillRect(x - 2.5, y + h / 2 - 0.5, 5, 1); g.fillRect(x - 1.5, y + h / 2 + 0.5, 3, 1); g.fillRect(x - 0.5, y + h / 2 + 1.5, 1, 1);
       g.fillStyle = st.bd; g.fillRect(x - 3, y + h / 2 - 0.5, 0.5, 1); g.fillRect(x + 2.5, y + h / 2 - 0.5, 0.5, 1); g.fillRect(x - 2, y + h / 2 + 0.5, 0.5, 1); g.fillRect(x + 1.5, y + h / 2 + 0.5, 0.5, 1); g.fillRect(x - 1, y + h / 2 + 1.5, 0.5, 1); g.fillRect(x + 0.5, y + h / 2 + 1.5, 0.5, 1); g.fillRect(x - 0.5, y + h / 2 + 2.5, 1, 0.5); }
+    }
     g.restore();
     txt(b.text, x, y + 0.3, { size: fs, color: st.fg, ls: 0.4, shadow: false, weight: st.it ? "italic 600" : "600", alpha: a });
   }
