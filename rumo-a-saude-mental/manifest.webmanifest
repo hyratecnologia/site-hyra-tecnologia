@@ -1,0 +1,9 @@
+{
+  "name": "Rumo à Saúde Mental",
+  "short_name": "Saúde Mental",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#07070d",
+  "theme_color": "#07070d"
+}
