@@ -952,7 +952,8 @@ h1 em { font-style: normal; color: var(--good); }
   const PSI_LINES = [];
   const KID_LINES = ["tô com fome!", "me leva no colo?", "brinca comigo?", "olha!", "tô cansado..."];
   const CRISIS_CAP = { "TAQUICARDIA": "o coração dispara", "FALTA DE AR": "o ar não vem", "TREMOR": "o corpo treme", "TONTURA": "tudo gira", "ENJOO": "o estômago revira", "MEDO": "e se der tudo errado?", "SONO": "faz dias que você não dorme direito" };
-  const CRISIS_MAX = 4; // no máximo 4 crises por partida
+  const CRISIS_MAX = 2; // no máximo 2 crises por partida
+  const QUAKE_T = 0.6; // the short jolt when the boss arrives
   const CRISIS_POOL = ["TAQUICARDIA", "TAQUICARDIA", "TAQUICARDIA", "FALTA DE AR", "FALTA DE AR", "FALTA DE AR", "SONO", "SONO", "TREMOR", "TONTURA", "ENJOO", "MEDO"];
   const RUN_LINES = ["Tô ótima!", "#gratidão", "Cheguei!", "Só good vibes", "Vida plena", "Saúde mental 100%"];
   const CAR_LINES = ["Venci na vida", "É só querer", "Foco e fé", "#abençoado", "Trabalhe enquanto eles dormem"];
@@ -1067,7 +1068,7 @@ h1 em { font-style: normal; color: var(--good); }
   const sel = { cor: "branca", genero: "homem", orient: "hetero", classe: "rica", pcd: "nao", filhos: "nao" };
   const diffOf = () => (sel.cor === "negra") + (sel.genero === "mulher") + (sel.orient === "lgbt") + (sel.classe === "pobre") + (sel.pcd === "sim") + (sel.filhos === "sim");
   let mode = "title", P, look, D, blocks, debris, bubbles, crowd, helpers, transfers, spill = [], fell = false, boss, psi, arch, camX, time, endT, parts;
-  let kid = null, thinkT = 8, goodT, spawnT, obstT, crowdT, crowdX, traffic, trafT, obstacles, stats, said, heartT, heartPulse, banner, lastNope, endReason, specialT, crisis, warnQ, warn, dialog;
+  let kid = null, thinkT = 8, goodT, spawnT, obstT, crowdT, crowdX, traffic, trafT, obstacles, stats, said, heartT, heartPulse, banner, lastNope, endReason, specialT, crisis, warnQ, warn, dialog, quake = 0;
 
   function reset() {
     look = heroLook(sel); D = diffOf(); PSI = randomPsi();
@@ -1079,7 +1080,7 @@ h1 em { font-style: normal; color: var(--good); }
     arch = { x: 340, tx: 340 };
     camX = 0; time = 0; endT = 0; spawnT = 2; obstT = 4; wallBag = []; wallLast = ""; wallCool = 0; crowdT = 2; crowdX = 0; trafT = 3; specialT = 6; goodT = 3;
     stats = { dropped: 0, max: 0, hits: 0, walls: 0, carried: 0, lost: [] }; said = {}; heartT = 0; heartPulse = 0; banner = null; lastNope = -9; endReason = "fim";
-    crisis = { t: 0, dur: 0, cd: 12, n: 0 }; warnQ = []; warn = null; dialog = null;
+    crisis = { t: 0, dur: 0, cd: 12, n: 0 }; quake = 0; warnQ = []; warn = null; dialog = null;
     if (sel.classe === "pobre") { P.stack.push({ type: "boleto" }); stats.max = 1; stats.carried = 1; }
     if (sel.filhos === "sim") { P.stack.push({ type: "filhos" }); stats.max = P.stack.length; kid = { x: P.x - 14, y: P.y + 10, walk: 0, t: 6 }; } else kid = null;
     thinkT = 8; music.i = 0;
@@ -1344,7 +1345,7 @@ h1 em { font-style: normal; color: var(--good); }
       crisis.cd -= dt;
       if (crisis.dur > 0) { crisis.t += dt; if (crisis.t >= crisis.dur) { crisis.dur = 0; crisis.t = 0; } }
       else if (eff >= 6 && crisis.cd <= 0 && crisis.n < CRISIS_MAX && mode === "play") {
-        crisis.n++; crisis.dur = 4.6; crisis.t = 0; crisis.cd = (psiNear() ? 32 : 22) + rand() * 6; crisis.bt = 0;
+        crisis.n++; crisis.dur = 2.6; crisis.t = 0; crisis.cd = (psiNear() ? 32 : 22) + rand() * 6; crisis.bt = 0;
         crisis.kind = pick(CRISIS_POOL.filter((k) => k !== crisis.last)); crisis.last = crisis.kind;
         say(pick(THOUGHTS), P.x, P.y, "think", 2.4, true, P);
         showCard("crisis", crisis.kind); // the game pauses and names the symptom; the effect plays when it resumes
@@ -1358,7 +1359,7 @@ h1 em { font-style: normal; color: var(--good); }
     // physics
     P.vz -= 700 * dt; P.z += P.vz * dt;
     if (P.z <= 0) { P.z = 0; P.vz = 0; }
-    P.shake = Math.max(0, P.shake - dt);
+    P.shake = Math.max(0, P.shake - dt); quake = Math.max(0, quake - dt);
     arch.x += (arch.tx - arch.x) * Math.min(1, dt * 3);
     camX += (P.x - 160 - camX) * Math.min(1, dt * 5); camX = Math.max(0, camX);
     if (banner) { banner.t += dt; if (banner.t > 3) banner = null; }
@@ -2281,9 +2282,8 @@ h1 em { font-style: normal; color: var(--good); }
     const kind = crisis.kind || "", W2 = cv.width, H2 = cv.height;
     const base = play ? clamp((eff - 4) / 8, 0, 1) : 0;
     let ox = 0, oy = 0, rot = 0, sc = 1;
-    // like the first version: the heavier it gets, the more the screen trembles
-    if (base > 0) { const sh = base * 1.6 * K2; ox = Math.round((rand() - 0.5) * sh); oy = Math.round((rand() - 0.5) * sh); }
-    if (eff >= 6) oy += Math.round(heartPulse * K2 * (0.7 + base));
+    // outside a symptom the screen stays still; it only gives a short jolt on big moments (the boss arriving)
+    if (play && quake > 0) { const sh = 7 * K2 * (quake / QUAKE_T); ox = Math.round((rand() - 0.5) * sh); oy = Math.round((rand() - 0.5) * sh); }
     if (ce > 0.02) {
       const sh = ({ TREMOR: 9, TAQUICARDIA: 4 + heartPulse * 6, "FALTA DE AR": 3, MEDO: 4, SONO: 0.5 }[kind] || 2.5) * ce * K2;
       ox += Math.round((rand() - 0.5) * sh); oy += Math.round((rand() - 0.5) * sh);
@@ -2439,6 +2439,7 @@ h1 em { font-style: normal; color: var(--good); }
   }
   $("cardBtn").addEventListener("click", (e) => {
     e.stopPropagation(); $("card").hidden = true; mode = "play"; last = performance.now();
+    if (cardKind === "boss") quake = QUAKE_T;
     if (cardKind === "crisis") crisisSfx(crisis.kind);
     cardKind = null;
   });
