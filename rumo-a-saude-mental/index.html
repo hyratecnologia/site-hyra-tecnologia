@@ -338,6 +338,15 @@ h1 em { font-style: normal; color: var(--good); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 #title .cover-box { justify-content: flex-end; }
 .ov.retro { background: linear-gradient(180deg, rgba(6,5,16,0) 70%, rgba(6,5,16,.45) 100%); }
+.ov.retro.is-day { background: linear-gradient(180deg, rgba(30,42,58,0) 72%, rgba(30,42,58,.28) 100%); }
+.ov.retro.is-day::after { background: repeating-linear-gradient(0deg, rgba(0,0,0,.03) 0 1px, transparent 1px 3px); }
+.theme-btn { position: absolute; z-index: 2; top: calc(env(safe-area-inset-top, 0px) + 10px); left: calc(env(safe-area-inset-left, 0px) + 10px); min-height: 40px; padding: 8px 14px;
+  font-family: var(--pix); font-size: 11px; letter-spacing: .16em; text-transform: lowercase; color: var(--ink); background: rgba(17,14,36,.85); border: 0;
+  box-shadow: inset -2px -2px 0 #0e0b20, inset 2px 2px 0 #3a3466, 0 0 0 2px #07050f; }
+.theme-btn:hover { background: #2a2650; }
+.is-day .theme-btn { color: #1e2a3a; background: rgba(255,255,255,.88); box-shadow: inset -2px -2px 0 #a9c3d6, inset 2px 2px 0 #ffffff, 0 0 0 2px #1e2a3a; }
+.is-day .theme-btn:hover { background: #fff1b8; }
+.is-day .cover-box .credits { color: #1e2a3a; text-shadow: 1px 1px 0 rgba(255,255,255,.75); }
 </style>
 
 </head>
@@ -373,6 +382,7 @@ h1 em { font-style: normal; color: var(--good); }
 </div>
 
 <div class="ov retro" id="title">
+  <button class="theme-btn" id="themeBtn" type="button">dia</button>
   <div class="box cover-box">
     <h1 class="sr-only">Rumo à Saúde Mental</h1>
     <div class="cover-foot">
@@ -448,7 +458,7 @@ h1 em { font-style: normal; color: var(--good); }
   <div class="box">
     <span class="eyebrow" id="endEyebrow">fim do caminho (por enquanto)</span>
     <h1 class="h-end">SAÚDE MENTAL NÃO É LINHA DE CHEGADA.</h1>
-    <p class="lead" style="color:var(--good)">E ninguém caminha sozinho.</p>
+    <p class="lead" style="color:var(--good)">E ninguém deveria caminhar sozinho.</p>
     <div class="stats" id="stats"></div>
     <div class="help-box">
       <p class="help-title">precisa conversar? existe ajuda gratuita e perto de você</p>
@@ -1607,7 +1617,7 @@ h1 em { font-style: normal; color: var(--good); }
     if (psi.on) { psi.x += (P.x + 18 - psi.x) * Math.min(1, dt * 4); psi.y += (P.y + 10 - psi.y) * Math.min(1, dt * 4); psi.arrived = true; psi.mv = walking; if (walking) psi.walk += dt * 12; }
     for (let i = transfers.length - 1; i >= 0; i--) { const tr = transfers[i]; tr.t += dt / 0.4; if (tr.t >= 1) { tr.h.stack.push({ type: tr.type }); transfers.splice(i, 1); } }
     if (!said.chord1 && endT > 1) { said.chord1 = true; sfx.chime(); }
-    if (endT > UP_T + 0.3 && !dialog) dialog = { lines: ["Saúde mental não é linha de chegada.", "E ninguém caminha sozinho."], t: 0 };
+    if (endT > UP_T + 0.3 && !dialog) dialog = { lines: ["Saúde mental não é linha de chegada.", "E ninguém deveria caminhar sozinho."], t: 0 };
     if (dialog) dialog.t += dt;
     if (!said.chord2 && endT > UP_T + 3.3) { said.chord2 = true; sfx.chord(); }
     if (endT > UP_T + 7.3 && !said.over) { said.over = true; mode = "over"; showEnd(); }
@@ -1710,41 +1720,59 @@ h1 em { font-style: normal; color: var(--good); }
     else if (ic === "aviao") { r(0, 3.5, 10, 1.6); r(4, 0.5, 2, 7.5); r(0, 1.5, 1.2, 2.5); }
     else if (ic === "cartao") { r(0, 1, 10, 6.5); r(0, 2.5, 10, 1.3, dk); r(1, 5, 3, 1, dk); }
   }
-  // ===== v6 scene: the avenue at night, pre-rendered in layers at 2x density =====
-  const SC = { blinks: [], lampHeads: [] };
-  (function buildScene() {
+  // ===== v6 scene: the avenue, pre-rendered in layers at 2x density; built for the night and, when drawn, for the day =====
+  let SC;
+  const SCENES = {};
+  // turns a night sprite into its daytime version: lighter, a little greyer
+  function dayify(c, k, add, desat) {
+    const x = c.getContext("2d"), id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+    for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue;
+      let r = d[i] * k + add, gg = d[i + 1] * k + add, b = d[i + 2] * k + add; const l = r * 0.3 + gg * 0.59 + b * 0.11;
+      d[i] = clamp(r + (l - r) * desat, 0, 255); d[i + 1] = clamp(gg + (l - gg) * desat, 0, 255); d[i + 2] = clamp(b + (l - b) * desat, 0, 255); }
+    x.putImageData(id, 0, 0); return c;
+  }
+  function buildScene(day) {
+    const SC = { blinks: [], lampHeads: [], day };
     const BAY = [[0, 0.5], [0.75, 0.25]];
     const fillImg = (c, fn) => { const x = c.getContext("2d"), id = x.createImageData(c.width, c.height), d = id.data; for (let y = 0; y < c.height; y++) for (let xx = 0; xx < c.width; xx++) { const col = fn(xx, y); if (!col) continue; const i = (y * c.width + xx) * 4; d[i] = col[0]; d[i + 1] = col[1]; d[i + 2] = col[2]; d[i + 3] = 255; } x.putImageData(id, 0, 0); };
     const dith = (cols, f, x, y) => { f = clamp(f, 0, 0.9999) * (cols.length - 1); const i = Math.floor(f); return cols[Math.min(cols.length - 1, i + (f - i > BAY[y & 1][x & 1] ? 1 : 0))]; };
 
-    // sky: deep indigo up top, a purple city glow near the rooftops, stars
-    const SKYC = ["#0b0920", "#100d2a", "#161233", "#1d173d", "#251c48", "#2f2252", "#3b285b", "#492e63", "#573469"].map(hex);
+    // sky: deep indigo up top, a purple city glow near the rooftops, stars; by day, blue fading to a pale haze
+    const SKYC = (day ? ["#2f7fd0", "#3b8cd8", "#4a9ae0", "#5ba8e7", "#6fb6ec", "#86c4f0", "#9ed1f3", "#b7ddf5", "#cfe7f4"] : ["#0b0920", "#100d2a", "#161233", "#1d173d", "#251c48", "#2f2252", "#3b285b", "#492e63", "#573469"]).map(hex);
     SC.sky = mkCanvas(1360, 132);
     fillImg(SC.sky, (x, y) => {
       const r = hash(x * 12.9898 + y * 78.233);
-      if (y < 90 && r > 0.9975) return hex(r > 0.9993 ? "#ffffff" : "#b8b4e8");
-      if (y < 60 && r > 0.9955 && r < 0.9962) return hex("#5a5690");
-      return dith(SKYC, Math.pow(y / 131, 1.5), x, y);
+      if (!day && y < 90 && r > 0.9975) return hex(r > 0.9993 ? "#ffffff" : "#b8b4e8");
+      if (!day && y < 60 && r > 0.9955 && r < 0.9962) return hex("#5a5690");
+      return dith(SKYC, Math.pow(y / 131, day ? 1.1 : 1.5), x, y);
     });
-    // a full moon with a banded halo
+    // a full moon with a banded halo; by day, the sun
     SC.moon = mkCanvas(48, 48); { const q = pen(SC.moon);
-      q.disc(24, 24, 23, "#1d1a40"); q.disc(24, 24, 19, "#26214d"); q.disc(24, 24, 15.5, "#332b5c");
-      q.disc(24, 24, 11, "#f2ecd8"); q.disc(26, 26, 9.5, "#e2d9c0"); q.disc(22, 21, 6, "#fbf7ea");
-      [[20, 25, 2], [27, 20, 1.6], [28, 28, 2.4], [23, 30, 1.2]].forEach(([x, y, r]) => { q.disc(x, y, r, "#cfc4a8"); q.p(x - 1, y - 1, "#e8e0c8"); }); }
+      if (day) {
+        q.disc(24, 24, 23, "#8cc8f0"); q.disc(24, 24, 19, "#a8d6f2"); q.disc(24, 24, 15.5, "#cfe6f0");
+        for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; for (let dd = 13; dd < 18; dd++) q.r(Math.round(24 + Math.cos(a) * dd) - 1, Math.round(24 + Math.sin(a) * dd) - 1, 2, 2, "#ffe680"); }
+        q.disc(24, 24, 11, "#ffc93a"); q.disc(23, 23, 9.5, "#ffd84a"); q.disc(22, 21, 6, "#ffe680"); q.disc(20, 19, 2.6, "#fff6c4");
+      } else {
+        q.disc(24, 24, 23, "#1d1a40"); q.disc(24, 24, 19, "#26214d"); q.disc(24, 24, 15.5, "#332b5c");
+        q.disc(24, 24, 11, "#f2ecd8"); q.disc(26, 26, 9.5, "#e2d9c0"); q.disc(22, 21, 6, "#fbf7ea");
+        [[20, 25, 2], [27, 20, 1.6], [28, 28, 2.4], [23, 30, 1.2]].forEach(([x, y, r]) => { q.disc(x, y, r, "#cfc4a8"); q.p(x - 1, y - 1, "#e8e0c8"); });
+      } }
 
-    // far skyline: flat silhouettes, a few lit windows, antennas with red lights
+    // far skyline: flat silhouettes, a few lit windows, antennas with red lights (by day: pale blue in the haze)
     SC.far = mkCanvas(768, 110); { const q = pen(SC.far); let x = 0, i = 0;
       while (x < 768) {
         const w = Math.min(18 + Math.floor(hash(i * 3.1 + 2) * 42), 768 - x), h = 30 + Math.floor(hash(i * 5.7 + 1) * 72);
-        q.r(x, 110 - h, w, h, i % 2 ? "#18142e" : "#1b1733"); q.r(x, 110 - h, w, 1, "#2a2350");
-        for (let wy = 110 - h + 5; wy < 106; wy += 5) for (let wx = x + 3; wx < x + w - 3; wx += 4) { const r = hash(wx * 1.7 + wy * 3.3); if (r > 0.94) q.r(wx, wy, 2, 2, r > 0.985 ? "#d8a870" : "#5a4878"); else if (r > 0.55) q.r(wx, wy, 2, 2, "#221c3e"); }
-        if (hash(i + 77) > 0.68 && w > 14) { const ax = x + Math.floor(w / 2); q.r(ax, 110 - h - 12, 1, 12, "#1b1733"); SC.blinks.push([ax, 110 - h - 13, hash(i) * 6]); }
+        const fill = day ? (i % 2 ? "#9ec0da" : "#a8c8df") : (i % 2 ? "#18142e" : "#1b1733");
+        q.r(x, 110 - h, w, h, fill); q.r(x, 110 - h, w, 1, day ? "#c2dbec" : "#2a2350");
+        for (let wy = 110 - h + 5; wy < 106; wy += 5) for (let wx = x + 3; wx < x + w - 3; wx += 4) { const r = hash(wx * 1.7 + wy * 3.3); if (day) { if (r > 0.6) q.r(wx, wy, 2, 2, r > 0.9 ? "#d6e8f4" : "#8fb2cc"); } else if (r > 0.94) q.r(wx, wy, 2, 2, r > 0.985 ? "#d8a870" : "#5a4878"); else if (r > 0.55) q.r(wx, wy, 2, 2, "#221c3e"); }
+        if (hash(i + 77) > 0.68 && w > 14) { const ax = x + Math.floor(w / 2); q.r(ax, 110 - h - 12, 1, 12, fill); if (!day) SC.blinks.push([ax, 110 - h - 13, hash(i) * 6]); }
         x += w; i++;
       } }
 
     // near buildings: brick and concrete, window grids with warm and TV-blue lights, AC units,
     // fire escapes, rooftop water tanks and shop fronts with awnings at street level
-    const BLD = [["#3b2a3c", "#4d374b", "#2a1d2b"], ["#2b2c44", "#3a3c5a", "#1e1f33"], ["#26354a", "#32465e", "#1a2536"], ["#3a3040", "#4a4051", "#29222f"], ["#30293c", "#3e3550", "#211c2a"], ["#3c3230", "#4c403c", "#2a2220"]];
+    const BLD = day ? [["#c98a6a", "#dca080", "#a86e52"], ["#8aa0b8", "#a2b6ca", "#6e849c"], ["#d8c8a8", "#e8dcc0", "#b8a888"], ["#a8b8a0", "#bccab4", "#8a9a84"], ["#c0a0b8", "#d0b4c8", "#a084a0"], ["#e0b080", "#ecc498", "#c09060"]]
+      : [["#3b2a3c", "#4d374b", "#2a1d2b"], ["#2b2c44", "#3a3c5a", "#1e1f33"], ["#26354a", "#32465e", "#1a2536"], ["#3a3040", "#4a4051", "#29222f"], ["#30293c", "#3e3550", "#211c2a"], ["#3c3230", "#4c403c", "#2a2220"]];
     const AWN = [["#a8434f", "#e8d8c8"], ["#2f6a5a", "#d8e8d0"], ["#3a4a8a", "#e0e4f0"], ["#b07a30", "#f0e2c0"], ["#6a3b86", "#eadcf2"]];
     SC.mid = mkCanvas(1536, 124); { const q = pen(SC.mid); let x = 0, n = 0;
       while (x < 1536) {
@@ -1758,7 +1786,11 @@ h1 em { font-style: normal; color: var(--good); }
         for (let fy = top + 7; fy < 100; fy += 14) for (let c = 0; c < cols; c++) {
           const wx = gx + c * 11, r = hash(wx * 0.91 + fy * 2.17 + n);
           q.r(wx - 1, fy - 1, 8, 10, P[2]);
-          if (r > 0.8) { const tv = r > 0.96; q.r(wx, fy, 6, 8, tv ? "#7aa8e8" : "#f2c070"); q.r(wx, fy + 4, 6, 4, tv ? "#5a80c8" : "#d89048");
+          if (day) { // glass catching the sky, a few curtains
+            if (r > 0.82) { q.r(wx, fy, 6, 8, "#9fd2f2"); q.r(wx, fy, 2, 8, ["#f28aa0", "#ffd166", "#8fd6a8"][Math.floor(hash(r * 53) * 3)]); }
+            else if (r > 0.3) { q.r(wx, fy, 6, 8, "#9fd2f2"); q.r(wx, fy + 5, 6, 3, "#78b2de"); q.p(wx + 1, fy + 1, "#ffffff"); q.p(wx + 3, fy + 1, "#e6f6ff"); q.p(wx + 2, fy + 2, "#e6f6ff"); }
+            else { q.r(wx, fy, 6, 8, "#4a5a78"); q.p(wx + 4, fy + 1, "#6a7a98"); } }
+          else if (r > 0.8) { const tv = r > 0.96; q.r(wx, fy, 6, 8, tv ? "#7aa8e8" : "#f2c070"); q.r(wx, fy + 4, 6, 4, tv ? "#5a80c8" : "#d89048");
             if (hash(r * 91) > 0.6) { q.r(wx + 2, fy + 3, 2, 5, tv ? "#2a3860" : "#5a3420"); q.r(wx + 2, fy + 2, 2, 1, tv ? "#2a3860" : "#5a3420"); }
             else if (hash(r * 37) > 0.5) q.r(wx, fy, 2, 8, tv ? "#9ac0f0" : "#e8a0a0"); }
           else { q.r(wx, fy, 6, 8, "#141829"); q.p(wx + 4, fy + 1, "#2a3456"); q.p(wx + 5, fy + 2, "#232c4a"); }
@@ -1766,7 +1798,7 @@ h1 em { font-style: normal; color: var(--good); }
           if (hash(wx * 3.7 + fy) > 0.82) { q.r(wx + 1, fy + 9, 5, 3, "#7a7f90"); q.r(wx + 1, fy + 9, 5, 1, "#9aa0b0"); q.p(wx + 2, fy + 10, "#4a4e5e"); }
         }
         // fire escape
-        if (hash(n * 6.1) > 0.55 && w > 90) { const fx = x + w - 34; for (let fy = top + 15; fy < 98; fy += 14) { q.r(fx, fy, 24, 1, "#120f1c"); for (let k = 0; k < 24; k += 3) q.r(fx + k, fy - 4, 1, 4, "#120f1c"); q.r(fx, fy - 4, 24, 1, "#120f1c"); if (fy + 14 < 98) q.line(fx + 3, fy + 1, fx + 18, fy + 13, "#120f1c"); } }
+        if (hash(n * 6.1) > 0.55 && w > 90) { const fx = x + w - 34, FE = day ? "#3a3a4e" : "#120f1c"; for (let fy = top + 15; fy < 98; fy += 14) { q.r(fx, fy, 24, 1, FE); for (let k = 0; k < 24; k += 3) q.r(fx + k, fy - 4, 1, 4, FE); q.r(fx, fy - 4, 24, 1, FE); if (fy + 14 < 98) q.line(fx + 3, fy + 1, fx + 18, fy + 13, FE); } }
         // roof: water tank or antenna
         const rr = hash(n * 8.3 + 3);
         if (rr > 0.55) { const tx = x + 10 + Math.floor(hash(n) * (w - 30)); q.r(tx + 1, top - 7, 1, 5, "#1a1424"); q.r(tx + 10, top - 7, 1, 5, "#1a1424"); q.r(tx, top - 19, 12, 12, "#5a4030"); q.r(tx, top - 19, 2, 12, "#7a5a40"); q.r(tx, top - 15, 12, 1, "#3a2a20"); q.r(tx, top - 11, 12, 1, "#3a2a20"); q.r(tx - 1, top - 21, 14, 2, "#3a2a20"); q.r(tx + 2, top - 23, 8, 2, "#3a2a20"); }
@@ -1784,9 +1816,11 @@ h1 em { font-style: normal; color: var(--good); }
         q.r(x, 122, w, 2, "#1a1626");
         x += w; n++;
       }
-      // push the block back a little: night haze over everything that isn't a light
+      // push the block back a little: night haze over everything that isn't a light (by day, a thin pale-blue air)
       const hx = SC.mid.getContext("2d"), id = hx.getImageData(0, 0, 1536, 124), d = id.data;
-      for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const lum = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; if (lum > 150) continue; d[i] = d[i] * 0.78 + 14 * 0.22; d[i + 1] = d[i + 1] * 0.78 + 12 * 0.22; d[i + 2] = d[i + 2] * 0.78 + 34 * 0.22; }
+      for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue;
+        if (day) { d[i] = d[i] * 0.86 + 190 * 0.14; d[i + 1] = d[i + 1] * 0.86 + 222 * 0.14; d[i + 2] = d[i + 2] * 0.86 + 243 * 0.14; continue; }
+        const lum = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; if (lum > 150) continue; d[i] = d[i] * 0.78 + 14 * 0.22; d[i + 1] = d[i + 1] * 0.78 + 12 * 0.22; d[i + 2] = d[i + 2] * 0.78 + 34 * 0.22; }
       hx.putImageData(id, 0, 0); }
 
     // top sidewalk tile: concrete slabs with joints, the building's shadow, and the curb
@@ -1833,7 +1867,15 @@ h1 em { font-style: normal; color: var(--good); }
       for (let k = 0; k < 14; k++) q.r(11 + k, 12 - Math.round(Math.sin(k / 14 * Math.PI / 2) * 6), 2, 2, M[1]);
       q.r(22, 4, 14, 4, M[1]); q.r(22, 4, 14, 1, M[0]); q.r(23, 8, 12, 2, "#fff0c0"); q.r(25, 8, 8, 1, "#ffffff"); }
     SC.lampHead = [29, 9]; // where the bulb is, in lamp-sprite art pixels
-  })();
+    if (day) { // daylight on the ground level: lighter concrete and asphalt, brighter leaves
+      dayify(SC.walkTop, 1.9, 70, 0.6); dayify(SC.walkBot, 1.9, 70, 0.6);
+      dayify(SC.road, 1.6, 45, 0.5); dayify(SC.tree, 1.35, 28, 0);
+    }
+    return SC;
+  }
+  // which scene the game uses: "night" or "day" (built the first time it is needed)
+  function sceneFor(th) { if (!SCENES[th]) SCENES[th] = buildScene(th === "day"); return SCENES[th]; }
+  SC = sceneFor("night");
 
   function tiles(img, k, y) {
     const w = img.width / 2, h = img.height / 2, off = ((camX * k) % w + w) % w;
@@ -1852,13 +1894,14 @@ h1 em { font-style: normal; color: var(--good); }
       if (i < 1) continue;
       const x = Math.round((i * 300 - camX + 90) * 2) / 2, [s, ic] = BILLS[i % BILLS.length];
       const w = Math.round(measure(s, 5.5, PIX, 0.5) + 28);
-      g.fillStyle = "#14121e"; g.fillRect(x + 6, 44, 2, 22); g.fillRect(x + w - 8, 44, 2, 22); g.fillStyle = "#2e2c40"; g.fillRect(x + 6, 44, 0.5, 22); g.fillRect(x + w - 8, 44, 0.5, 22);
-      g.fillStyle = "#14121e"; g.fillRect(x - 1, 30, w + 2, 15); g.fillStyle = "#24212f"; g.fillRect(x, 31, w, 13); g.fillStyle = "#1a1824"; g.fillRect(x + 1, 32, w - 2, 11);
-      g.fillStyle = "#34314a"; g.fillRect(x, 31, w, 0.5); g.fillRect(x + 2, 43.5, w - 4, 0.5);
-      g.fillStyle = "#14121e"; g.fillRect(x + 8, 28, 3, 2); g.fillRect(x + w - 11, 28, 3, 2);
-      g.fillStyle = "rgba(255,230,180,0.05)"; g.fillRect(x + 4, 31, w - 8, 6);
-      billIcon(ic, x + 6, 33.5, "#6f6a8a");
-      txt(s, x + 18 + (w - 22) / 2, 37.8, { size: 5.5, font: PIX, color: "#7d7898", ls: 0.5, shadow: false });
+      const BB = SC.day ? ["#3a3a4e", "#6a6a80", "#9a98b0", "#d8d6e4", "#c8c6d6", "#aeacc2", "#6a6886", "#5a5874"] : ["#14121e", "#2e2c40", "#14121e", "#24212f", "#1a1824", "#34314a", "#6f6a8a", "#7d7898"];
+      g.fillStyle = BB[0]; g.fillRect(x + 6, 44, 2, 22); g.fillRect(x + w - 8, 44, 2, 22); g.fillStyle = BB[1]; g.fillRect(x + 6, 44, 0.5, 22); g.fillRect(x + w - 8, 44, 0.5, 22);
+      g.fillStyle = BB[2]; g.fillRect(x - 1, 30, w + 2, 15); g.fillStyle = BB[3]; g.fillRect(x, 31, w, 13); g.fillStyle = BB[4]; g.fillRect(x + 1, 32, w - 2, 11);
+      g.fillStyle = BB[5]; g.fillRect(x, 31, w, 0.5); g.fillRect(x + 2, 43.5, w - 4, 0.5);
+      g.fillStyle = BB[0]; g.fillRect(x + 8, 28, 3, 2); g.fillRect(x + w - 11, 28, 3, 2);
+      if (!SC.day) { g.fillStyle = "rgba(255,230,180,0.05)"; g.fillRect(x + 4, 31, w - 8, 6); }
+      billIcon(ic, x + 6, 33.5, BB[6]);
+      txt(s, x + 18 + (w - 22) / 2, 37.8, { size: 5.5, font: PIX, color: BB[7], ls: 0.5, shadow: false });
     }
     tiles(SC.walkTop, 1, 66);
     // props along the top sidewalk
@@ -1869,11 +1912,11 @@ h1 em { font-style: normal; color: var(--good); }
     // lamps: post on the sidewalk, head over the road
     const lamps = [];
     for (let i = Math.floor(camX / 150) - 1; i < Math.floor(camX / 150) + Math.ceil(LW / 150) + 2; i++) { const x = i * 150 + 40 - camX; spr(SC.lamp, x - 5, 82 - 50); lamps.push([x - 5 + SC.lampHead[0] / 2, 32 + SC.lampHead[1] / 2, i]); }
-    lamps.forEach(([hx, hy]) => { [[12, 0.1], [8, 0.12], [4.5, 0.18]].forEach(([r, a]) => { g.fillStyle = "rgba(255,214,150," + a + ")"; g.beginPath(); g.arc(hx, hy + 1, r, 0, Math.PI * 2); g.fill(); }); });
+    if (!SC.day) lamps.forEach(([hx, hy]) => { [[12, 0.1], [8, 0.12], [4.5, 0.18]].forEach(([r, a]) => { g.fillStyle = "rgba(255,214,150," + a + ")"; g.beginPath(); g.arc(hx, hy + 1, r, 0, Math.PI * 2); g.fill(); }); });
     tiles(SC.road, 1, ROAD_T);
     // light pools on the asphalt, in hard bands
     g.globalCompositeOperation = "lighter";
-    lamps.forEach(([hx]) => { [[50, 14, 0.012], [34, 9, 0.014], [18, 5, 0.018]].forEach(([rx, ry, a]) => { g.fillStyle = "rgba(255,180,90," + a + ")"; g.beginPath(); g.ellipse(hx, 100, rx, ry, 0, 0, Math.PI * 2); g.fill(); }); });
+    if (!SC.day) lamps.forEach(([hx]) => { [[50, 14, 0.012], [34, 9, 0.014], [18, 5, 0.018]].forEach(([rx, ry, a]) => { g.fillStyle = "rgba(255,180,90," + a + ")"; g.beginPath(); g.ellipse(hx, 100, rx, ry, 0, 0, Math.PI * 2); g.fill(); }); });
     g.globalCompositeOperation = "source-over";
     // worn paint: edges, lane dashes, double yellow centre, arrows
     const ox = -(camX % 8);
@@ -1891,24 +1934,25 @@ h1 em { font-style: normal; color: var(--good); }
       g.fillStyle = "#4a4660"; g.fillRect(x - 7, y - 3, 14, 0.5);
     }
     lamps.forEach(([hx, , i]) => { if (hash(i * 5.1) < 0.5) return;
-      const px = hx + 14, py = 104; g.fillStyle = "#1a2236"; g.beginPath(); g.ellipse(px, py, 16, 3.5, 0, 0, Math.PI * 2); g.fill();
-      g.fillStyle = "#2a3654"; g.fillRect(px - 14, py - 3, 28, 0.5);
-      for (let k = 0; k < 4; k++) { g.fillStyle = k % 2 ? "#e8c27a" : "#b8925a"; g.fillRect(px - 4 + Math.sin(time * 3 + k * 1.7) * 1.5, py - 2 + k, 3 - k * 0.5, 0.5); } });
+      const px = hx + 14, py = 104; g.fillStyle = SC.day ? "#6f98c0" : "#1a2236"; g.beginPath(); g.ellipse(px, py, 16, 3.5, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = SC.day ? "#9cc4e4" : "#2a3654"; g.fillRect(px - 14, py - 3, 28, 0.5);
+      for (let k = 0; k < 4; k++) { g.fillStyle = SC.day ? (k % 2 ? "#ffffff" : "#d6ecfa") : k % 2 ? "#e8c27a" : "#b8925a"; g.fillRect(px - 4 + Math.sin(time * 3 + k * 1.7) * 1.5, py - 2 + k, 3 - k * 0.5, 0.5); } });
     tiles(SC.walkBot, 1, ROAD_B);
     // railing, bollard lights and the dark water of the waterfront
-    g.fillStyle = "#0a0f1c"; g.fillRect(0, 232, LW, LH - 232);
-    g.fillStyle = "#0d1428"; g.fillRect(0, 246, LW, LH - 246);
-    g.fillStyle = "rgba(60,90,150,0.18)"; for (let i = 0; i < 18; i++) { const x = ((i * 47 - camX * 0.6 + time * 6) % 540 + 540) % 540 - 30, y = 238 + (i % 5) * 6.5; g.fillRect(Math.round(x * 2) / 2, y, 12 + (i % 3) * 6, 0.5); }
-    for (let i = Math.floor(camX / 150) - 1; i < Math.floor(camX / 150) + 5; i++) {
+    g.fillStyle = SC.day ? "#2f6aa0" : "#0a0f1c"; g.fillRect(0, 232, LW, LH - 232);
+    g.fillStyle = SC.day ? "#3a78b0" : "#0d1428"; g.fillRect(0, 246, LW, LH - 246);
+    g.fillStyle = SC.day ? "rgba(255,255,255,0.35)" : "rgba(60,90,150,0.18)"; for (let i = 0; i < 18; i++) { const x = ((i * 47 - camX * 0.6 + time * 6) % 540 + 540) % 540 - 30, y = 238 + (i % 5) * 6.5; g.fillRect(Math.round(x * 2) / 2, y, 12 + (i % 3) * 6, 0.5); }
+    if (!SC.day) for (let i = Math.floor(camX / 150) - 1; i < Math.floor(camX / 150) + 5; i++) {
       const x = i * 150 - camX + 115;
       for (let k = 0; k < 7; k++) { g.fillStyle = "rgba(232,194,122," + (0.45 - k * 0.06).toFixed(2) + ")"; g.fillRect(Math.round((x - 1 + Math.sin(time * 3 + k * 1.3 + i) * 1.5) * 2) / 2, 235 + k * 4.5, 2.5 - k * 0.2, 1.5); }
     }
-    g.fillStyle = "#1e1c2c"; g.fillRect(0, 226, LW, 6);
-    g.fillStyle = "#5a5878"; g.fillRect(0, 225.5, LW, 1); g.fillStyle = "#3a3850"; g.fillRect(0, 229, LW, 0.5);
-    for (let x = -(camX % 16); x < LW; x += 16) { g.fillStyle = "#2e2c40"; g.fillRect(x, 226, 1.5, 6); g.fillStyle = "#5a5878"; g.fillRect(x, 226, 0.5, 6); }
+    const RL = SC.day ? ["#6a6880", "#b8b6cc", "#8a889e", "#7a788e"] : ["#1e1c2c", "#5a5878", "#3a3850", "#2e2c40"];
+    g.fillStyle = RL[0]; g.fillRect(0, 226, LW, 6);
+    g.fillStyle = RL[1]; g.fillRect(0, 225.5, LW, 1); g.fillStyle = RL[2]; g.fillRect(0, 229, LW, 0.5);
+    for (let x = -(camX % 16); x < LW; x += 16) { g.fillStyle = RL[3]; g.fillRect(x, 226, 1.5, 6); g.fillStyle = RL[1]; g.fillRect(x, 226, 0.5, 6); }
     for (let i = Math.floor(camX / 150) - 1; i < Math.floor(camX / 150) + 5; i++) {
       const x = i * 150 - camX + 115;
-      [[9, 0.08], [5, 0.14]].forEach(([r, a]) => { g.fillStyle = "rgba(255,214,150," + a + ")"; g.beginPath(); g.arc(x, 224, r, 0, Math.PI * 2); g.fill(); });
+      if (!SC.day) [[9, 0.08], [5, 0.14]].forEach(([r, a]) => { g.fillStyle = "rgba(255,214,150," + a + ")"; g.beginPath(); g.arc(x, 224, r, 0, Math.PI * 2); g.fill(); });
       g.fillStyle = "#1a1826"; g.fillRect(x - 1.5, 220, 3, 7); g.fillStyle = "#ffe9b0"; g.fillRect(x - 1, 220.5, 2, 1.5);
     }
     // the "mental health" gate: two posts, a quiet sign, a finish line nobody reaches
@@ -1984,7 +2028,12 @@ h1 em { font-style: normal; color: var(--good); }
   // Static parts (sky, city, title) are painted once per width; walkers, rope, net and falling things move every frame.
   const TS_H = 360;
   const TS_RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const TS = { W: 0, fall: [], dips: [], next: 2.2, tops: [] };
+  const TS = { W: 0, fall: [], dips: [], next: 2.2, tops: [], theme: tsInitialTheme() };
+  // day or night, drawn at random (both the start screen and the avenue); ?tema=dia|noite in the address forces one
+  function tsInitialTheme() {
+    try { const t = new URLSearchParams(location.search).get("tema"); if (t === "dia") return "day"; if (t === "noite") return "night"; } catch (e) {}
+    return Math.random() < 0.5 ? "day" : "night";
+  }
 
   // ---- pixel font: 5x7 caps, accents above, cedilla below ----
   const TS_F = {
@@ -2067,9 +2116,11 @@ h1 em { font-style: normal; color: var(--good); }
   const TS_B4 = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
   const TS_SKY = ["#0b0920", "#100d2a", "#161233", "#1d173d", "#251c48", "#2f2252", "#3b285b", "#492e63", "#573469", "#663a6e"];
   const TS_BLD = [["#3b2a3c", "#4d374b", "#2a1d2b"], ["#2b2c44", "#3a3c5a", "#1e1f33"], ["#26354a", "#32465e", "#1a2536"], ["#3a3040", "#4a4051", "#29222f"], ["#30293c", "#3e3550", "#211c2a"], ["#3c3230", "#4c403c", "#2a2220"]];
+  const TS_SKY_DAY = ["#2f7fd0", "#3b8cd8", "#4a9ae0", "#5ba8e7", "#6fb6ec", "#86c4f0", "#9ed1f3", "#b7ddf5", "#cfe7f4", "#e6efe9"];
+  const TS_BLD_DAY = [["#c98a6a", "#dca080", "#a86e52"], ["#8aa0b8", "#a2b6ca", "#6e849c"], ["#d8c8a8", "#e8dcc0", "#b8a888"], ["#a8b8a0", "#bccab4", "#8a9a84"], ["#c0a0b8", "#d0b4c8", "#a084a0"], ["#e0b080", "#ecc498", "#c09060"]];
   function tsBuilding(q, x, top, w, h, s, opt) {
     opt = opt || {};
-    const Pl = TS_BLD[Math.floor(hash(s * 2.3 + 1) * TS_BLD.length)];
+    const day = TS.theme === "day", PAL = day ? TS_BLD_DAY : TS_BLD, Pl = PAL[Math.floor(hash(s * 2.3 + 1) * PAL.length)];
     q.r(x, top, w, h, Pl[0]); q.r(x, top, 2, h, Pl[1]); q.r(x + w - 3, top, 3, h, Pl[2]);
     q.r(x - 1, top - 3, w + 2, 3, Pl[1]); q.r(x - 1, top, w + 2, 1, Pl[2]);
     if (s % 2 === 0) for (let by = top + 5; by < top + h; by += 4) for (let bx = x + 3 + ((by >> 2) % 2) * 3; bx < x + w - 4; bx += 6) q.p(bx, by, Pl[2]);
@@ -2077,7 +2128,12 @@ h1 em { font-style: normal; color: var(--good); }
     for (let fy = top + 7; fy < Math.min(top + h - 8, TS_H); fy += 12) for (let c = 0; c < cols; c++) {
       const wx = gx + c * 10, r = hash(wx * 0.91 + fy * 2.17 + s);
       q.r(wx - 1, fy - 1, 7, 9, Pl[2]);
-      if (r > (opt.lit || 0.72)) { const tv = r > 0.95; q.r(wx, fy, 5, 7, tv ? "#7aa8e8" : "#f2c070"); q.r(wx, fy + 4, 5, 3, tv ? "#5a80c8" : "#d89048"); if (hash(r * 91) > 0.55) q.r(wx + 1, fy + 2, 2, 5, tv ? "#2a3860" : "#5a3420"); }
+      if (day) { // glass catching the sky, a few curtains, a few open windows
+        if (r > 0.82) { q.r(wx, fy, 5, 7, "#9fd2f2"); q.r(wx, fy, 2, 7, ["#f28aa0", "#ffd166", "#8fd6a8"][Math.floor(hash(r * 53) * 3)]); }
+        else if (r > 0.3) { q.r(wx, fy, 5, 7, "#9fd2f2"); q.r(wx, fy + 4, 5, 3, "#78b2de"); q.p(wx + 1, fy + 1, "#ffffff"); q.p(wx + 3, fy + 1, "#e6f6ff"); q.p(wx + 2, fy + 2, "#e6f6ff"); }
+        else { q.r(wx, fy, 5, 7, "#4a5a78"); q.p(wx + 3, fy + 1, "#6a7a98"); }
+      }
+      else if (r > (opt.lit || 0.72)) { const tv = r > 0.95; q.r(wx, fy, 5, 7, tv ? "#7aa8e8" : "#f2c070"); q.r(wx, fy + 4, 5, 3, tv ? "#5a80c8" : "#d89048"); if (hash(r * 91) > 0.55) q.r(wx + 1, fy + 2, 2, 5, tv ? "#2a3860" : "#5a3420"); }
       else { q.r(wx, fy, 5, 7, "#141829"); q.p(wx + 3, fy + 1, "#2a3456"); }
       q.r(wx - 1, fy + 7, 7, 1, Pl[1]);
     }
@@ -2109,37 +2165,42 @@ h1 em { font-style: normal; color: var(--good); }
     };
   }
   function tsBuild(W) {
-    const L = tsLayout(W), H = TS_H, bg = mkCanvas(W, H), q = pen(bg);
+    const day = TS.theme === "day", L = tsLayout(W), H = TS_H, sky = mkCanvas(W, H), bg = mkCanvas(W, H), q = pen(bg), sq = pen(sky);
     TS.W = W; TS.L = L; TS.buf = mkCanvas(W, H); TS.q = pen(TS.buf); TS.fall = []; TS.dips = [];
     // sky: dithered night gradient with a few stars baked in
-    { const P = tsPixels(bg);
+    { const P = tsPixels(sky), SK = day ? TS_SKY_DAY : TS_SKY;
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-        const f = clamp(Math.pow(y / L.horizon, 1.4), 0, 0.9999) * (TS_SKY.length - 1), i = Math.floor(f), th = (TS_B4[y & 3][x & 3] + 0.5) / 16, r = hash(x * 12.9898 + y * 78.233);
-        P.set(x, y, y < L.horizon * 0.85 && r > 0.9972 ? (r > 0.9992 ? "#ffffff" : r > 0.998 ? "#d8d4ff" : "#8a86c0") : TS_SKY[Math.min(TS_SKY.length - 1, i + (f - i > th ? 1 : 0))]);
+        const f = clamp(Math.pow(y / L.horizon, day ? 1.1 : 1.4), 0, 0.9999) * (SK.length - 1), i = Math.floor(f), th = (TS_B4[y & 3][x & 3] + 0.5) / 16, r = hash(x * 12.9898 + y * 78.233);
+        P.set(x, y, !day && y < L.horizon * 0.85 && r > 0.9972 ? (r > 0.9992 ? "#ffffff" : r > 0.998 ? "#d8d4ff" : "#8a86c0") : SK[Math.min(SK.length - 1, i + (f - i > th ? 1 : 0))]);
       }
       P.done(); }
     // moon with a banded halo
-    { const [cx, cy, r] = L.moon;
-      [[r + 15, 0.07], [r + 9, 0.09], [r + 4, 0.12]].forEach(([rr, a]) => q.disc(cx, cy, rr, "rgba(150,140,230," + a + ")"));
-      q.disc(cx, cy, r, "#f2ecd8"); q.disc(cx + r * 0.2, cy + r * 0.2, r * 0.84, "#e2d9c0"); q.disc(cx - r * 0.18, cy - r * 0.26, r * 0.52, "#fbf7ea");
-      [[-0.3, 0.15, 0.17], [0.3, -0.3, 0.13], [0.35, 0.35, 0.2], [-0.05, 0.55, 0.1]].forEach(([dx, dy, rr]) => { q.disc(cx + dx * r, cy + dy * r, rr * r, "#cfc4a8"); q.p(cx + dx * r - 1, cy + dy * r - 1, "#e8e0c8"); }); }
+    if (day) tsSun(sq, L.moon[0], L.moon[1], L.moon[2]);
+    else { const [cx, cy, r] = L.moon;
+      [[r + 15, 0.07], [r + 9, 0.09], [r + 4, 0.12]].forEach(([rr, a]) => sq.disc(cx, cy, rr, "rgba(150,140,230," + a + ")"));
+      sq.disc(cx, cy, r, "#f2ecd8"); sq.disc(cx + r * 0.2, cy + r * 0.2, r * 0.84, "#e2d9c0"); sq.disc(cx - r * 0.18, cy - r * 0.26, r * 0.52, "#fbf7ea");
+      [[-0.3, 0.15, 0.17], [0.3, -0.3, 0.13], [0.35, 0.35, 0.2], [-0.05, 0.55, 0.1]].forEach(([dx, dy, rr]) => { sq.disc(cx + dx * r, cy + dy * r, rr * r, "#cfc4a8"); sq.p(cx + dx * r - 1, cy + dy * r - 1, "#e8e0c8"); }); }
     // far skyline; antenna lights are kept to blink later
     TS.ant = [];
     { let x = -4, i = 0; const base = L.groundY;
       while (x < W) {
         const w = 14 + Math.floor(hash(3 + i * 3.1) * 30), h = 40 + Math.floor(hash(3 + i * 5.7) * 80), top = base - h;
-        q.r(x, top, w, h + 40, i % 2 ? "#18142e" : "#1b1733"); q.r(x, top, w, 1, "#2a2350");
-        for (let wy = top + 4; wy < base; wy += 4) for (let wx = x + 2; wx < x + w - 2; wx += 3) { const r = hash(wx * 1.7 + wy * 3.3 + 3); if (r > 0.95) q.p(wx, wy, r > 0.985 ? "#d8a870" : "#5a4878"); }
-        if (hash(i + 80) > 0.7 && w > 12) { const ax = x + Math.floor(w / 2); q.r(ax, top - 8, 1, 8, "#1b1733"); q.p(ax, top - 9, "#4a1a24"); TS.ant.push([ax, top - 9, hash(i) * 6]); }
+        const fill = day ? (i % 2 ? "#9ec0da" : "#a8c8df") : (i % 2 ? "#18142e" : "#1b1733");
+        q.r(x, top, w, h + 40, fill); q.r(x, top, w, 1, day ? "#c2dbec" : "#2a2350");
+        for (let wy = top + 4; wy < base; wy += 4) for (let wx = x + 2; wx < x + w - 2; wx += 3) { const r = hash(wx * 1.7 + wy * 3.3 + 3); if (r > 0.95) q.p(wx, wy, day ? "#c9dff0" : r > 0.985 ? "#d8a870" : "#5a4878"); }
+        if (hash(i + 80) > 0.7 && w > 12) { const ax = x + Math.floor(w / 2); q.r(ax, top - 8, 1, 8, fill); q.p(ax, top - 9, day ? "#c84a5a" : "#4a1a24"); if (!day) TS.ant.push([ax, top - 9, hash(i) * 6]); }
         x += w; i++;
       } }
     // the finish sign's halo
-    [[64, 0.05], [46, 0.07], [30, 0.1]].forEach(([r, a]) => q.disc(L.sign[0], L.sign[1] + 8, r, "rgba(120,255,170," + a + ")"));
+    if (!day) [[64, 0.05], [46, 0.07], [30, 0.1]].forEach(([r, a]) => q.disc(L.sign[0], L.sign[1] + 8, r, "rgba(120,255,170," + a + ")"));
     // city below the rope, pushed back by night haze
     { const Lc = mkCanvas(W, H), lq = pen(Lc); let x = -6, n = 0;
       while (x < W) { const w = 36 + Math.floor(hash(11 + n * 9.13) * 52), h = 36 + Math.floor(hash(11 + n * 4.71) * 50); tsBuilding(lq, x, L.groundY - h, w, h + 40, n + 11, { lit: 0.68, tank: hash(n * 8.3 + 11) > 0.7 ? 8 : 0 }); x += w; n++; }
       const lx = Lc.getContext("2d"), id = lx.getImageData(0, 0, W, H), d = id.data;
-      for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const lum = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; if (lum > 150) continue; d[i] = d[i] * 0.7 + 14 * 0.3; d[i + 1] = d[i + 1] * 0.7 + 12 * 0.3; d[i + 2] = d[i + 2] * 0.7 + 34 * 0.3; }
+      // night: dark haze that spares lit windows; day: pale blue air over everything
+      for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue;
+        if (day) { d[i] = d[i] * 0.72 + 190 * 0.28; d[i + 1] = d[i + 1] * 0.72 + 222 * 0.28; d[i + 2] = d[i + 2] * 0.72 + 243 * 0.28; continue; }
+        const lum = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; if (lum > 150) continue; d[i] = d[i] * 0.7 + 14 * 0.3; d[i + 1] = d[i + 1] * 0.7 + 12 * 0.3; d[i + 2] = d[i + 2] * 0.7 + 34 * 0.3; }
       lx.putImageData(id, 0, 0); q.x.drawImage(Lc, 0, 0); }
     // the two tall buildings the rope is tied to
     tsBuilding(q, L.left[0], L.left[1], L.left[2], H, 4, { lit: 0.7 });
@@ -2154,9 +2215,13 @@ h1 em { font-style: normal; color: var(--good); }
     // tie posts on both rooftops
     [[L.rope[0], L.rope[1], L.left[1]], [L.rope[2], L.rope[3], L.right[1]]].forEach(([x, y, roof]) => { const h = roof - y; q.r(x - 2, y - 3, 5, h + 3, "#07050f"); q.r(x - 1, y - 2, 3, h + 2, "#5a5878"); q.r(x - 1, y - 2, 1, h + 2, "#8a88a8"); q.r(x - 3, y - 4, 7, 2, "#2e2c40"); q.r(x - 2, y, 5, 2, "#c8b48a"); });
     // pavement
-    { const y = L.groundY; q.r(0, y, W, H - y, "#3a3550"); q.r(0, y, W, 2, "#928cab"); q.r(0, y + 1, W, 1, "#77718f"); q.r(0, y + 2, W, 1, "#2a2638");
-      for (let row = 0; row * 7 + y + 3 < H; row++) for (let k = -1; k < W / 16 + 1; k++) { const x0 = k * 16 + (row % 2) * 8, y0 = y + 3 + row * 7, v = hash(k * 5.3 + row * 2.1 + 9); q.r(x0 + 1, y0 + 1, 15, 6, v > 0.6 ? "#423c5a" : "#3c3753"); q.r(x0 + 1, y0 + 1, 15, 1, "#48425f"); } }
-    TS.bg = bg;
+    { const y = L.groundY, G = day ? ["#9d97ad", "#ece8f2", "#cfc9da", "#7a748a", "#bdb7cb", "#b4aec3", "#cac5d6"] : ["#3a3550", "#928cab", "#77718f", "#2a2638", "#423c5a", "#3c3753", "#48425f"];
+      q.r(0, y, W, H - y, G[0]); q.r(0, y, W, 2, G[1]); q.r(0, y + 1, W, 1, G[2]); q.r(0, y + 2, W, 1, G[3]);
+      for (let row = 0; row * 7 + y + 3 < H; row++) for (let k = -1; k < W / 16 + 1; k++) { const x0 = k * 16 + (row % 2) * 8, y0 = y + 3 + row * 7, v = hash(k * 5.3 + row * 2.1 + 9); q.r(x0 + 1, y0 + 1, 15, 6, v > 0.6 ? G[4] : G[5]); q.r(x0 + 1, y0 + 1, 15, 1, G[6]); } }
+    TS.sky = sky; TS.bg = bg;
+    // daytime: a few drifting clouds and birds
+    TS.clouds = day ? [[0.08, 92, 46, 1], [0.34, 150, 34, 2], [0.58, 78, 56, 3], [0.8, 128, 40, 4], [0.97, 104, 30, 5]].map(([fx, y, w, s]) => ({ img: tsCloud(w, s), x: fx * (W + 120), y, v: 2.5 + hash(s * 3.1) * 4 })) : [];
+    TS.birds = day ? [[0.2, 112, 0], [0.24, 120, 1.7], [0.62, 96, 3.1]].map(([fx, y, ph]) => ({ x: fx * (W + 60), y, ph, v: 16 + ph * 2 })) : [];
     // the logo and the psychologist's name tag
     const WHITE = { face: ["#ffffff", "#f1eeff", "#e2dcfa", "#cbc3ee"], lit: "#ffffff", accent: "#ffffff", outline: "#0b0820", extCols: ["#6b3b8f", "#4a2468"], ext: 3, out: 2 };
     const MINT = { face: ["#f2fff6", "#d6ffe2", "#c8ffd9", "#b0f8cb", "#8ff0b4", "#78e3a2"], lit: "#ffffff", accent: "#ffffff", outline: "#0b0820", extCols: ["#8a52b0", "#6b3b8f", "#4a2468"], ext: 6, out: 2 };
@@ -2166,6 +2231,26 @@ h1 em { font-style: normal; color: var(--good); }
     if (!TS.tag) { const t = tsText("PSICÓLOGA", 1, "#5fd18a"), w = t.width - 1 + 8, c = mkCanvas(w, 11), tq = pen(c);
       tq.r(0, 0, w, 11, "#07050f"); tq.r(1, 1, w - 2, 9, "#0b1410"); tq.r(1, 1, w - 2, 1, "#5fd18a"); tq.r(1, 9, w - 2, 1, "#5fd18a"); tq.r(1, 1, 1, 9, "#5fd18a"); tq.r(w - 2, 1, 1, 9, "#5fd18a");
       tq.x.drawImage(t, 4, -1); TS.tag = c; }
+  }
+  function tsSun(q, cx, cy, r) {
+    [[r + 18, 0.12], [r + 11, 0.16], [r + 5, 0.22]].forEach(([rr, a]) => q.disc(cx, cy, rr, "rgba(255,240,170," + a + ")"));
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; for (let d = r + 4; d < r + 9; d++) q.r(Math.round(cx + Math.cos(a) * d) - 1, Math.round(cy + Math.sin(a) * d) - 1, 2, 2, "#ffe680"); }
+    q.disc(cx, cy, r, "#ffc93a"); q.disc(cx - 1, cy - 1, r * 0.86, "#ffd84a"); q.disc(cx - r * 0.2, cy - r * 0.22, r * 0.55, "#ffe680"); q.disc(cx - r * 0.32, cy - r * 0.36, r * 0.24, "#fff6c4");
+  }
+  // a puffy cloud as its own sprite: lit on top, shaded underneath, flat base
+  function tsCloud(w, seed) {
+    const h = Math.round(w * 0.55), c = mkCanvas(w + 4, h + 4), P = tsPixels(c), base = h;
+    const puffs = [[0.18, 0.62, 0.2], [0.38, 0.42, 0.28], [0.62, 0.5, 0.24], [0.82, 0.66, 0.16]].map(([fx, fy, fr], i) => [2 + fx * w + (hash(seed * 7 + i) - 0.5) * w * 0.08, 2 + fy * h, fr * w]);
+    const inside = (x, y) => y <= base && puffs.some(([px, py, pr]) => (x - px) * (x - px) + (y - py) * (y - py) * 1.6 <= pr * pr);
+    for (let y = 0; y < h + 4; y++) for (let x = 0; x < w + 4; x++) {
+      if (!inside(x, y)) continue;
+      P.set(x, y, !inside(x - 1, y - 2) ? "#ffffff" : !inside(x + 1, y + 3) ? "#cfe2f1" : "#eef6fc");
+    }
+    P.done(); return c;
+  }
+  function tsBird(q, x, y, up) {
+    const rows = up ? ["#.....#", ".#...#.", "..#.#..", "...#..."] : [".......", "###.###", "...#...", "......."], col = "#2a3550";
+    rows.forEach((row, ry) => { for (let i = 0; i < row.length; i++) if (row[i] === "#") q.p(x + i, y + ry, col); });
   }
   const tsFlips = new Map();
   function tsFlip(img) {
@@ -2231,9 +2316,15 @@ h1 em { font-style: normal; color: var(--good); }
     if (TS.W !== W) tsBuild(W);
     const L = TS.L, c = TS.buf, bx = c.getContext("2d"), q = TS.q, t = TS_RM ? 0 : time;
     bx.imageSmoothingEnabled = false;
+    const day = TS.theme === "day";
+    bx.drawImage(TS.sky, 0, 0);
+    TS.clouds.forEach((cl) => { const span = W + cl.img.width + 40; bx.drawImage(cl.img, Math.round(((cl.x + t * cl.v) % span + span) % span) - cl.img.width - 20, cl.y); });
     bx.drawImage(TS.bg, 0, 0);
-    L.sparkles.forEach(([sx, sy, big], i) => { const v = Math.sin(t * 1.7 + i * 2.3); if (v > -0.4) tsSparkle(q, sx, sy, big && v > 0.4); });
-    TS.ant.forEach(([ax, ay, ph]) => { if (Math.sin(t * 2 + ph) > 0.4) q.p(ax, ay, "#ff3a4a"); });
+    if (day) TS.birds.forEach((b) => { const span = W + 40; tsBird(q, Math.round(((b.x + t * b.v) % span + span) % span) - 20, Math.round(b.y + Math.sin(t * 1.3 + b.ph) * 4), Math.floor(t * 5 + b.ph) % 2 === 0); });
+    else {
+      L.sparkles.forEach(([sx, sy, big], i) => { const v = Math.sin(t * 1.7 + i * 2.3); if (v > -0.4) tsSparkle(q, sx, sy, big && v > 0.4); });
+      TS.ant.forEach(([ax, ay, ph]) => { if (Math.sin(t * 2 + ph) > 0.4) q.p(ax, ay, "#ff3a4a"); });
+    }
     TS.bulbs.forEach(([x, y, k]) => q.p(x, y, (k + Math.floor(t * 3)) % 2 === 0 ? "#fffbe0" : "#a8801e"));
     // the rope bounces a little under every walker
     const sway = L.walkers.map((w) => (TS_RM ? 0 : Math.sin(t * w.sp + w.ph)));
@@ -2244,7 +2335,7 @@ h1 em { font-style: normal; color: var(--good); }
     const hs = L.holders.map((h, i) => { const sx = Math.round(h.x) - 16, sy = L.groundY - 50 + (Math.floor(t * 1.4 + i * 0.7) % 2); return { h, sx, sy, hand: [h.flip ? sx + 5 : sx + 26, sy + 23] }; });
     tsNet(q, hs.map((o) => o.hand).sort((a, b) => a[0] - b[0]), L.netDepth);
     hs.forEach(({ h, sx, sy }) => {
-      q.ell(h.x, L.groundY + 1.5, 9, 2.4, "rgba(0,0,0,0.4)");
+      q.ell(h.x, L.groundY + 1.5, 9, 2.4, day ? "rgba(40,50,80,0.25)" : "rgba(0,0,0,0.4)");
       const img = personImg(h.look, "hold"); bx.drawImage(h.flip ? tsFlip(img) : img, sx, sy);
       if (h.tag) bx.drawImage(TS.tag, Math.round(h.x - TS.tag.width / 2), sy - 12);
     });
@@ -2881,6 +2972,7 @@ h1 em { font-style: normal; color: var(--good); }
   function showSelect() { initAudio(); randomize(); ["title", "end", "draw"].forEach((id) => ($(id).hidden = true)); $("select").hidden = false; renderSelect(); document.querySelector(".seg button").focus(); }
   let drawing = null;
   function showDraw() {
+    if (!/[?&]tema=/.test(location.search)) tsSetTheme(Math.random() < 0.5 ? "day" : "night"); // each new person gets a fresh draw of day or night
     tutNext = true; initAudio(); $("select").hidden = true; $("draw").hidden = false;
     $("drawTraits").innerHTML = "&nbsp;"; $("drawDiff").innerHTML = "&nbsp;"; $("drawTag").textContent = "sorteando..."; $("drawNote").classList.remove("on");
     let n = 0, delay = 50; const total = 22;
@@ -2950,6 +3042,15 @@ h1 em { font-style: normal; color: var(--good); }
   addEventListener("pointerdown", goFull, true);
   addEventListener("keydown", (e) => { if (e.key !== "Escape") goFull(); }, true);
   $("startBtn").addEventListener("click", () => { goFull(); showSelect(); });
+  // start screen by day or by night; the choice is remembered on this device
+  function tsSetTheme(th, save) {
+    TS.theme = th; TS.W = 0; TS.fall = []; $("title").classList.toggle("is-day", th === "day");
+    SC = sceneFor(th); // the avenue follows the same day or night
+    $("themeBtn").textContent = th === "day" ? "noite" : "dia";
+    $("themeBtn").setAttribute("aria-label", th === "day" ? "Ver a tela de início à noite" : "Ver a tela de início de dia");
+  }
+  $("themeBtn").addEventListener("click", (e) => { e.stopPropagation(); tsSetTheme(TS.theme === "day" ? "night" : "day"); });
+  tsSetTheme(TS.theme, false);
   $("againBtn").addEventListener("click", start);
   $("charBtn").addEventListener("click", showSelect);
   if (isTouch && $("ctrlHint")) $("ctrlHint").textContent = "arraste na tela para andar · toque rápido ou PULAR para pular · LARGAR solta uma carga · 5 corações";
