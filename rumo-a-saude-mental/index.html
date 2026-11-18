@@ -452,6 +452,8 @@ h1 em { font-style: normal; color: var(--good); }
   const cv = $("c"), ctx = cv.getContext("2d");
   const buf = document.createElement("canvas"), g = buf.getContext("2d");
   let K2 = 2;
+  // LW is the width of the world in view; LWF the full width of the screen in HUD units (they differ only when zoomed in)
+  let LWF = 480, ZOOM = 1, ZOY = 0; const ZOOM_SMALL = 1.2;
   const isTouch = matchMedia("(pointer: coarse)").matches;
   const K = "#14121e";
   const MONO = '"IBM Plex Mono", ui-monospace, monospace', PIX = '"Silkscreen", "IBM Plex Mono", monospace';
@@ -1078,8 +1080,8 @@ h1 em { font-style: normal; color: var(--good); }
   const rotQ = matchMedia("(pointer: coarse) and (orientation: portrait)");
   const toLogical = (e) => {
     const r = cv.getBoundingClientRect();
-    if (rotQ.matches) return [(e.clientY - r.top) / r.height * LW, (r.right - e.clientX) / r.width * LH];
-    return [(e.clientX - r.left) / r.width * LW, (e.clientY - r.top) / r.height * LH];
+    if (rotQ.matches) return [(e.clientY - r.top) / r.height * LWF, (r.right - e.clientX) / r.width * LH];
+    return [(e.clientX - r.left) / r.width * LWF, (e.clientY - r.top) / r.height * LH];
   };
   const joyAim = (x, y) => {
     joy.x = x; joy.y = y;
@@ -1419,7 +1421,7 @@ h1 em { font-style: normal; color: var(--good); }
     if (P.z <= 0) { P.z = 0; P.vz = 0; }
     P.shake = Math.max(0, P.shake - dt); quake = Math.max(0, quake - dt);
     arch.x += (arch.tx - arch.x) * Math.min(1, dt * 3);
-    camX += (P.x - 160 - camX) * Math.min(1, dt * 5); camX = Math.max(0, camX);
+    camX += (P.x - Math.min(160, LW * 0.28) - camX) * Math.min(1, dt * 5); camX = Math.max(0, camX);
     if (banner) { banner.t += dt; if (banner.t > 3) banner = null; }
     obstacles.forEach((o) => {
       if (o.moving) o.x += o.vx * dt;
@@ -2296,9 +2298,9 @@ h1 em { font-style: normal; color: var(--good); }
   }
 
   function render() {
-    g.setTransform(K2, 0, 0, K2, 0, 0);
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, buf.width, buf.height);
+    g.setTransform(K2 * ZOOM, 0, 0, K2 * ZOOM, 0, -ZOY * K2 * ZOOM); // world pass (zoomed in on small screens)
     g.imageSmoothingEnabled = false;
-    g.clearRect(0, 0, LW, LH);
     drawWorld();
     blocks.forEach((b) => {
       const sx = b.x - camX, r = clamp(7 - b.z / 30, 3, 7);
@@ -2316,6 +2318,8 @@ h1 em { font-style: normal; color: var(--good); }
     blocks.forEach((b) => blk(b.type, b.x - camX, b.y - b.z));
     parts.forEach((p) => { g.globalAlpha = clamp(p.life * 2.5, 0, 1); g.fillStyle = p.col; g.fillRect(p.x - camX, p.y - p.z, 1, 1); g.globalAlpha = 1; });
     bubbles.forEach(bubbleDraw);
+    // HUD pass: screen units, never zoomed
+    const LWworld = LW; LW = LWF; g.setTransform(K2, 0, 0, K2, 0, 0);
     if (mode === "play" || mode === "tutorial") drawHUD();
     drawWarn();
     if (banner) {
@@ -2333,11 +2337,12 @@ h1 em { font-style: normal; color: var(--good); }
       txt(CRISIS_CAP[crisis.kind], LW / 2, 91, { size: 7, color: "#ffc2c8", ls: 2, alpha: ca, shadow: false });
       if (crisis.kind === "TAQUICARDIA") { const hs = 26 * (1 + heartPulse * 0.45); g.globalAlpha = ca; g.drawImage(HEART.full, LW / 2 - hs / 2, 30 - hs * 0.3 + 14, hs, hs * 0.86); g.globalAlpha = 1; }
       if (crisis.kind === "FALTA DE AR") txt(Math.sin(time * 2.6) > 0 ? "inspira..." : "...expira", LW / 2, 108, { size: 7, color: "#c9d4ff", ls: 2, alpha: ca * 0.9, shadow: false });
-      if (crisis.kind === "SONO") for (let k = 0; k < 3; k++) { const ph = ((time * 0.8 + k / 3) % 1); txt("Z", P.x - camX + 10 + k * 4 + ph * 6, P.y - stackTopZ() - 10 - ph * 22, { size: 6 + k * 2, font: PIX, color: "#c9d4ff", alpha: ca * (1 - ph) }); }
+      if (crisis.kind === "SONO") for (let k = 0; k < 3; k++) { const ph = ((time * 0.8 + k / 3) % 1); txt("Z", (P.x - camX + 10 + k * 4 + ph * 6) * ZOOM, (P.y - stackTopZ() - 10 - ph * 22 - ZOY) * ZOOM, { size: 6 + k * 2, font: PIX, color: "#c9d4ff", alpha: ca * (1 - ph) }); }
     }
     drawJoy();
     drawDialog();
     if (mode === "ending" && endT > UP_T + 6.3) { g.fillStyle = "rgba(5,5,10," + clamp((endT - UP_T - 6.3) / 1, 0, 0.8).toFixed(2) + ")"; g.fillRect(0, 0, LW, LH); }
+    LW = LWworld;
 
     const play = mode === "play";
     const eff = play ? effOf() : 0;
@@ -2412,13 +2417,16 @@ h1 em { font-style: normal; color: var(--good); }
   function fit() {
     const st = $("stage"), w = st.clientWidth, h = st.clientHeight;
     // fill the whole screen: the visible stretch of avenue widens with the screen's aspect ratio
-    LW = Math.round(Math.max(480, Math.min(680, LH * w / Math.max(1, h))));
-    const s = Math.max(0.5, Math.min(w / LW, h / LH));
-    const cw = Math.floor(LW * s), ch = Math.floor(LH * s);
+    LWF = Math.round(Math.max(480, Math.min(680, LH * w / Math.max(1, h))));
+    const s = Math.max(0.5, Math.min(w / LWF, h / LH));
+    const cw = Math.floor(LWF * s), ch = Math.floor(LH * s);
+    // small screens (a phone lying down): the avenue is shown closer, cropping sky and sea; the HUD keeps its size
+    ZOOM = ch < 540 ? ZOOM_SMALL : 1; ZOY = ZOOM > 1 ? 10 : 0;
+    LW = LWF / ZOOM;
     $("screen").style.width = cw + "px"; $("screen").style.height = ch + "px";
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let bw = Math.round(cw * dpr); if (bw > 2400) bw = 2400; if (bw < 480) bw = 480;
-    K2 = bw / LW;
+    K2 = bw / LWF;
     cv.width = bw; cv.height = Math.round(LH * K2); buf.width = cv.width; buf.height = cv.height;
     if (!$("tut").hidden) placeTut();
   }
@@ -2556,7 +2564,7 @@ h1 em { font-style: normal; color: var(--good); }
   let tutNext = false;
   function placeTut() {
     if (!isTouch) return;
-    const sc = $("screen"), s = sc.clientWidth / LW, H = sc.clientHeight;
+    const sc = $("screen"), s = sc.clientWidth / LWF, H = sc.clientHeight;
     const jx = JOY_X * s, jyB = H - JOY_Y * s, r = JOY_R * s;
     const mv = $("tutMove"), left = Math.max(8, jx - 24);
     mv.style.left = left + "px"; mv.style.bottom = (jyB + r + 16) + "px"; mv.style.setProperty("--stem", "12px"); mv.querySelector("i").style.left = (jx - left - 1) + "px";
