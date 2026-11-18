@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#07070d">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,6 +33,9 @@
 }
 [hidden] { display: none !important; }
 html, body { height: 100%; }
+/* no browser zoom on phones: no double-tap or pinch zoom (iPhone ignores user-scalable=no), no text resize on rotation */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+* { touch-action: pan-x pan-y; -webkit-touch-callout: none; }
 body {
   background: var(--bg); color: var(--ink); font-family: var(--mono); font-size: 14px;
   margin: 0; overflow: hidden; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
@@ -85,7 +88,7 @@ kbd { font-family: var(--pix); font-size: 11px; color: #2a1a06; background: #e8b
 .tut.touch .tut-keys { display: none; }
 .tbtns.tut-glow button { animation: tutGlow .9s steps(2) infinite; }
 @keyframes tutGlow { 50% { box-shadow: 0 0 0 3px #5fd18a, 0 0 18px #5fd18a; } }
-@media (max-height: 420px) { .tut-panel { top: 4%; gap: 6px; padding: 10px 14px; } .tut-goal { font-size: 11px; } .tut-call { font-size: 10px; max-width: 150px; padding: 5px 8px; } }
+@media (max-height: 420px), (pointer: coarse) and (orientation: portrait) and (max-width: 420px) { .tut-panel { top: 4%; gap: 6px; padding: 10px 14px; } .tut-goal { font-size: 11px; } .tut-call { font-size: 10px; max-width: 150px; padding: 5px 8px; } }
 @media (prefers-reduced-motion: reduce) { .tut-call, .tut-eyebrow, .tbtns.tut-glow button { animation: none; } }
 
 .ov {
@@ -156,7 +159,7 @@ h1 em { font-style: normal; color: var(--good); }
 @media (prefers-reduced-motion: reduce) { .cta.press { animation: none; } }
 .credits { margin: 0; font-size: 10px; letter-spacing: .25em; color: var(--muted); text-transform: lowercase; }
 .credits b { color: var(--gold); font-weight: 600; text-transform: none; }
-@media (max-height: 520px) {
+@media (max-height: 520px), (pointer: coarse) and (orientation: portrait) and (max-width: 520px) {
   #title .box, #end .box { gap: 10px; }
   .logo { font-size: clamp(26px, 9vh, 44px); }
   .h-end { font-size: 16px; }
@@ -180,20 +183,20 @@ h1 em { font-style: normal; color: var(--good); }
 .perks strong { color: #c8ffd9; font-size: 14px; letter-spacing: .04em; margin-right: 4px; }
 .bonus-note { color: #8ff0b4; }
 .bonus-cta { border-color: var(--good); background: rgba(95,209,138,.14); }
-@media (max-height: 520px) { .bonus-box { gap: 8px; } .bonus-pv canvas { width: 60px; height: 98px; } .bonus-pv { padding: 8px 12px; } .perks { gap: 4px; } .perks li { font-size: 11px; } }
-@media (max-width: 560px) { .bonus-main { gap: 12px; } .bonus-pv canvas { width: 60px; height: 98px; } }
+@media (max-height: 520px), (pointer: coarse) and (orientation: portrait) and (max-width: 520px) { .bonus-box { gap: 8px; } .bonus-pv canvas { width: 60px; height: 98px; } .bonus-pv { padding: 8px 12px; } .perks { gap: 4px; } .perks li { font-size: 11px; } }
+@media (max-width: 560px) and (orientation: landscape), (max-width: 560px) and (pointer: fine) { .bonus-main { gap: 12px; } .bonus-pv canvas { width: 60px; height: 98px; } }
 /* birth lottery */
 .draw-pv canvas { width: 112px; height: 182px; }
 .draw-traits { margin: 0; min-height: 1.6em; font-size: 13px; letter-spacing: .14em; color: var(--ink); text-transform: lowercase; }
 .draw-diff { margin: 0; min-height: 1.4em; font-family: var(--pix); font-size: 14px; letter-spacing: .14em; }
 #drawNote { visibility: hidden; }
 #drawNote.on { visibility: visible; }
-@media (max-height: 520px) { .draw-box { gap: 8px; } .draw-pv canvas { width: 64px; height: 104px; } .draw-pv { padding: 8px 14px; } }
+@media (max-height: 520px), (pointer: coarse) and (orientation: portrait) and (max-width: 520px) { .draw-box { gap: 8px; } .draw-pv canvas { width: 64px; height: 104px; } .draw-pv { padding: 8px 14px; } }
 .select-foot .diff { flex: 1 1 auto; min-width: 0; }
 .select-foot .cta { flex: none; }
 .h-sel { font-size: clamp(16px, 3.6vw, 26px); }
 /* short screens (phone lying down): compact the character screen so everything fits without scrolling */
-@media (max-height: 520px) {
+@media (max-height: 520px), (pointer: coarse) and (orientation: portrait) and (max-width: 520px) {
   #select .box { gap: 10px; }
   #select .eyebrow { display: none; }
   .h-sel { font-size: 16px; }
@@ -204,7 +207,7 @@ h1 em { font-style: normal; color: var(--good); }
   .portrait canvas { width: 56px; height: 91px; }
   .select-foot .cta { padding: 10px 22px; }
 }
-@media (max-width: 560px) {
+@media (max-width: 560px) and (orientation: landscape), (max-width: 560px) and (pointer: fine) {
   .select { grid-template-columns: minmax(0, 1fr); }
   .portrait canvas { width: 56px; height: 91px; }
   .opt-row { grid-template-columns: 86px minmax(0, 1fr); }
@@ -226,7 +229,7 @@ h1 em { font-style: normal; color: var(--good); }
 .help-list a { color: #8ff0b4; }
 .disclaimer { margin: 0; max-width: 62ch; font-size: 10.5px; line-height: 1.6; color: var(--muted); font-style: italic; }
 #end .box { gap: 12px; }
-@media (max-height: 640px) and (min-width: 700px) {
+@media (max-height: 640px) and (min-width: 700px), (pointer: coarse) and (orientation: portrait) and (max-width: 640px) and (min-height: 700px) {
   #end .box { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-auto-flow: row dense; max-width: 940px; column-gap: 30px; row-gap: 10px; align-items: center; justify-items: center; }
   #end .box > :nth-child(-n+5) { grid-column: 1; }
   #end .box > :nth-child(n+6) { grid-column: 2; }
@@ -236,7 +239,7 @@ h1 em { font-style: normal; color: var(--good); }
   .stats div { padding: 5px 8px; min-width: 74px; }
   .stats span { font-size: 8px; letter-spacing: .14em; }
 }
-@media (max-height: 520px) { #end .box { gap: 8px; } .help-box { padding: 6px 12px; } .help-list { font-size: 11px; gap: 2px; } .disclaimer { font-size: 9.5px; } #end .lead { font-size: 12px; } }
+@media (max-height: 520px), (pointer: coarse) and (orientation: portrait) and (max-width: 520px) { #end .box { gap: 8px; } .help-box { padding: 6px 12px; } .help-list { font-size: 11px; gap: 2px; } .disclaimer { font-size: 9.5px; } #end .lead { font-size: 12px; } }
 /* ===== v6: pixel-art windows and buttons ===== */
 .ov { background: radial-gradient(ellipse at 50% 42%, rgba(14,11,34,.74), rgba(4,3,12,.93) 78%); }
 #select .box, #draw .box, #bonus .box, #end .box {
@@ -292,15 +295,15 @@ h1 em { font-style: normal; color: var(--good); }
 .card-note { color: var(--acc-hi); }
 .card-cta { background: var(--acc-dk); box-shadow: inset -3px -3px 0 rgba(0,0,0,.35), inset 3px 3px 0 var(--acc), 0 0 0 3px #07050f, 0 5px 0 3px #07050f; }
 .card-cta:hover { filter: brightness(1.2); background: var(--acc-dk); }
-@media (max-height: 520px) { #card .box { padding: 10px 14px; gap: 6px; } .card-pv canvas { width: 60px; height: 98px; } .card-boss .card-pv canvas { width: 80px; height: 96px; } .card-name { font-size: 22px; } }
-@media (max-width: 560px) { .card-pv canvas { width: 60px; height: 98px; } .card-boss .card-pv canvas { width: 80px; height: 96px; } }
+@media (max-height: 520px), (pointer: coarse) and (orientation: portrait) and (max-width: 520px) { #card .box { padding: 10px 14px; gap: 6px; } .card-pv canvas { width: 60px; height: 98px; } .card-boss .card-pv canvas { width: 80px; height: 96px; } .card-name { font-size: 22px; } }
+@media (max-width: 560px) and (orientation: landscape), (max-width: 560px) and (pointer: fine) { .card-pv canvas { width: 60px; height: 98px; } .card-boss .card-pv canvas { width: 80px; height: 96px; } }
 @media (prefers-reduced-motion: reduce) { .card-eyebrow, .card-name, .card-pv canvas { animation: none !important; } }
 /* title: the live avenue behind the logo */
 .ov.retro { background: linear-gradient(180deg, rgba(6,5,16,.72) 0%, rgba(6,5,16,.05) 34%, rgba(6,5,16,0) 58%, rgba(6,5,16,.78) 100%); }
 .ov.retro::after { background: repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0 1px, transparent 1px 3px); }
 .cover-box .cta.press { background: #d63a4a; box-shadow: inset -3px -3px 0 #8e1d2a, inset 3px 3px 0 #ff8a92, 0 0 0 3px #07050f, 0 5px 0 3px #07050f; border: 0; }
-@media (max-height: 520px) { #select .box, #draw .box, #bonus .box, #end .box { padding: 10px 14px; } }
-@media (max-height: 640px) and (min-width: 700px) {
+@media (max-height: 520px), (pointer: coarse) and (orientation: portrait) and (max-width: 520px) { #select .box, #draw .box, #bonus .box, #end .box { padding: 10px 14px; } }
+@media (max-height: 640px) and (min-width: 700px), (pointer: coarse) and (orientation: portrait) and (max-width: 640px) and (min-height: 700px) {
   #end .box { padding: 6px 16px; row-gap: 5px; }
   #end .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%; }
   #end .stats div { min-width: 0; padding: 4px 6px; }
@@ -314,6 +317,22 @@ h1 em { font-style: normal; color: var(--good); }
   #end .disclaimer { font-size: 9px; line-height: 1.45; }
   #end .lead { font-size: 11px; }
   #end.ov { padding-top: calc(env(safe-area-inset-top, 0px) + 6px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6px); }
+}
+/* very short screens (iPhone lying down with Safari's bars): the end screen fits without scrolling */
+@media (max-height: 430px) and (min-width: 700px), (pointer: coarse) and (orientation: portrait) and (max-width: 430px) and (min-height: 700px) {
+  #end .box { row-gap: 3px; padding: 4px 14px; }
+  #end .stats { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+  #end .stats div { padding: 3px 3px; }
+  #end .stats b { font-size: 12px; }
+  #end .stats span { font-size: 7px; letter-spacing: .04em; }
+  #end .eyebrow { font-size: 9px; }
+  #end .h-end { font-size: 13px; }
+  #end .lead { font-size: 10px; }
+  #end .help-box { padding: 4px 10px; }
+  #end .help-list { font-size: 9.5px; line-height: 1.35; }
+  #end .help-title { font-size: 8px; }
+  #end .disclaimer { font-size: 8.5px; line-height: 1.35; }
+  #end .row-btns .cta { padding: 8px 10px; }
 }
 /* v7 title: the logo lives in the pixel scene; only the button and credits sit on top */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
@@ -2934,6 +2953,13 @@ h1 em { font-style: normal; color: var(--good); }
   $("againBtn").addEventListener("click", start);
   $("charBtn").addEventListener("click", showSelect);
   if (isTouch && $("ctrlHint")) $("ctrlHint").textContent = "arraste na tela para andar · toque rápido ou PULAR para pular · LARGAR solta uma carga · 5 corações";
+
+  // iPhone Safari zooms on pinch and double-tap even with user-scalable=no: block both
+  ["gesturestart", "gesturechange", "gestureend"].forEach((ev) => document.addEventListener(ev, (e) => e.preventDefault(), { passive: false }));
+  document.addEventListener("touchmove", (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  let lastTouchEnd = 0;
+  document.addEventListener("touchend", (e) => { const now = Date.now(); if (now - lastTouchEnd < 320 && e.cancelable && !e.target.closest("button, a")) e.preventDefault(); lastTouchEnd = now; }, { passive: false });
+  document.addEventListener("dblclick", (e) => e.preventDefault(), { passive: false });
 
   reset(); mode = "title";
   fit();
