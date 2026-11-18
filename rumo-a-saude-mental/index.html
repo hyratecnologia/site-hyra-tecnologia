@@ -315,6 +315,10 @@ h1 em { font-style: normal; color: var(--good); }
   #end .lead { font-size: 11px; }
   #end.ov { padding-top: calc(env(safe-area-inset-top, 0px) + 6px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6px); }
 }
+/* v7 title: the logo lives in the pixel scene; only the button and credits sit on top */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+#title .cover-box { justify-content: flex-end; }
+.ov.retro { background: linear-gradient(180deg, rgba(6,5,16,0) 70%, rgba(6,5,16,.45) 100%); }
 </style>
 
 </head>
@@ -351,7 +355,7 @@ h1 em { font-style: normal; color: var(--good); }
 
 <div class="ov retro" id="title">
   <div class="box cover-box">
-    <h1 class="logo"><span class="logo-top">RUMO À</span><em>SAÚDE MENTAL</em></h1>
+    <h1 class="sr-only">Rumo à Saúde Mental</h1>
     <div class="cover-foot">
       <button class="cta press" id="startBtn" type="button">▶ começar</button>
       <p class="credits">semana da psicologia</p>
@@ -525,6 +529,8 @@ h1 em { font-style: normal; color: var(--good); }
     else if (jump) { legs = [[55, -8], [-25, -50]]; up = -1; arms = [[150, 165], [130, 150]]; }
     else if (kneel) { legs = [[40, -90], [12, -90]]; drop = 9; hipY = 41; arms = [[25, 50], [10, 40]]; }
     else if (wheel || sit) { legs = [[90, 0], [90, 4]]; hipX = 13; hipY = 33; drop = 1; arms = sit ? [[60, 85], [50, 80]] : [[30, 75], [20, 65]]; }
+    else if (frame === "bal") { legs = [[13, 6], [-11, -6]]; arms = [[80, 95], [-80, -95]]; } // tightrope: arms out holding a pole
+    else if (frame === "hold") { legs = [[7, 0], [-6, 0]]; arms = [[65, 95], [55, 90]]; } // holding the net at chest height
     else { legs = [[4, 0], [-3, 0]]; arms = [[6, 12], [-4, 6]]; if (frame === "idle1") up = 1; }
     if (!kneel && !wheel && !sit) hipY += (frame === "idle1" ? 0 : up);
     const tx = 10 + lean, ty = 17 + up + drop, hx = 9 + lean + (kneel ? 1 : 0), hy = 3 + up + drop;
@@ -1915,6 +1921,7 @@ h1 em { font-style: normal; color: var(--good); }
   ].map((tp) => Object.assign(tp, { stack: tp.stack.map((type) => ({ type })), next: 1 + Math.random() * 3 }));
   const titleFall = [];
   function titleUpdate(dt) {
+    tsUpdate(dt);
     TITLE_PEOPLE.forEach((tp) => {
       tp.next -= dt;
       if (tp.next <= 0) { tp.next = 2.6 + Math.random() * 2.4; titleFall.push({ type: pick(GOOD), x: camX + tp.dx * LW / 480 - 4, y: tp.y + 1, z: 26 + tp.stack.length * 10, vx: -10 - Math.random() * 10, vz: 30, rot: 0, vr: -5, life: 2.2 }); }
@@ -1953,6 +1960,316 @@ h1 em { font-style: normal; color: var(--good); }
   }
   function stackDrawAt(stack, x, y) { stack.forEach((b, i) => blk(b.type, x - camX, y - 23 - i * 10)); }
   function blk(t, cx, bottom) { const im = blockImg(t), w = im.width / 2, h = im.height / 2; sprite(im, cx - w / 2, bottom - h, w, h); }
+  // ================= v7 title scene: tightrope walkers balancing their loads =================
+  // The start screen is drawn live: 360 art px tall, as wide as the screen's shape asks, then scaled up to the canvas.
+  // Static parts (sky, city, title) are painted once per width; walkers, rope, net and falling things move every frame.
+  const TS_H = 360;
+  const TS_RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TS = { W: 0, fall: [], dips: [], next: 2.2, tops: [] };
+
+  // ---- pixel font: 5x7 caps, accents above, cedilla below ----
+  const TS_F = {
+    A: [".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"], B: ["####.", "#...#", "#...#", "####.", "#...#", "#...#", "####."],
+    C: [".###.", "#...#", "#....", "#....", "#....", "#...#", ".###."], D: ["####.", "#...#", "#...#", "#...#", "#...#", "#...#", "####."],
+    E: ["#####", "#....", "#....", "####.", "#....", "#....", "#####"], F: ["#####", "#....", "#....", "####.", "#....", "#....", "#...."],
+    G: [".###.", "#...#", "#....", "#.###", "#...#", "#...#", ".####"], H: ["#...#", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"],
+    I: ["###", ".#.", ".#.", ".#.", ".#.", ".#.", "###"], J: ["....#", "....#", "....#", "....#", "#...#", "#...#", ".###."],
+    K: ["#...#", "#..#.", "#.#..", "##...", "#.#..", "#..#.", "#...#"], L: ["#....", "#....", "#....", "#....", "#....", "#....", "#####"],
+    M: ["#...#", "##.##", "#.#.#", "#.#.#", "#...#", "#...#", "#...#"], N: ["#...#", "##..#", "#.#.#", "#..##", "#...#", "#...#", "#...#"],
+    O: [".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."], P: ["####.", "#...#", "#...#", "####.", "#....", "#....", "#...."],
+    Q: [".###.", "#...#", "#...#", "#...#", "#.#.#", "#..#.", ".##.#"], R: ["####.", "#...#", "#...#", "####.", "#.#..", "#..#.", "#...#"],
+    S: [".####", "#....", "#....", ".###.", "....#", "....#", "####."], T: ["#####", "..#..", "..#..", "..#..", "..#..", "..#..", "..#.."],
+    U: ["#...#", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."], V: ["#...#", "#...#", "#...#", "#...#", "#...#", ".#.#.", "..#.."],
+    W: ["#...#", "#...#", "#...#", "#.#.#", "#.#.#", "##.##", "#...#"], X: ["#...#", "#...#", ".#.#.", "..#..", ".#.#.", "#...#", "#...#"],
+    Y: ["#...#", "#...#", ".#.#.", "..#..", "..#..", "..#..", "..#.."], Z: ["#####", "....#", "...#.", "..#..", ".#...", "#....", "#####"],
+    ".": [".", ".", ".", ".", ".", ".", "#"], "?": [".###.", "#...#", "....#", "...#.", "..#..", ".....", "..#.."], "!": ["#", "#", "#", "#", "#", ".", "#"],
+    " ": ["...", "...", "...", "...", "...", "...", "..."]
+  };
+  const TS_ACC = { acute: ["...##", "..##."], grave: ["##...", ".##.."], circ: ["..#..", ".#.#."], tilde: [".##.#", "#..#."] };
+  const TS_ACCENTED = { "Á": ["A", "acute"], "À": ["A", "grave"], "Â": ["A", "circ"], "Ã": ["A", "tilde"], "É": ["E", "acute"], "Ê": ["E", "circ"], "Í": ["I", "acute"], "Ó": ["O", "acute"], "Ô": ["O", "circ"], "Õ": ["O", "tilde"], "Ú": ["U", "acute"] };
+  function tsGlyph(ch) {
+    ch = ch.toUpperCase();
+    if (ch === "Ç") return { rows: TS_F.C, acc: null, desc: ["..#..", ".##.."] };
+    if (TS_ACCENTED[ch]) { const [b, a] = TS_ACCENTED[ch]; let acc = TS_ACC[a]; if (b === "I") acc = acc.map((r) => r.slice(1, 4)); return { rows: TS_F[b], acc, desc: null }; }
+    return { rows: TS_F[ch] || TS_F[" "], acc: null, desc: null };
+  }
+  // grid rows: 0-1 accent, 3-9 letter, 10-11 descender; role 1 accent, 2 body, 3 descender
+  function tsMask(str, s, track) {
+    track = track == null ? 1 : track;
+    const gl = [...str].map(tsGlyph), W = gl.reduce((a, gg) => a + gg.rows[0].length * s, 0) + (gl.length - 1) * track * s, H = 12 * s;
+    const m = new Uint8Array(W * H), role = new Int8Array(W * H);
+    let x = 0;
+    gl.forEach((gg) => {
+      const put = (rows, r0, rl) => rows.forEach((row, ry) => { for (let i = 0; i < row.length; i++) if (row[i] === "#") for (let yy = 0; yy < s; yy++) for (let xx = 0; xx < s; xx++) { const k = ((r0 + ry) * s + yy) * W + x + i * s + xx; m[k] = 1; role[k] = rl; } });
+      put(gg.rows, 3, 2); if (gg.acc) put(gg.acc, 0, 1); if (gg.desc) put(gg.desc, 10, 3);
+      x += gg.rows[0].length * s + track * s;
+    });
+    return { W, H, m, role, s };
+  }
+  // opaque pixel writes straight into a canvas's ImageData
+  function tsPixels(c) {
+    const x = c.getContext("2d"), id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+    return { set(px, py, col) { if (px < 0 || py < 0 || px >= c.width || py >= c.height) return; const v = hex(col), i = (py * c.width + px) * 4; d[i] = v[0]; d[i + 1] = v[1]; d[i + 2] = v[2]; d[i + 3] = 255; }, done() { x.putImageData(id, 0, 0); } };
+  }
+  // small flat text on its own canvas, with an optional 1px drop shadow
+  function tsText(str, s, col, shadow, track) {
+    const T = tsMask(str, s, track), c = mkCanvas(T.W + 1, T.H + 1), P = tsPixels(c);
+    if (shadow) for (let y = 0; y < T.H; y++) for (let x = 0; x < T.W; x++) if (T.m[y * T.W + x]) P.set(x + 1, y + 1, shadow);
+    for (let y = 0; y < T.H; y++) for (let x = 0; x < T.W; x++) if (T.m[y * T.W + x]) P.set(x, y, col);
+    P.done(); return c;
+  }
+  // the chunky logo: dark outline, purple extrusion, shaded face with a lit top edge; `face` is the face alone, for the shine
+  function tsLogo(str, s, o) {
+    const T = tsMask(str, s, 1), pad = o.out, w = T.W + pad * 2, h = T.H + o.ext + pad * 2;
+    const c = mkCanvas(w, h), f = mkCanvas(w, h), P = tsPixels(c), FM = tsPixels(f);
+    const inM = (x, y) => x >= 0 && y >= 0 && x < T.W && y < T.H && T.m[y * T.W + x];
+    const U = new Uint8Array(w * h);
+    for (let y = 0; y < T.H; y++) for (let x = 0; x < T.W; x++) if (T.m[y * T.W + x]) for (let e = 0; e <= o.ext; e++) U[(y + e + pad) * w + x + pad] = 1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      let hit = false;
+      for (let dy = -pad; dy <= pad && !hit; dy++) for (let dx = -pad; dx <= pad && !hit; dx++) { const a = x + dx, b = y + dy; if (a >= 0 && b >= 0 && a < w && b < h && U[b * w + a]) hit = true; }
+      if (hit) P.set(x, y, o.outline);
+    }
+    for (let e = o.ext; e >= 1; e--) for (let y = 0; y < T.H; y++) for (let x = 0; x < T.W; x++) if (T.m[y * T.W + x]) P.set(x + pad, y + e + pad, o.extCols[Math.min(o.extCols.length - 1, Math.floor((e - 1) / Math.max(1, o.ext / o.extCols.length)))]);
+    for (let y = 0; y < T.H; y++) for (let x = 0; x < T.W; x++) {
+      const k = y * T.W + x; if (!T.m[k]) continue;
+      let col;
+      if (T.role[k] === 1) col = o.accent;
+      else { const fy = T.role[k] === 3 ? 0.95 : clamp((y - 3 * T.s) / (7 * T.s), 0, 0.999); col = o.face[Math.floor(fy * o.face.length)]; }
+      if (!inM(x, y - 1)) col = o.lit;
+      else if (!inM(x + 1, y) && T.role[k] === 2) col = mix(col, o.face[o.face.length - 1], 0.5);
+      P.set(x + pad, y + pad, col); FM.set(x + pad, y + pad, "#ffffff");
+    }
+    P.done(); FM.done();
+    return { c, f, pad, T };
+  }
+
+  // ---- scenery, painted once ----
+  const TS_B4 = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+  const TS_SKY = ["#0b0920", "#100d2a", "#161233", "#1d173d", "#251c48", "#2f2252", "#3b285b", "#492e63", "#573469", "#663a6e"];
+  const TS_BLD = [["#3b2a3c", "#4d374b", "#2a1d2b"], ["#2b2c44", "#3a3c5a", "#1e1f33"], ["#26354a", "#32465e", "#1a2536"], ["#3a3040", "#4a4051", "#29222f"], ["#30293c", "#3e3550", "#211c2a"], ["#3c3230", "#4c403c", "#2a2220"]];
+  function tsBuilding(q, x, top, w, h, s, opt) {
+    opt = opt || {};
+    const Pl = TS_BLD[Math.floor(hash(s * 2.3 + 1) * TS_BLD.length)];
+    q.r(x, top, w, h, Pl[0]); q.r(x, top, 2, h, Pl[1]); q.r(x + w - 3, top, 3, h, Pl[2]);
+    q.r(x - 1, top - 3, w + 2, 3, Pl[1]); q.r(x - 1, top, w + 2, 1, Pl[2]);
+    if (s % 2 === 0) for (let by = top + 5; by < top + h; by += 4) for (let bx = x + 3 + ((by >> 2) % 2) * 3; bx < x + w - 4; bx += 6) q.p(bx, by, Pl[2]);
+    const cols = Math.max(1, Math.floor((w - 8) / 10)), gx = x + Math.floor((w - cols * 10) / 2) + 2;
+    for (let fy = top + 7; fy < Math.min(top + h - 8, TS_H); fy += 12) for (let c = 0; c < cols; c++) {
+      const wx = gx + c * 10, r = hash(wx * 0.91 + fy * 2.17 + s);
+      q.r(wx - 1, fy - 1, 7, 9, Pl[2]);
+      if (r > (opt.lit || 0.72)) { const tv = r > 0.95; q.r(wx, fy, 5, 7, tv ? "#7aa8e8" : "#f2c070"); q.r(wx, fy + 4, 5, 3, tv ? "#5a80c8" : "#d89048"); if (hash(r * 91) > 0.55) q.r(wx + 1, fy + 2, 2, 5, tv ? "#2a3860" : "#5a3420"); }
+      else { q.r(wx, fy, 5, 7, "#141829"); q.p(wx + 3, fy + 1, "#2a3456"); }
+      q.r(wx - 1, fy + 7, 7, 1, Pl[1]);
+    }
+    if (opt.tank) { const tx = x + opt.tank; q.r(tx + 1, top - 7, 1, 5, "#1a1424"); q.r(tx + 10, top - 7, 1, 5, "#1a1424"); q.r(tx, top - 19, 12, 12, "#5a4030"); q.r(tx, top - 19, 2, 12, "#7a5a40"); q.r(tx, top - 15, 12, 1, "#3a2a20"); q.r(tx, top - 11, 12, 1, "#3a2a20"); q.r(tx - 1, top - 21, 14, 2, "#3a2a20"); q.r(tx + 2, top - 23, 8, 2, "#3a2a20"); }
+  }
+  const TS_CAST = {
+    a: heroLook({ cor: "negra", genero: "homem", orient: "lgbt", classe: "pobre", pcd: "nao" }),
+    b: heroLook({ cor: "branca", genero: "mulher", orient: "lgbt", classe: "rica", pcd: "sim" }),
+    c: heroLook({ cor: "negra", genero: "mulher", orient: "hetero", classe: "pobre", pcd: "nao" }),
+    d: heroLook({ cor: "branca", genero: "homem", orient: "hetero", classe: "rica", pcd: "nao" }),
+    psi: { skin: "#c98e62", hair: "#3a2418", hairStyle: "long", shirt: "#3fa39a", pants: "#2d3a5a" }
+  };
+  function tsLayout(W) {
+    const wx = [0, 1, 2, 3].map((i) => Math.round(118 + (W - 242) * i / 3));
+    const sparkles = [[34, 30, 1], [196, 132, 0], [W - 80, 40, 1], [W - 28, 96, 0], [W - 170, 128, 0], [130, 150, 1], [W - 48, 140, 0], [24, 110, 0]];
+    for (let k = 0; k < Math.floor((W - 640) / 70); k++) sparkles.push([Math.round(160 + hash(k * 7.1 + 2) * (W - 320)), Math.round(110 + hash(k * 3.3 + 5) * 60), k % 3 === 0 ? 1 : 0]);
+    return {
+      W, horizon: 300, groundY: 348, moon: [78, 64, 20],
+      sparkles, left: [-8, 186, 66], right: [W - 74, 174, 82], sign: [W - 42, 132],
+      rope: [50, 182, W - 56, 170, 46],
+      walkers: [
+        { x: wx[0], look: TS_CAST.c, stack: ["boleto", "aluguel", "faculdade", "casa", "trabalho"], lean: -1.3, tilt: -3, sp: 1.5, ph: 0 },
+        { x: wx[1], look: TS_CAST.a, stack: ["boleto", "trabalho", "dobro"], lean: 1.2, tilt: 2, sp: 1.8, ph: 1.3 },
+        { x: wx[2], look: TS_CAST.b, wheel: true, stack: ["casa", "trabalho", "faculdade"], lean: -1.0, sp: 1.3, ph: 2.1 },
+        { x: wx[3], look: TS_CAST.d, stack: ["trabalho", "doenca", "cuidar", "trabalho"], lean: 1.6, tilt: 3, sp: 1.6, ph: 3.4 }
+      ],
+      holders: [{ x: 30, look: HELPERS[0] }, { x: 92, look: TS_CAST.psi, tag: true }, { x: W - 92, look: HELPERS[1], flip: true }, { x: W - 30, look: HELPERS[2], flip: true }],
+      netDepth: 16
+    };
+  }
+  function tsBuild(W) {
+    const L = tsLayout(W), H = TS_H, bg = mkCanvas(W, H), q = pen(bg);
+    TS.W = W; TS.L = L; TS.buf = mkCanvas(W, H); TS.q = pen(TS.buf); TS.fall = []; TS.dips = [];
+    // sky: dithered night gradient with a few stars baked in
+    { const P = tsPixels(bg);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        const f = clamp(Math.pow(y / L.horizon, 1.4), 0, 0.9999) * (TS_SKY.length - 1), i = Math.floor(f), th = (TS_B4[y & 3][x & 3] + 0.5) / 16, r = hash(x * 12.9898 + y * 78.233);
+        P.set(x, y, y < L.horizon * 0.85 && r > 0.9972 ? (r > 0.9992 ? "#ffffff" : r > 0.998 ? "#d8d4ff" : "#8a86c0") : TS_SKY[Math.min(TS_SKY.length - 1, i + (f - i > th ? 1 : 0))]);
+      }
+      P.done(); }
+    // moon with a banded halo
+    { const [cx, cy, r] = L.moon;
+      [[r + 15, 0.07], [r + 9, 0.09], [r + 4, 0.12]].forEach(([rr, a]) => q.disc(cx, cy, rr, "rgba(150,140,230," + a + ")"));
+      q.disc(cx, cy, r, "#f2ecd8"); q.disc(cx + r * 0.2, cy + r * 0.2, r * 0.84, "#e2d9c0"); q.disc(cx - r * 0.18, cy - r * 0.26, r * 0.52, "#fbf7ea");
+      [[-0.3, 0.15, 0.17], [0.3, -0.3, 0.13], [0.35, 0.35, 0.2], [-0.05, 0.55, 0.1]].forEach(([dx, dy, rr]) => { q.disc(cx + dx * r, cy + dy * r, rr * r, "#cfc4a8"); q.p(cx + dx * r - 1, cy + dy * r - 1, "#e8e0c8"); }); }
+    // far skyline; antenna lights are kept to blink later
+    TS.ant = [];
+    { let x = -4, i = 0; const base = L.groundY;
+      while (x < W) {
+        const w = 14 + Math.floor(hash(3 + i * 3.1) * 30), h = 40 + Math.floor(hash(3 + i * 5.7) * 80), top = base - h;
+        q.r(x, top, w, h + 40, i % 2 ? "#18142e" : "#1b1733"); q.r(x, top, w, 1, "#2a2350");
+        for (let wy = top + 4; wy < base; wy += 4) for (let wx = x + 2; wx < x + w - 2; wx += 3) { const r = hash(wx * 1.7 + wy * 3.3 + 3); if (r > 0.95) q.p(wx, wy, r > 0.985 ? "#d8a870" : "#5a4878"); }
+        if (hash(i + 80) > 0.7 && w > 12) { const ax = x + Math.floor(w / 2); q.r(ax, top - 8, 1, 8, "#1b1733"); q.p(ax, top - 9, "#4a1a24"); TS.ant.push([ax, top - 9, hash(i) * 6]); }
+        x += w; i++;
+      } }
+    // the finish sign's halo
+    [[64, 0.05], [46, 0.07], [30, 0.1]].forEach(([r, a]) => q.disc(L.sign[0], L.sign[1] + 8, r, "rgba(120,255,170," + a + ")"));
+    // city below the rope, pushed back by night haze
+    { const Lc = mkCanvas(W, H), lq = pen(Lc); let x = -6, n = 0;
+      while (x < W) { const w = 36 + Math.floor(hash(11 + n * 9.13) * 52), h = 36 + Math.floor(hash(11 + n * 4.71) * 50); tsBuilding(lq, x, L.groundY - h, w, h + 40, n + 11, { lit: 0.68, tank: hash(n * 8.3 + 11) > 0.7 ? 8 : 0 }); x += w; n++; }
+      const lx = Lc.getContext("2d"), id = lx.getImageData(0, 0, W, H), d = id.data;
+      for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const lum = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; if (lum > 150) continue; d[i] = d[i] * 0.7 + 14 * 0.3; d[i + 1] = d[i + 1] * 0.7 + 12 * 0.3; d[i + 2] = d[i + 2] * 0.7 + 34 * 0.3; }
+      lx.putImageData(id, 0, 0); q.x.drawImage(Lc, 0, 0); }
+    // the two tall buildings the rope is tied to
+    tsBuilding(q, L.left[0], L.left[1], L.left[2], H, 4, { lit: 0.7 });
+    tsBuilding(q, L.right[0], L.right[1], L.right[2], H, 7, { lit: 0.7 });
+    // the finish sign (bulbs blink later)
+    { const txt = tsText("SAÚDE MENTAL", 1, "#ffffff"), sh = tsText("SAÚDE MENTAL", 1, "#0e3a24"), tw = txt.width - 1, w = tw + 10, hh = 17, x = Math.round(L.sign[0] - w / 2), top = L.sign[1];
+      q.r(x + 6, top + hh, 3, 20, "#14121e"); q.r(x + w - 9, top + hh, 3, 20, "#14121e"); q.r(x + 6, top + hh, 1, 20, "#2e3a34"); q.r(x + w - 9, top + hh, 1, 20, "#2e3a34");
+      q.r(x - 1, top - 1, w + 2, hh + 2, "#07050f"); q.r(x, top, w, hh, "#e8b84a"); q.r(x, top, w, 1, "#fff1a8"); q.r(x, top + hh - 1, w, 1, "#a8801e");
+      q.r(x + 2, top + 2, w - 4, hh - 4, "#1f8a55"); q.r(x + 2, top + 2, w - 4, 6, "#2fb070");
+      q.x.drawImage(sh, x + 6, top + 3); q.x.drawImage(txt, x + 5, top + 2);
+      TS.bulbs = []; for (let k = 3; k < w - 3; k += 4) TS.bulbs.push([x + k, top, k / 4], [x + k, top + hh - 1, k / 4]); }
+    // tie posts on both rooftops
+    [[L.rope[0], L.rope[1], L.left[1]], [L.rope[2], L.rope[3], L.right[1]]].forEach(([x, y, roof]) => { const h = roof - y; q.r(x - 2, y - 3, 5, h + 3, "#07050f"); q.r(x - 1, y - 2, 3, h + 2, "#5a5878"); q.r(x - 1, y - 2, 1, h + 2, "#8a88a8"); q.r(x - 3, y - 4, 7, 2, "#2e2c40"); q.r(x - 2, y, 5, 2, "#c8b48a"); });
+    // pavement
+    { const y = L.groundY; q.r(0, y, W, H - y, "#3a3550"); q.r(0, y, W, 2, "#928cab"); q.r(0, y + 1, W, 1, "#77718f"); q.r(0, y + 2, W, 1, "#2a2638");
+      for (let row = 0; row * 7 + y + 3 < H; row++) for (let k = -1; k < W / 16 + 1; k++) { const x0 = k * 16 + (row % 2) * 8, y0 = y + 3 + row * 7, v = hash(k * 5.3 + row * 2.1 + 9); q.r(x0 + 1, y0 + 1, 15, 6, v > 0.6 ? "#423c5a" : "#3c3753"); q.r(x0 + 1, y0 + 1, 15, 1, "#48425f"); } }
+    TS.bg = bg;
+    // the logo and the psychologist's name tag
+    const WHITE = { face: ["#ffffff", "#f1eeff", "#e2dcfa", "#cbc3ee"], lit: "#ffffff", accent: "#ffffff", outline: "#0b0820", extCols: ["#6b3b8f", "#4a2468"], ext: 3, out: 2 };
+    const MINT = { face: ["#f2fff6", "#d6ffe2", "#c8ffd9", "#b0f8cb", "#8ff0b4", "#78e3a2"], lit: "#ffffff", accent: "#ffffff", outline: "#0b0820", extCols: ["#8a52b0", "#6b3b8f", "#4a2468"], ext: 6, out: 2 };
+    TS.logo1 = TS.logo1 || tsLogo("RUMO À", 3, WHITE);
+    TS.logo2 = TS.logo2 || tsLogo("SAÚDE MENTAL", 5, MINT);
+    TS.shine = TS.shine || mkCanvas(TS.logo2.c.width, TS.logo2.c.height);
+    if (!TS.tag) { const t = tsText("PSICÓLOGA", 1, "#5fd18a"), w = t.width - 1 + 8, c = mkCanvas(w, 11), tq = pen(c);
+      tq.r(0, 0, w, 11, "#07050f"); tq.r(1, 1, w - 2, 9, "#0b1410"); tq.r(1, 1, w - 2, 1, "#5fd18a"); tq.r(1, 9, w - 2, 1, "#5fd18a"); tq.r(1, 1, 1, 9, "#5fd18a"); tq.r(w - 2, 1, 1, 9, "#5fd18a");
+      tq.x.drawImage(t, 4, -1); TS.tag = c; }
+  }
+  const tsFlips = new Map();
+  function tsFlip(img) {
+    if (!tsFlips.has(img)) { const c = mkCanvas(img.width, img.height), x = c.getContext("2d"); x.translate(img.width, 0); x.scale(-1, 1); x.drawImage(img, 0, 0); tsFlips.set(img, c); }
+    return tsFlips.get(img);
+  }
+  // the net's top cord follows the hands; the mesh hangs below it, deepest in the middle
+  function tsNet(q, hands, depthMax) {
+    const x0 = hands[0][0], x1 = hands[hands.length - 1][0];
+    const topAt = (x) => {
+      for (let i = 0; i < hands.length - 1; i++) { const [ax, ay] = hands[i], [bx, by] = hands[i + 1]; if (x >= ax && x <= bx) { const t = (x - ax) / Math.max(1, bx - ax); return ay + (by - ay) * t + Math.min(14, (bx - ax) * 0.05) * 4 * t * (1 - t); } }
+      return hands[0][1];
+    };
+    const dip = (x) => TS.dips.reduce((s, d) => s + d.a * Math.max(0, 1 - d.t / 0.7) * Math.exp(-((x - d.x) * (x - d.x)) / 300), 0);
+    const botAt = (x) => topAt(x) + 2 + depthMax * Math.pow(Math.sin(Math.PI * clamp((x - x0) / (x1 - x0), 0, 1)), 0.7) + dip(x);
+    for (let x = Math.round(x0); x <= Math.round(x1); x++) {
+      const t = topAt(x), b = botAt(x), d = b - t;
+      for (let y = Math.round(t) + 1; y < Math.round(b); y++) { const v = Math.round((y - t) / d * 12), u = x - Math.round(x0); if ((u + v) % 6 === 0 || ((u - v) % 6 + 6) % 6 === 0) q.p(x, y, y > t + d * 0.6 ? "#9a94b0" : "#cfc8dc"); }
+      q.p(x, Math.round(b), "#07050f"); q.p(x, Math.round(b) - 1, "#bdb6cc");
+      q.p(x, Math.round(t) - 1, "#07050f"); q.p(x, Math.round(t), "#f1e6cc"); q.p(x, Math.round(t) + 1, "#9a8a70");
+    }
+    TS.netX = [x0, x1]; TS.netBot = botAt;
+  }
+  function tsPole(q, cx, cy, half, tilt) {
+    const yAt = (u) => cy - tilt * u + 3 * u * u;
+    for (let x = Math.round(cx - half); x <= Math.round(cx + half); x++) q.r(x, Math.round(yAt((x - cx) / half)) - 1, 1, 4, "#0b0816");
+    for (let x = Math.round(cx - half); x <= Math.round(cx + half); x++) { const y = Math.round(yAt((x - cx) / half)); q.p(x, y, "#e2b878"); q.p(x, y + 1, "#8a5a2b"); }
+    [-1, 1].forEach((u) => { const x = cx + u * half, y = yAt(u) + 0.5; q.disc(x, y, 3.3, "#0b0816"); q.disc(x, y, 2.4, "#c8323a"); q.p(x - 1, y - 1, "#ff8a92"); });
+  }
+  function tsSparkle(q, x, y, big) {
+    q.p(x, y, "#ffffff"); q.p(x - 1, y, "#cfc8ff"); q.p(x + 1, y, "#cfc8ff"); q.p(x, y - 1, "#cfc8ff"); q.p(x, y + 1, "#cfc8ff");
+    if (big) { q.p(x - 2, y, "#6a64b0"); q.p(x + 2, y, "#6a64b0"); q.p(x, y - 2, "#6a64b0"); q.p(x, y + 2, "#6a64b0"); }
+  }
+  // now and then something they love slips off a pile and falls into the net
+  function tsUpdate(dt) {
+    if (!TS.L || TS_RM) return;
+    TS.next -= dt;
+    if (TS.next <= 0 && TS.tops.length) {
+      const top = pick(TS.tops);
+      TS.fall.push({ type: pick(GOOD), x: top.x, y: top.y - 12, vx: (top.lean > 0 ? 1 : -1) * (12 + rand() * 12), vy: -50, rk: 0, rt: 0, rest: false, life: 1 });
+      TS.next = 2.4 + rand() * 2.2;
+    }
+    TS.fall.forEach((f) => {
+      if (!f.rest) {
+        f.vy += 260 * dt; f.x += f.vx * dt; f.y += f.vy * dt;
+        f.rt += dt; if (f.rt > 0.12) { f.rt = 0; f.rk = (f.rk + (f.vx > 0 ? 1 : 3)) % 4; }
+        const cx = f.x + 11;
+        if (TS.netBot && cx > TS.netX[0] + 6 && cx < TS.netX[1] - 6) {
+          const floor = TS.netBot(cx) - 21;
+          if (f.vy > 0 && f.y >= floor) {
+            f.y = floor; TS.dips.push({ x: cx, a: Math.min(7, f.vy * 0.025), t: 0 });
+            if (f.vy > 80) { f.vy = -f.vy * 0.32; f.vx *= 0.5; } else { f.rest = true; f.vy = 0; f.rk = 0; }
+          }
+        }
+        if (f.y > TS_H) f.life = 0;
+      } else { f.life -= dt * 0.5; f.y = TS.netBot(f.x + 11) - 21; }
+    });
+    TS.fall = TS.fall.filter((f) => f.life > 0);
+    TS.dips.forEach((d) => (d.t += dt)); TS.dips = TS.dips.filter((d) => d.t < 0.7);
+  }
+  function tsDraw() {
+    const W = Math.max(640, Math.round(TS_H * LWF / LH));
+    if (TS.W !== W) tsBuild(W);
+    const L = TS.L, c = TS.buf, bx = c.getContext("2d"), q = TS.q, t = TS_RM ? 0 : time;
+    bx.imageSmoothingEnabled = false;
+    bx.drawImage(TS.bg, 0, 0);
+    L.sparkles.forEach(([sx, sy, big], i) => { const v = Math.sin(t * 1.7 + i * 2.3); if (v > -0.4) tsSparkle(q, sx, sy, big && v > 0.4); });
+    TS.ant.forEach(([ax, ay, ph]) => { if (Math.sin(t * 2 + ph) > 0.4) q.p(ax, ay, "#ff3a4a"); });
+    TS.bulbs.forEach(([x, y, k]) => q.p(x, y, (k + Math.floor(t * 3)) % 2 === 0 ? "#fffbe0" : "#a8801e"));
+    // the rope bounces a little under every walker
+    const sway = L.walkers.map((w) => (TS_RM ? 0 : Math.sin(t * w.sp + w.ph)));
+    const [rx0, ry0, rx1, ry1, sag] = L.rope;
+    const ropeY = (x) => { const tt = clamp((x - rx0) / (rx1 - rx0), 0, 1); let y = ry0 + (ry1 - ry0) * tt + sag * 4 * tt * (1 - tt); L.walkers.forEach((w, i) => { y += (4 + Math.sin(t * 2.2 + i * 1.9) * 1.3) * Math.max(0, 1 - Math.abs(x - w.x) / 34); }); return y; };
+    for (let x = rx0; x <= rx1; x++) { const y = Math.round(ropeY(x)); q.p(x, y - 1, "#07050f"); q.p(x, y, x % 3 === 0 ? "#b8a888" : "#efe2c4"); q.p(x, y + 1, "#8a7a62"); q.p(x, y + 2, "#07050f"); }
+    // the net and the people holding it (they breathe, so the cord rises and falls a pixel)
+    const hs = L.holders.map((h, i) => { const sx = Math.round(h.x) - 16, sy = L.groundY - 50 + (Math.floor(t * 1.4 + i * 0.7) % 2); return { h, sx, sy, hand: [h.flip ? sx + 5 : sx + 26, sy + 23] }; });
+    tsNet(q, hs.map((o) => o.hand).sort((a, b) => a[0] - b[0]), L.netDepth);
+    hs.forEach(({ h, sx, sy }) => {
+      q.ell(h.x, L.groundY + 1.5, 9, 2.4, "rgba(0,0,0,0.4)");
+      const img = personImg(h.look, "hold"); bx.drawImage(h.flip ? tsFlip(img) : img, sx, sy);
+      if (h.tag) bx.drawImage(TS.tag, Math.round(h.x - TS.tag.width / 2), sy - 12);
+    });
+    // walkers: the pile sways one way, the pole tips the other way to keep balance
+    TS.tops = [];
+    L.walkers.forEach((w, i) => {
+      const s = sway[i], lean = w.lean + s * 0.9, tilt = (w.tilt || 0) - s * 3.5;
+      const feet = Math.round(ropeY(w.x)), sx = Math.round(w.x) - 16, sy = feet - 50;
+      bx.drawImage(personImg(w.look, w.wheel ? "w" + (((Math.round(s * 2) % 4) + 4) % 4) : "bal"), sx, sy);
+      if (!w.wheel) {
+        const cx = sx + 16, cy = sy + 21.6, half = 25; tsPole(q, cx, cy, half, tilt);
+        const S = skinRamp(w.look.skin);
+        [[cx - 11.5, cy + tilt * 11.5 / half], [cx + 10.5, cy - tilt * 10.5 / half]].forEach(([hx, hy]) => { q.r(hx - 2, hy - 2, 4, 5, "#0b0816"); q.r(hx - 1, hy - 1, 2, 3, S[1]); q.p(hx - 1, hy - 1, S[0]); });
+      }
+      let ix = 0, iy = 0;
+      w.stack.forEach((type, k) => { ix = Math.round(w.x - 11 + lean * Math.pow(k, 1.45)); iy = sy + 5 - 22 - k * 20; bx.drawImage(blockImg(type), ix, iy); });
+      TS.tops.push({ x: ix, y: iy, lean });
+      if (Math.abs(lean) > 1.9 && Math.floor(t * 6) % 2) { const sd = lean > 0 ? 1 : -1, mx = ix + (sd > 0 ? 25 : -4), my = iy + 6; for (let k = 0; k < 3; k++) { q.p(mx + sd * k * 2, my + k * 3, "#ffffff"); q.p(mx + sd * (k * 2 + 1), my + k * 3 + 1, "#c9c2f0"); } }
+    });
+    // what they love, tumbling down into the net
+    TS.fall.forEach((f) => {
+      const img = blockImg(f.type);
+      bx.save(); bx.globalAlpha = clamp(f.life * 2, 0, 1); bx.translate(Math.round(f.x) + 11, Math.round(f.y) + 11); bx.rotate(f.rk * Math.PI / 2); bx.drawImage(img, -11, -11); bx.restore();
+      if (!f.rest && f.vy > 60) for (let k = 0; k < 3; k++) for (let j = 0; j < 6 - k * 2; j++) q.p(Math.round(f.x) + 5 + k * 6, Math.round(f.y) - 3 - j, j < 2 ? "#ffffff" : "#8a84c0");
+    });
+    // the logo, with a shine sweeping across now and then
+    const l1 = TS.logo1, l2 = TS.logo2;
+    bx.drawImage(l1.c, Math.round(W / 2 - l1.T.W / 2) - l1.pad, 12 - l1.pad);
+    const lx = Math.round(W / 2 - l2.T.W / 2) - l2.pad, ly = 40 - l2.pad;
+    bx.drawImage(l2.c, lx, ly);
+    const ph = (t % 5.5) / 1.1;
+    if (!TS_RM && ph < 1) {
+      const sc = TS.shine, sx2 = sc.getContext("2d"), sw = sc.width, pos = -40 + ph * (sw + 80);
+      sx2.globalCompositeOperation = "source-over"; sx2.clearRect(0, 0, sw, sc.height); sx2.drawImage(l2.f, 0, 0);
+      sx2.globalCompositeOperation = "source-in"; sx2.fillStyle = "rgba(255,255,255,0.75)";
+      sx2.beginPath(); sx2.moveTo(pos, 0); sx2.lineTo(pos + 14, 0); sx2.lineTo(pos + 14 - sc.height * 0.6, sc.height); sx2.lineTo(pos - sc.height * 0.6, sc.height); sx2.closePath(); sx2.fill();
+      bx.drawImage(sc, lx, ly);
+    }
+    // scale the whole picture up to the screen, keeping the pixels square
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = "#07070d"; ctx.fillRect(0, 0, cv.width, cv.height);
+    const k = cv.height / TS_H, dw = Math.round(W * k);
+    ctx.drawImage(c, Math.round((cv.width - dw) / 2), 0, dw, cv.height);
+  }
   // ===== v6 vehicles and props of the masked ones (2x art, cached) =====
   const vcache = new Map();
   const cached = (key, fn) => { if (!vcache.has(key)) vcache.set(key, fn()); return vcache.get(key); };
@@ -2297,7 +2614,12 @@ h1 em { font-style: normal; color: var(--good); }
     if (n2 >= t2.length && Math.floor(time * 2) % 2) { g.fillStyle = "#8ff0b4"; g.fillRect(LW / 2 + 176, 248, 3, 2); g.fillRect(LW / 2 + 177, 250, 1, 1); }
   }
 
+  const tbtnsEl = document.querySelector(".tbtns");
   function render() {
+    // the touch buttons only show while playing, so they don't cover the start screen or the menus
+    const showBtns = mode === "play" || mode === "tutorial" || mode === "card" || mode === "bonus";
+    if (tbtnsEl.hidden === showBtns) tbtnsEl.hidden = !showBtns;
+    if (mode === "title") { tsDraw(); return; } // start screen: the tightrope scene
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, buf.width, buf.height);
     g.setTransform(K2 * ZOOM, 0, 0, K2 * ZOOM, 0, -ZOY * K2 * ZOOM); // world pass (zoomed in on small screens)
     g.imageSmoothingEnabled = false;
