@@ -239,6 +239,33 @@ h1 em { font-style: normal; color: var(--good); }
 .stats div { border: 0; background: #1a1636; box-shadow: inset 0 -3px 0 rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.05), 0 0 0 2px #3a3466; }
 .help-box { border: 0; background: #0f1d18; box-shadow: 0 0 0 2px #2f9d68, inset 0 2px 0 rgba(255,255,255,.05); }
 .perks li b { font-family: var(--pix); }
+/* symptom and boss cards: same window as the psychologist's, in alarm colors */
+.ov.card-crisis { --acc: #b48cff; --acc-hi: #e2d2ff; --acc-dk: #4a2a8a; background: radial-gradient(ellipse at 30% 40%, rgba(180,140,255,.2), rgba(5,5,10,.94) 65%); }
+.ov.card-boss { --acc: #ff6b7d; --acc-hi: #ffd0d6; --acc-dk: #7a1a26; background: radial-gradient(ellipse at 30% 40%, rgba(255,60,80,.24), rgba(5,5,10,.95) 65%); }
+#card .box { background: #120e22; border: 3px solid var(--acc-dk); padding: 20px 24px; box-sizing: border-box;
+  box-shadow: 0 0 0 3px #07050f, 0 0 0 6px var(--acc-dk), inset 0 3px 0 rgba(255,255,255,.05), 0 18px 50px rgba(0,0,0,.6); }
+.card-boss .box { background: #180a10 !important; }
+.card-eyebrow { color: var(--acc); animation: blink .7s steps(1) infinite; }
+.h-card { margin: 0; color: var(--acc-hi); font-size: clamp(14px, 2.8vw, 20px); line-height: 1.35; text-shadow: 0 3px 0 var(--acc-dk); }
+.card-name { margin: 0; font-family: var(--pix); font-size: clamp(22px, 5.4vw, 40px); letter-spacing: .08em; color: #fff; text-shadow: 3px 3px 0 var(--acc-dk), -1px -1px 0 var(--acc); animation: cardIn .45s steps(4) both; }
+@keyframes cardIn { from { transform: scale(2.2); opacity: 0; } to { transform: none; opacity: 1; } }
+.card-pv { box-shadow: 0 0 0 3px var(--acc), 0 0 0 6px #07050f, 0 0 34px var(--acc-dk); }
+.card-pv span { color: var(--acc); text-transform: uppercase; letter-spacing: .3em; }
+.card-pv canvas { width: 104px; height: 169px; image-rendering: pixelated; }
+.card-boss .card-pv canvas { width: 140px; height: 168px; }
+.card-crisis .card-pv canvas { animation: shake .18s steps(2) infinite; }
+.card-crisis[data-sym="TAQUICARDIA"] .card-pv canvas { animation: pulse .5s steps(3) infinite; }
+.card-crisis[data-sym="SONO"] .card-pv canvas, .card-crisis[data-sym="MEDO"] .card-pv canvas { animation: shake .6s steps(2) infinite; }
+@keyframes shake { 0% { transform: translate(-2px, 1px); } 50% { transform: translate(2px, -1px); } 100% { transform: translate(-1px, 0); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.08); } }
+.card-rows b { color: var(--acc); }
+.card-rows strong { color: var(--acc-hi); }
+.card-note { color: var(--acc-hi); }
+.card-cta { background: var(--acc-dk); box-shadow: inset -3px -3px 0 rgba(0,0,0,.35), inset 3px 3px 0 var(--acc), 0 0 0 3px #07050f, 0 5px 0 3px #07050f; }
+.card-cta:hover { filter: brightness(1.2); background: var(--acc-dk); }
+@media (max-height: 520px) { #card .box { padding: 10px 14px; gap: 6px; } .card-pv canvas { width: 60px; height: 98px; } .card-boss .card-pv canvas { width: 80px; height: 96px; } .card-name { font-size: 22px; } }
+@media (max-width: 560px) { .card-pv canvas { width: 60px; height: 98px; } .card-boss .card-pv canvas { width: 80px; height: 96px; } }
+@media (prefers-reduced-motion: reduce) { .card-eyebrow, .card-name, .card-pv canvas { animation: none !important; } }
 /* title: the live avenue behind the logo */
 .ov.retro { background: linear-gradient(180deg, rgba(6,5,16,.72) 0%, rgba(6,5,16,.05) 34%, rgba(6,5,16,0) 58%, rgba(6,5,16,.78) 100%); }
 .ov.retro::after { background: repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0 1px, transparent 1px 3px); }
@@ -336,13 +363,26 @@ h1 em { font-style: normal; color: var(--good); }
   </div>
 </div>
 
+<div class="ov card card-crisis" id="card" hidden>
+  <div class="box bonus-box card-box">
+    <span class="eyebrow card-eyebrow" id="cardEyebrow">⚠ sintoma ⚠</span>
+    <h1 class="h-card" id="cardTitle">Você apresentou um sintoma</h1>
+    <p class="card-name" id="cardName">TAQUICARDIA</p>
+    <div class="bonus-main">
+      <div class="portrait card-pv"><canvas id="cardPv" width="32" height="52"></canvas><span id="cardTag">você</span></div>
+      <ul class="perks card-rows" id="cardRows"></ul>
+    </div>
+    <p class="lead small card-note" id="cardNote"></p>
+    <button class="cta card-cta" id="cardBtn" type="button">respirar e seguir</button>
+  </div>
+</div>
+
 <div class="ov" id="end" hidden>
   <div class="box">
     <span class="eyebrow" id="endEyebrow">fim do caminho (por enquanto)</span>
     <h1 class="h-end">SAÚDE MENTAL NÃO É LINHA DE CHEGADA.</h1>
     <p class="lead" style="color:var(--good)">E ninguém caminha sozinho.</p>
     <div class="stats" id="stats"></div>
-    <p class="lead small" id="psiLine">O psicólogo não carregou nada por você. Caminhou junto.</p>
     <div class="help-box">
       <p class="help-title">precisa conversar? existe ajuda gratuita e perto de você</p>
       <ul class="help-list">
@@ -912,6 +952,7 @@ h1 em { font-style: normal; color: var(--good); }
   const PSI_LINES = [];
   const KID_LINES = ["tô com fome!", "me leva no colo?", "brinca comigo?", "olha!", "tô cansado..."];
   const CRISIS_CAP = { "TAQUICARDIA": "o coração dispara", "FALTA DE AR": "o ar não vem", "TREMOR": "o corpo treme", "TONTURA": "tudo gira", "ENJOO": "o estômago revira", "MEDO": "e se der tudo errado?", "SONO": "faz dias que você não dorme direito" };
+  const CRISIS_MAX = 4; // no máximo 4 crises por partida
   const CRISIS_POOL = ["TAQUICARDIA", "TAQUICARDIA", "TAQUICARDIA", "FALTA DE AR", "FALTA DE AR", "FALTA DE AR", "SONO", "SONO", "TREMOR", "TONTURA", "ENJOO", "MEDO"];
   const RUN_LINES = ["Tô ótima!", "#gratidão", "Cheguei!", "Só good vibes", "Vida plena", "Saúde mental 100%"];
   const CAR_LINES = ["Venci na vida", "É só querer", "Foco e fé", "#abençoado", "Trabalhe enquanto eles dormem"];
@@ -1038,7 +1079,7 @@ h1 em { font-style: normal; color: var(--good); }
     arch = { x: 340, tx: 340 };
     camX = 0; time = 0; endT = 0; spawnT = 2; obstT = 4; wallBag = []; wallLast = ""; wallCool = 0; crowdT = 2; crowdX = 0; trafT = 3; specialT = 6; goodT = 3;
     stats = { dropped: 0, max: 0, hits: 0, walls: 0, carried: 0, lost: [] }; said = {}; heartT = 0; heartPulse = 0; banner = null; lastNope = -9; endReason = "fim";
-    crisis = { t: 0, dur: 0, cd: 5 }; warnQ = []; warn = null; dialog = null;
+    crisis = { t: 0, dur: 0, cd: 12, n: 0 }; warnQ = []; warn = null; dialog = null;
     if (sel.classe === "pobre") { P.stack.push({ type: "boleto" }); stats.max = 1; stats.carried = 1; }
     if (sel.filhos === "sim") { P.stack.push({ type: "filhos" }); stats.max = P.stack.length; kid = { x: P.x - 14, y: P.y + 10, walk: 0, t: 6 }; } else kid = null;
     thinkT = 8; music.i = 0;
@@ -1240,6 +1281,7 @@ h1 em { font-style: normal; color: var(--good); }
       if (time > 60 && !boss.on) { // the stage clears for the boss: the masked ones hurry off, the crowd goes quiet
         boss.on = true; banner = { text: "MERCADO DE TRABALHO", t: 0 }; sfx.boss(); warnMsg("o mercado de trabalho chegou");
         traffic.forEach((r) => { r.state = "go"; r.speed = Math.max(r.speed, 320); r.stopX = 1e9; r.selfied = true; });
+        if (mode === "play") showCard("boss"); // the game pauses to present the boss
       }
       if (boss.on) updateBoss(dt, L);
 
@@ -1249,7 +1291,7 @@ h1 em { font-style: normal; color: var(--good); }
         const sp = Math.min(dd, 180 * dt);
         if (dd > 0.5) { psi.x += ddx / dd * sp; psi.y += ddy / dd * sp; }
         psi.mv = dd > 2 || Math.hypot(P.vx, P.vy) > 5; if (psi.mv) psi.walk += dt * 12;
-        if (!psi.arrived && dd < 6) {
+        if (!psi.arrived && dd < 6 && mode === "play") {
           psi.arrived = true; sfx.chime(); if (P.hearts < 5) P.hearts++;
           showBonus();
         }
@@ -1301,15 +1343,11 @@ h1 em { font-style: normal; color: var(--good); }
       const eff = effOf();
       crisis.cd -= dt;
       if (crisis.dur > 0) { crisis.t += dt; if (crisis.t >= crisis.dur) { crisis.dur = 0; crisis.t = 0; } }
-      else if (eff >= 6 && crisis.cd <= 0) {
-        crisis.dur = 4.6; crisis.t = 0; crisis.cd = (psiNear() ? 14 : 9) + rand() * 3; crisis.bt = 0;
+      else if (eff >= 6 && crisis.cd <= 0 && crisis.n < CRISIS_MAX && mode === "play") {
+        crisis.n++; crisis.dur = 4.6; crisis.t = 0; crisis.cd = (psiNear() ? 32 : 22) + rand() * 6; crisis.bt = 0;
         crisis.kind = pick(CRISIS_POOL.filter((k) => k !== crisis.last)); crisis.last = crisis.kind;
-        if (crisis.kind === "SONO") { tone(420, 1.4, "sine", 0.08, 160); }
-        else if (crisis.kind === "TREMOR") { tone(48, 1.6, "sawtooth", 0.1, 40); tone(52, 1.6, "sawtooth", 0.08, 44, 0.05); }
-        else if (crisis.kind === "TONTURA") { tone(300, 1.2, "sine", 0.06, 150); tone(310, 1.2, "sine", 0.05, 160, 0.2); }
-        else if (crisis.kind === "ENJOO") { tone(110, 1.5, "triangle", 0.08, 90); }
-        else if (crisis.kind === "MEDO") { tone(70, 2, "sawtooth", 0.08, 55); noise(1.5, 300, 0.06); }
         say(pick(THOUGHTS), P.x, P.y, "think", 2.4, true, P);
+        showCard("crisis", crisis.kind); // the game pauses and names the symptom; the effect plays when it resumes
       }
       P.dust -= dt;
       if (P.z === 0 && P.dust <= 0 && spd > 25) { P.dust = 0.08; parts.push({ x: P.x - 4, y: P.y, z: 1, vx: -20 - rand() * 20, vy: (rand() - 0.5) * 10, vz: 10, life: 0.35, col: "#6d6a85" }); }
@@ -1793,10 +1831,17 @@ h1 em { font-style: normal; color: var(--good); }
       for (let y = ROAD_T + 3; y < ROAD_B - 3; y += 3) { const odd = Math.floor(y / 3) % 2; g.fillStyle = odd ? "rgba(236,235,242,0.42)" : "rgba(20,20,30,0.5)"; g.fillRect(ax - 3, y, 3, 3); g.fillStyle = odd ? "rgba(20,20,30,0.5)" : "rgba(236,235,242,0.42)"; g.fillRect(ax, y, 3, 3); }
       g.fillStyle = "#14121e"; g.fillRect(ax - 2, 44, 4, 38); g.fillRect(ax - 2, ROAD_B, 4, 16);
       g.fillStyle = "#2e3a34"; g.fillRect(ax - 2, 44, 1, 38); g.fillRect(ax - 2, ROAD_B, 1, 16);
-      g.fillStyle = "#0e1612"; g.fillRect(ax - 51, 27, 102, 18); g.fillStyle = "#14261d"; g.fillRect(ax - 50, 28, 100, 16);
-      g.fillStyle = "#24503a"; g.fillRect(ax - 50, 28, 100, 0.5); g.fillRect(ax - 50, 43.5, 100, 0.5);
-      for (let k = -46; k <= 46; k += 6) { g.fillStyle = (Math.floor(time * 2) + k / 6) % 2 ? "#3a6a4e" : "#24503a"; g.fillRect(ax + k, 29, 1, 1); g.fillRect(ax + k, 42, 1, 1); }
-      txt("SAÚDE MENTAL", ax, 36.5, { size: 7, font: PIX, color: "#58866b", ls: 1, shadow: false });
+      // the finish sign stands out from the street signs: lit, bright green, gold frame, blinking bulbs and a soft halo
+      const glow = 0.5 + 0.5 * Math.sin(time * 2.2);
+      const halo = g.createRadialGradient(ax, 36, 8, ax, 36, 78);
+      halo.addColorStop(0, "rgba(120,255,170," + (0.32 + glow * 0.12).toFixed(2) + ")"); halo.addColorStop(1, "rgba(120,255,170,0)");
+      g.fillStyle = halo; g.fillRect(ax - 80, 0, 160, 90);
+      g.fillStyle = "#07050f"; g.fillRect(ax - 54, 24, 108, 24);
+      g.fillStyle = "#e8b84a"; g.fillRect(ax - 53, 25, 106, 22); g.fillStyle = "#fff1a8"; g.fillRect(ax - 53, 25, 106, 1);
+      g.fillStyle = "#1f8a55"; g.fillRect(ax - 51, 27, 102, 18); g.fillStyle = "#2fb070"; g.fillRect(ax - 51, 27, 102, 9);
+      for (let k = -48; k <= 48; k += 6) { const on = (Math.floor(time * 3) + k / 6) % 2 === 0; g.fillStyle = on ? "#fffbe0" : "#a8801e"; g.fillRect(ax + k - 0.5, 25.5, 1.5, 1.5); g.fillRect(ax + k - 0.5, 45, 1.5, 1.5); }
+      txt("SAÚDE MENTAL", ax + 0.8, 37.3, { size: 8, font: PIX, color: "#0e3a24", ls: 1, shadow: false });
+      txt("SAÚDE MENTAL", ax, 36.5, { size: 8, font: PIX, color: "#ffffff", ls: 1, shadow: false });
     }
   }
 
@@ -2293,7 +2338,7 @@ h1 em { font-style: normal; color: var(--good); }
     const dt = Math.min(0.05, (ts - last) / 1000); last = ts;
     if (!paused) {
       if (mode === "title") { time += dt; camX += dt * 30; titleUpdate(dt); }
-      else if (mode !== "over" && mode !== "bonus") update(dt);
+      else if (mode !== "over" && mode !== "bonus" && mode !== "card") update(dt);
       render();
     }
     requestAnimationFrame(frame);
@@ -2322,7 +2367,7 @@ h1 em { font-style: normal; color: var(--good); }
   }
   const pvx0 = $("pv").getContext("2d"), dpx = $("drawPv").getContext("2d"); let pvT = 0;
   const bpx = $("bonusPv").getContext("2d");
-  setInterval(() => { pvT++; drawPortrait(pvx0, sel, pvT); if (!$("draw").hidden) drawPortrait(dpx, sel, pvT); if (!$("bonus").hidden) drawPortrait(bpx, sel, pvT, PSI); }, 130);
+  setInterval(() => { pvT++; drawPortrait(pvx0, sel, pvT); if (!$("draw").hidden) drawPortrait(dpx, sel, pvT); if (!$("bonus").hidden) drawPortrait(bpx, sel, pvT, PSI); if (cardKind) drawCardPv(); }, 130);
   // reward screen when the psychologist arrives: the game pauses and the psychologist gets the spotlight
   function showBonus() {
     const f = PSI.fem;
@@ -2339,6 +2384,64 @@ h1 em { font-style: normal; color: var(--good); }
     setTimeout(() => $("bonusBtn").focus(), 50);
   }
   $("bonusBtn").addEventListener("click", (e) => { e.stopPropagation(); $("bonus").hidden = true; mode = "play"; last = performance.now(); });
+  // game-style cards that pause the run: a symptom showing up, and the boss entering
+  const SYMPTOM_INFO = {
+    "TAQUICARDIA": ["o coração acelera mesmo sem esforço físico", "o corpo entra em alerta, como se houvesse um perigo", "respirar devagar: puxar o ar em 4, soltar em 6"],
+    "FALTA DE AR": ["parece que o ar não chega, mesmo respirando", "o corpo em alerta acelera e encurta a respiração", "soltar o ar devagar, mais longo do que puxar"],
+    "SONO": ["dias dormindo mal, a cabeça não desliga", "a preocupação não deixa o corpo descansar", "uma rotina para dormir e menos tela à noite"],
+    "TREMOR": ["mãos e pernas tremem sem controle", "é a adrenalina do estresse correndo no corpo", "apoiar os pés no chão e respirar devagar"],
+    "TONTURA": ["tudo parece girar ou ficar distante", "a respiração rápida mexe com o equilíbrio", "parar, sentar e olhar para um ponto fixo"],
+    "ENJOO": ["o estômago revira e a fome some", "o estresse mexe direto com a digestão", "pausas, água e comer aos poucos"],
+    "MEDO": ["a certeza de que algo ruim vai acontecer", "a mente antecipa perigos que ainda não existem", "dar nome ao medo e falar dele com alguém"],
+  };
+  const cpx = $("cardPv").getContext("2d"); let cardKind = null;
+  function crisisSfx(k) {
+    if (k === "SONO") { tone(420, 1.4, "sine", 0.08, 160); }
+    else if (k === "TREMOR") { tone(48, 1.6, "sawtooth", 0.1, 40); tone(52, 1.6, "sawtooth", 0.08, 44, 0.05); }
+    else if (k === "TONTURA") { tone(300, 1.2, "sine", 0.06, 150); tone(310, 1.2, "sine", 0.05, 160, 0.2); }
+    else if (k === "ENJOO") { tone(110, 1.5, "triangle", 0.08, 90); }
+    else if (k === "MEDO") { tone(70, 2, "sawtooth", 0.08, 55); noise(1.5, 300, 0.06); }
+  }
+  function drawCardPv() {
+    if (cardKind === "boss") { const c = cpx.canvas; cpx.clearRect(0, 0, c.width, c.height); cpx.imageSmoothingEnabled = false; cpx.drawImage(pvT % 6 < 2 ? BOSS_IMG.open : BOSS_IMG.closed, 0, 0, c.width, c.height); }
+    else drawPortrait(cpx, sel, pvT);
+  }
+  function showCard(kind, symptom) {
+    mode = "card"; cardKind = kind; keys.up = keys.down = keys.left = keys.right = false; joy.id = null; joy.dx = joy.dy = 0;
+    const boss = kind === "boss", ov = $("card");
+    ov.className = "ov card " + (boss ? "card-boss" : "card-crisis");
+    ov.dataset.sym = boss ? "" : symptom;
+    let rows;
+    if (boss) {
+      $("cardEyebrow").textContent = "⚠ chefão ⚠";
+      $("cardTitle").textContent = "Um chefão bloqueia o caminho";
+      $("cardName").textContent = "MERCADO DE TRABALHO";
+      $("cardTag").textContent = "chefão";
+      $("cardNote").textContent = "Ele não para de cobrar. Você não precisa carregar tudo o que ele joga.";
+      $("cardBtn").textContent = "encarar";
+      cpx.canvas.width = 100; cpx.canvas.height = 120;
+      rows = [["metas e prazos", "rolam pela avenida na sua direção: desvie"], ["a culpa", "cai do alto com o aviso \"a culpa é sua\": saia de baixo"], ["a luz da vigilância", "se ela te pegar, vem mais trabalho para a pilha"], ["frases prontas", "\"vista a camisa\", \"seja resiliente\", \"tem gente na fila\""]];
+    } else {
+      const info = SYMPTOM_INFO[symptom];
+      $("cardEyebrow").textContent = "⚠ sintoma ⚠";
+      $("cardTitle").textContent = "Você apresentou um sintoma";
+      $("cardName").textContent = symptom;
+      $("cardTag").textContent = "você";
+      $("cardNote").textContent = "É o corpo reagindo ao peso que você carrega. Não é frescura nem fraqueza.";
+      $("cardBtn").textContent = "respirar e seguir";
+      cpx.canvas.width = 32; cpx.canvas.height = 52;
+      rows = [["o que é", info[0]], ["por que acontece", info[1]], ["o que ajuda", info[2]]];
+    }
+    $("cardRows").innerHTML = rows.map(([h, t]) => "<li><b>" + (boss ? "▸" : "!") + "</b><span><strong>" + h + "</strong> " + t + "</span></li>").join("");
+    drawCardPv(); ov.hidden = false;
+    [...$("cardRows").children].forEach((li, i) => setTimeout(() => { li.classList.add("on"); tone(boss ? 180 - i * 20 : 520 - i * 60, 0.09, boss ? "sawtooth" : "square", 0.05); }, 450 + i * 380));
+    setTimeout(() => $("cardBtn").focus(), 50);
+  }
+  $("cardBtn").addEventListener("click", (e) => {
+    e.stopPropagation(); $("card").hidden = true; mode = "play"; last = performance.now();
+    if (cardKind === "crisis") crisisSfx(crisis.kind);
+    cardKind = null;
+  });
   function renderSelect() {
     document.querySelectorAll(".seg").forEach((sg) => sg.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(sel[sg.dataset.key] === b.dataset.v))));
     const d = diffOf();
@@ -2391,7 +2494,6 @@ h1 em { font-style: normal; color: var(--good); }
     const uniq = [...new Set(stats.lost)];
     if ($("lostLine")) $("lostLine").hidden = !uniq.length;
     if (uniq.length && $("lostLine")) $("lostLine").textContent = "Pelo caminho, a pressão tirou de você: " + uniq.join(", ") + ".";
-    $("psiLine").textContent = (PSI.fem ? "A psicóloga" : "O psicólogo") + " não carregou nada por você. Caminhou junto.";
     $("end").hidden = false; $("againBtn").focus();
   }
   function goFull() {
