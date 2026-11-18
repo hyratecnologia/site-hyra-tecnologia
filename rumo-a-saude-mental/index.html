@@ -1047,9 +1047,8 @@ h1 em { font-style: normal; color: var(--good); }
   const BOSS_LINES = ["PELO BEM DA EMPRESA", "VOCÊ DEVERIA AGRADECER", "NÃO HÁ POBREZA QUE RESISTA A 14 HORAS DE TRABALHO", "VISTA A CAMISA DA EMPRESA", "PELO BEM DA EMPRESA", "VOCÊ DEVERIA AGRADECER", "VISTA A CAMISA DA EMPRESA", "PRODUZA!", "TEM GENTE NA FILA", "SEJA RESILIENTE"];
   // background ads: plain consumerism (cars, coach, clothes, gadgets), muted so they sit in the scenery instead of shouting
   const BILLS = [["CARRO DO ANO", "carro"], ["COACH: VENÇA JÁ", "coach"], ["ROUPA DE MARCA", "roupa"], ["CELULAR NOVO", "cel"], ["TÊNIS EXCLUSIVO", "tenis"], ["RELÓGIO DE LUXO", "relogio"], ["VIAGEM DOS SONHOS", "aviao"], ["PARCELE EM 12X", "cartao"]];
-  const OBST_BASE = ["PRAZO", "META", "HORA EXTRA", "CONTA ATRASADA", "PROVA AMANHÃ", "SEM FÉRIAS", "FILA", "DESEMPREGO", "TRÂNSITO", "PLANTÃO"];
-  const OBST_KIND = { PRAZO: "relogio", META: "grafico", "HORA EXTRA": "ponto", "CONTA ATRASADA": "envelopes", "PROVA AMANHÃ": "livros", "SEM FÉRIAS": "mala", FILA: "fila", DESEMPREGO: "porta", "TRÂNSITO": "transito", "PLANTÃO": "maca" };
-  const QUEUE = [{ skin: "#8d5a3b", hair: "#2a2a33", hairStyle: "short", shirt: "#6a6680", pants: "#403e55" }, { skin: "#f1c29c", hair: "#45425a", hairStyle: "long", shirt: "#7a7590", pants: "#3b3950" }, { skin: "#5a3a26", hair: "#1c1410", hairStyle: "afro", shirt: "#5a5670", pants: "#45425a" }];
+  const OBST_BASE = ["PRAZO", "META", "HORA EXTRA", "CONTA ATRASADA", "PROVA AMANHÃ", "SEM FÉRIAS", "NOTIFICAÇÕES", "DESEMPREGO", "TRÂNSITO", "PLANTÃO"];
+  const OBST_KIND = { PRAZO: "relogio", META: "grafico", "HORA EXTRA": "ponto", "CONTA ATRASADA": "envelopes", "PROVA AMANHÃ": "livros", "SEM FÉRIAS": "mala", "NOTIFICAÇÕES": "celular", DESEMPREGO: "porta", "TRÂNSITO": "transito", "PLANTÃO": "maca" };
   const OBST_TRAIT = { negra: ["RACISMO", "“SEM PERFIL”", "SEGUIDA NA LOJA", "“CABELO RUIM”", "ABORDAGEM", "SEM REPRESENTAÇÃO"], mulher: ["MACHISMO", "ASSÉDIO", "SALÁRIO MENOR", "DUPLA JORNADA", "“SORRIA MAIS”", "INTERROMPIDA"], lgbt: ["LGBTFOBIA", "“É SÓ UMA FASE”", "PIADINHA", "OLHARES", "“NÃO PARECE”", "EXPULSÃO DE CASA"], pobre: ["SEM GRANA", "ÔNIBUS LOTADO", "SEM INTERNET", "MORA LONGE", "SEM SANEAMENTO", "SÓ BICO"], pcd: ["SEM RAMPA", "ESCADA", "CALÇADA QUEBRADA", "CAPACITISMO", "SEM ELEVADOR", "VAGA OCUPADA"], filhos: ["SEM CRECHE", "REUNIÃO NA ESCOLA"] };
   const DIFF = ["FÁCIL", "NORMAL", "DIFÍCIL", "MUITO DIFÍCIL", "EXTREMA", "EXTREMA+"];
   const DIFF_COL = ["#5fd18a", "#b8e05a", "#e8b84a", "#ff8a3d", "#e0404f", "#b01a6a"];
@@ -1347,7 +1346,7 @@ h1 em { font-style: normal; color: var(--good); }
         const y = trait ? (YMIN + YMAX) / 2 : pick(LANES);
         // each everyday barrier is its own little scene, most of them moving
         const label = trait ? nextWall(tp) : pick(OBST_BASE), kind = trait ? "wall" : OBST_KIND[label];
-        const dims = { wall: [12, YMAX - YMIN + 12, 15], fila: [12, 36, 20], transito: [28, 14, 12], relogio: [12, 10, 12], ponto: [12, 10, 16], envelopes: [18, 14, 12], livros: [12, 10, 18], mala: [16, 10, 12], porta: [8, 32, 18], maca: [26, 12, 10], grafico: [18, 10, 12] }[kind];
+        const dims = { wall: [12, YMAX - YMIN + 12, 15], celular: [12, 8, 22], transito: [28, 14, 12], relogio: [12, 10, 12], ponto: [12, 10, 16], envelopes: [18, 14, 12], livros: [12, 10, 18], mala: [16, 10, 12], porta: [8, 32, 18], maca: [26, 12, 10], grafico: [18, 10, 12] }[kind];
         obstacles.push({ x: Math.max(camX + LW + 30, lastOx + 110), y, y0: y, w: dims[0], d: dims[1], h: dims[2], h0: dims[2], kind, label, trait, hit: false, stuck: 0, t: rand() * 6 });
         obstT = Math.max(2.2, 4.0 - D * 0.38) * (0.75 + rand() * 0.5);
         if (!trait && !said.jumpHint) { said.jumpHint = true; warnMsg(isTouch ? "pule as barreiras: toque rápido na tela ou PULAR" : "pule as barreiras com espaço, ou desvie"); }
@@ -2529,6 +2528,13 @@ h1 em { font-style: normal; color: var(--good); }
     q.r(0, 0, 24, 8, B[1]); q.r(0, 0, 24, 1, B[0]); q.r(0, 7, 24, 1, B[2]); q.r(19, 1, 4, 6, PAPER[1]); q.r(19, 2, 4, 1, PAPER[2]); q.r(19, 4, 4, 1, PAPER[2]);
     q.r(3, 3, 8, 2, mix(col, "#ffffff", 0.45));
     return outline(c); });
+  // NOTIFICAÇÕES: a phone standing on the road, its screen stacked with notifications (lit = buzzing)
+  const phoneImg = (lit) => cached("phone" + (lit ? 1 : 0), () => { const c = mkCanvas(26, 44), q = pen(c), B = rampOf("#3a3a52");
+    q.r(1, 0, 24, 44, B[2]); q.r(1, 0, 24, 2, B[0]); q.r(1, 0, 2, 44, B[1]); q.r(23, 2, 2, 42, B[3]); q.r(1, 42, 24, 2, B[3]);
+    q.r(4, 4, 18, 34, lit ? "#1e2a48" : "#141a2c"); q.r(10, 2, 6, 1, "#14121e"); q.r(10, 40, 6, 1, "#5a5a74");
+    const rows = [["#e2354c", "#ffffff"], ["#3fa36a", "#e6f6ea"], ["#3c6fd1", "#e2ecff"], ["#e8a23a", "#fff4dc"], ["#9a5ccf", "#f0e2ff"]];
+    rows.forEach(([ic, tx], i) => { const y = 6 + i * 6.4; q.r(5, y, 16, 5, lit ? "#33456e" : "#222c46"); q.r(6, y + 1, 3, 3, ic); q.r(10, y + 1, 9, 1, lit ? tx : "#7a86a8"); q.r(10, y + 3, 6, 1, lit ? "#a8b6d8" : "#5a6688"); });
+    return outline(c); });
   const malaImg = () => cached("mala", () => { const c = mkCanvas(48, 40), q = pen(c), Br = rampOf("#a8662e");
     q.r(13, 10, 8, 3, DARK); q.r(14, 11, 6, 1, "#3a3846");
     q.r(2, 14, 32, 24, Br[1]); q.r(2, 14, 32, 2, Br[0]); q.r(2, 14, 2, 24, Br[0]); q.r(31, 16, 3, 22, Br[2]); q.r(2, 36, 32, 2, Br[3]);
@@ -2601,9 +2607,18 @@ h1 em { font-style: normal; color: var(--good); }
   }
   function drawCreative(o, x, y) {
     const t = o.t || 0, lab = (yy) => txt(o.label, x, yy, { size: 6, font: PIX, color: "#ffd27a", ls: 0.5 });
-    if (o.kind === "fila") {
-      [-12, 0, 12].forEach((dy, i) => { const sh = Math.sin(t * 3 + i * 1.7) > 0.7 ? 1 : 0; person(QUEUE[i], o.x + sh, y + dy, 0, "idle"); });
-      lab(y - 12 - 32); return true;
+    if (o.kind === "celular") {
+      const buzz = Math.sin(t * 2.4) > -0.2, jx = buzz ? (Math.floor(t * 30) % 2 ? 0.5 : -0.5) : 0;
+      shadow(x, y, 8); spr(phoneImg(buzz), x - 6.5 + jx, y - 22);
+      if (buzz) { glow(x, y - 12, 14, "rgba(120,160,255,A)", 0.25); txt("BZZ", x + (Math.floor(t * 8) % 2 ? 12 : 13), y - 10, { size: 4, font: PIX, color: "#ffffff", ls: 0.3 }); }
+      // the red badge on the corner
+      g.fillStyle = "#14121e"; g.beginPath(); g.arc(x + 6, y - 22, 4.2, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#e2354c"; g.beginPath(); g.arc(x + 6, y - 22, 3.6, 0, Math.PI * 2); g.fill();
+      txt("+99", x + 6, y - 21.6, { size: 3, font: PIX, color: "#ffffff", ls: 0.1, shadow: false });
+      // notifications popping out and floating up
+      for (let k = 0; k < 3; k++) { const ph = ((t * 0.7 + k / 3) % 1), px = x - 9 + k * 7 + Math.sin(t * 2 + k) * 2, py = y - 24 - ph * 14;
+        g.globalAlpha = 1 - ph; g.fillStyle = "#14121e"; g.fillRect(px - 0.5, py - 0.5, 7, 3.5); g.fillStyle = ["#e2354c", "#3fa36a", "#3c6fd1"][k]; g.fillRect(px, py, 2.5, 2.5); g.fillStyle = "#f4f1e8"; g.fillRect(px + 3, py + 0.5, 3, 0.8); g.fillRect(px + 3, py + 1.7, 2, 0.6); g.globalAlpha = 1; }
+      lab(y - 36); return true;
     }
     if (o.kind === "transito") {
       shadow(x, y, 17); spr(sedanImg(), x - 16, y - 20);
