@@ -760,13 +760,13 @@ h1 em { font-style: normal; color: var(--good); }
     curso: { stuck: false, w: 1, label: "CURSO DA FELICIDADE", pal: { k: K, y: "#ffe066", g: "#8a8f9e" }, rows: [".........", "kkkkkkkkk", "kyyyyyyyk", "kykyyykyk", "kyyyyyyyk", "kykyyykyk", "kyykkkyyk", "kkkkkkkkk", "ggggggggg"] }
   };
   Object.assign(TYPES, {
-    guitarra: { good: true, stuck: false, w: 0, label: "TOCAR GUITARRA", pal: { k: K, r: "#e2354c", w: "#ffffff", n: "#e8c890", y: "#ffe066" }, rows: ["........kk.", ".......kyk.", "......knk..", ".....knk...", "..kkknk....", ".krrrkk....", "krrwwrrk...", "krrrrrrk...", ".krrrrk....", "..kkkk.....", "..........."] },
+    guitarra: { good: true, stuck: false, w: 0, label: "APRENDER UM INSTRUMENTO", pal: { k: K, r: "#e2354c", w: "#ffffff", n: "#e8c890", y: "#ffe066" }, rows: ["........kk.", ".......kyk.", "......knk..", ".....knk...", "..kkknk....", ".krrrkk....", "krrwwrrk...", "krrrrrrk...", ".krrrrk....", "..kkkk.....", "..........."] },
     paleta: { good: true, stuck: false, w: 0, label: "PINTAR", pal: { k: K, t: "#e8c890", r: "#e2354c", y: "#ffe066", b: "#3c8fe0", g: "#4caf6a", p: "#ff7aa8" }, rows: ["...........", "...kkkkk...", "..kttttttk.", ".ktrttyttk.", "kttttttbtk.", "ktgttkkttk.", "kttttkkttk.", ".kttpttttk.", "..kkttttk..", "....kkkk...", "..........."] },
     livro: { good: true, stuck: false, w: 0, label: "LER", pal: { k: K, w: "#fff4e0", g: "#3fa39a" }, rows: ["...........", ".kkkk.kkkk.", "kwwwwkwwwwk", "kwkkwkwkkwk", "kwwwwkwwwwk", "kwkkwkwkkwk", "kwwwwkwwwwk", "kgggggggggk", ".kkkkkkkkk.", "...........", "..........."] },
-    bola: { good: true, stuck: false, w: 0, label: "JOGAR BOLA", pal: { k: K, w: "#f4f1e8" }, rows: ["...kkkkk...", "..kwwkwwk..", ".kwwkkkwwk.", "kwwwkkkwwwk", "kkwwwkwwwkk", "kkkwwwwwkkk", "kwwwwkwwwwk", "kwwwkkkwwwk", ".kwwkkkwwk.", "..kwwwwwk..", "...kkkkk..."] },
+    bola: { good: true, stuck: false, w: 0, label: "ESPORTE", pal: { k: K, w: "#f4f1e8" }, rows: ["...kkkkk...", "..kwwkwwk..", ".kwwkkkwwk.", "kwwwkkkwwwk", "kkwwwkwwwkk", "kkkwwwwwkkk", "kwwwwkwwwwk", "kwwwkkkwwwk", ".kwwkkkwwk.", "..kwwwwwk..", "...kkkkk..."] },
     controle: { good: true, stuck: false, w: 0, label: "VIDEOGAME", pal: { k: K, p: "#7a5cd6", y: "#ffe066", r: "#ff4f7b" }, rows: ["...........", "...........", ".kkkkkkkkk.", "kpppppppppk", "kpkppppyppk", "kkkkppprpyk", "kpkpppppppk", "kppkkkkkppk", ".kkk...kkk.", "...........", "..........."] },
     fone: { good: true, stuck: false, w: 0, label: "OUVIR MÚSICA", pal: { k: K, c: "#ff7aa8" }, rows: ["..kkkkkkk..", ".kccccccck.", "kck.....kck", "kk.......kk", "kk.......kk", "kcck...kcck", "kccck.kccck", "kccck.kccck", ".kkk...kkk.", "...........", "..........."] },
-    skate: { good: true, stuck: false, w: 0, label: "ANDAR DE SKATE", pal: { k: K, y: "#5fd1e0", w: "#f4f1e8" }, rows: ["...........", "...........", "...........", "...........", ".kkkkkkkkk.", "kyyyyyyyyyk", ".kkkkkkkkk.", "..kk...kk..", ".kwwk.kwwk.", "..kk...kk..", "..........."] },
+    danca: { good: true, stuck: false, w: 0, label: "DANÇAR" },
     pipoca: { good: true, stuck: false, w: 0, label: "IR AO CINEMA", pal: { k: K, w: "#fff4c0", r: "#e2354c" }, rows: ["...www.....", ".wwwwwww...", "wwwwwwwww..", "kkkkkkkkk..", "krwrwrwrk..", "krwrwrwrk..", ".krwrwrk...", ".krwrwrk...", ".kkkkkkk...", "...........", "..........."] },
     doenca: { stuck: true, w: 1, label: "DOENÇA", pal: { k: K, w: "#f4f1e8", r: "#e2354c" }, rows: [".kkkkkkk.", "kwwwwwwwk", "kwwwrwwwk", "kwwwrwwwk", "kwrrrrrwk", "kwwwrwwwk", "kwwwrwwwk", "kwwwwwwwk", ".kkkkkkk."] },
     aluguel: { stuck: true, w: 1, label: "ALUGUEL", pal: { k: K, y: "#e8c04a" }, rows: [".........", ".kkk.....", "kyyyk....", "kykyk....", "kyyykkkkk", ".kkkyyyyk", "....kkyky", ".....kkkk", "........."] },
@@ -774,7 +774,7 @@ h1 em { font-style: normal; color: var(--good); }
     filhos: { stuck: true, w: 1, label: "FILHOS", pal: { k: K, b: "#5a3a26", s: "#f2c7a5", r: "#e2574c", p: "#ff9ac0" }, rows: ["...kkk...", "..kbbbk..", ".kbsssbk.", ".ksksksk.", ".ksssssk.", ".kssrssk.", ".kkssskk.", "..kpppk..", ".kkpppkk."] },
     creche: { stuck: true, w: 1, label: "CRECHE", pal: { k: K, b: "#1c1410", s: "#8d5a3b", r: "#e2574c", p: "#3c8fe0" }, rows: ["...kkk...", "..kbbbk..", ".kbsssbk.", ".ksksksk.", ".ksssssk.", ".kssrssk.", ".kkssskk.", "..kpppk..", ".kkpppkk."] }
   });
-  const GOOD = ["guitarra", "paleta", "livro", "bola", "controle", "fone", "skate", "pipoca"];
+  const GOOD = ["guitarra", "paleta", "livro", "bola", "controle", "fone", "danca", "pipoca"];
   const DROP = ["curtidas", "padrao", "consumo", "comparar", "curso"];
   // ===== v6 icons: 20x20 art pixels each (11x11 world units once outlined) =====
   const PAPER = ["#ffffff", "#f1ede2", "#cfc8b8", "#9a927f"], GOLD = rampOf("#e8c04a"), DARK = "#2a2433";
@@ -924,13 +924,18 @@ h1 em { font-style: normal; color: var(--good); }
       q.r(4, 11, 2, 6, Pk[3]); q.r(14, 11, 2, 6, Pk[3]); q.r(1, 17, 5, 1, Pk[2]); q.r(14, 17, 5, 1, Pk[2]);
       q.r(10, 11, 1, 5, "#ffffff"); q.r(8, 15, 3, 2, "#ffffff"); q.r(11, 11, 2, 1, "#ffffff"); q.p(12, 12, "#ffffff");
     },
-    skate: (q) => {
-      const Cy = rampOf("#5fd1e0");
-      q.r(3, 9, 14, 3, Cy[1]); q.r(1, 8, 2, 2, Cy[1]); q.r(17, 8, 2, 2, Cy[1]); q.p(0, 7, Cy[1]); q.p(19, 7, Cy[1]);
-      q.r(3, 9, 14, 1, Cy[0]); q.r(1, 8, 2, 1, Cy[0]); q.r(3, 11, 14, 1, Cy[2]);
-      q.r(6, 10, 2, 1, "#ff7aa8"); q.r(11, 10, 3, 1, "#ffe066");
-      q.r(5, 12, 3, 1, "#8a8fa0"); q.r(12, 12, 3, 1, "#8a8fa0");
-      [5, 8, 12, 15].forEach((x) => { q.disc(x, 14.5, 1.5, "#f1ede2"); q.p(x, 15, "#9a927f"); });
+    danca: (q) => {
+      // a mirror ball on its string: 2x2 mirror tiles over a dark base, lit from the upper left, a few coloured reflections and two sparkles
+      q.r(9, 0, 2, 3, "#8a8fa0"); q.p(9, 0, "#c4c8d4");
+      q.disc(10, 11.5, 7.8, "#5a6078");
+      for (let y = 4; y < 20; y += 3) for (let x = 2; x < 19; x += 3) {
+        const dx = x + 1 - 10, dy = y + 1 - 11.5; if (dx * dx + dy * dy > 52) continue;
+        const d = dx + dy;
+        q.r(x, y, 2, 2, d < -5 ? "#ffffff" : d < 0 ? "#dfe5f0" : d < 6 ? "#aab3c8" : "#7f889e");
+      }
+      [[5, 10, "#ff9ac0"], [11, 7, "#7fe0ff"], [14, 13, "#ffe066"], [8, 16, "#b48cff"]].forEach(([x, y, c]) => q.r(x, y, 2, 2, c));
+      q.r(5, 7, 2, 2, "#ffffff");
+      [[17, 4], [2, 17]].forEach(([x, y]) => { q.p(x, y, "#ffffff"); q.p(x - 1, y, "#fff6c0"); q.p(x + 1, y, "#fff6c0"); q.p(x, y - 1, "#fff6c0"); q.p(x, y + 1, "#fff6c0"); });
     },
     pipoca: (q) => {
       for (let y = 8; y < 19; y++) { const ins = Math.floor((y - 8) / 4); for (let x = 3 + ins; x < 17 - ins; x++) q.p(x, y, Math.floor((x - 1) / 3) % 2 ? "#e2354c" : "#fff4e0"); }
